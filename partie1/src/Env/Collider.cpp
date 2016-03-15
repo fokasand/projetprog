@@ -10,32 +10,45 @@ Collider::Collider (Vec2d c, double r) :
 	assert(rayon >=0);
 }
 
-Collider::Collider (const Collider& a)
-	centre( a.getPosition),
-	rayon(a.getRadius)
+Collider::Collider (const Collider& a) :
+	centre( a.getPosition()),
+	rayon(a.getRadius())
 	{}
 
-void clamping(vec2d& c)
+/*void Collider::clamping(Vec2d& c)
 {
-	while (c.x> worldsize.x)
+	auto worldSize = getApp().getWorldSize();
+	auto width= worldSize.x;
+	auto height = worldSize.y;
+	
+	while (c.x> width)
 	{
-		c.x-= worldsize.x;
+		c.x-= width;
 	}
 	
-	while (c.y > worldsize.y)
+	while (c.y > height)
 	{
-		c.y-=worldsize.y;
+		c.y-=height;
 	}
-}
+} */
 
 // getters
 
-const Vec2d&Collider::getPosition ();
+ const Vec2d& Collider::getPosition ()
 {
 	return centre;
 }
 
-double getRadius()
+double Collider::getRadius()
 {
 	return rayon;
 }
+
+//deplacement
+
+void Collider::directionTo (Vec2d to)
+{
+	Vec2d from (centre);
+	
+}
+
