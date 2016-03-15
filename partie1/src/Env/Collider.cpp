@@ -10,6 +10,19 @@ Collider::Collider (Vec2d c, double r) :
 	assert(rayon >=0);
 }
 
+void clamping(vec2d& c)
+{
+	while (c.x> worldsize.x)
+	{
+		c.x-= worldsize.x;
+	}
+	
+	while (c.y > worldsize.y)
+	{
+		c.y-=worldsize.y;
+	}
+}
+
 // getters
 
 const Vec2d&Collider::getPosition ();
