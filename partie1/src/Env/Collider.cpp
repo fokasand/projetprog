@@ -1,4 +1,4 @@
-#include "Collider.h"
+#include "Collider.hpp"
 #include <iostream>
 #include <Application.hpp>
 
@@ -9,6 +9,11 @@ Collider::Collider (Vec2d c, double r) :
 {
 	assert(rayon >=0);
 }
+
+Collider::Collider (const Collider& a)
+	centre( a.getPosition),
+	rayon(a.getRadius)
+	{}
 
 void clamping(vec2d& c)
 {

@@ -12,7 +12,7 @@ class Collider
 	public :
 	//constructeur, verifier que r positif ou nul,
 			Collider (Vec2d c, double r);
-			
+			Collider (const Collider& a);
 			
 	//getters
 			const Vec2d& getPosition ();
