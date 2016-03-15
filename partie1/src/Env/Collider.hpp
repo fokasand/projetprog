@@ -20,6 +20,8 @@ class Collider
 			
 	//déplacement
 	Vec2d directionTo (Vec2d to);
+	Collider directionTo(Collider c);
+	double distanceTo(Vec2d to);
 	
 	//clamping
 	void clamping(Vec2d& c);
