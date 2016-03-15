@@ -14,6 +14,25 @@ Collider::Collider (const Collider& a) :
 	centre( a.getPosition()),
 	rayon(a.getRadius())
 	{}
+	
+//clamping
+
+void Collider::clamping(Vec2d& c)
+{
+	Vec2d worldSize = getApp().getWorldSize();
+	double width = worldSize.x;
+	double height= worldSize.y;
+	
+	while (c.x> width)
+	{
+		c.x -= worldSize.x;
+	}
+	
+	while (c.y> height)
+	{
+		c.y -= worldSize.y;
+	}
+}
 
 /*void Collider::clamping(Vec2d& c)
 {
