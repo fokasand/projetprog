@@ -18,6 +18,16 @@ class Collider
 			const Vec2d& getPosition ();
 			double getRadius();
 			
+	//déplacement
+	Vec2d directionTo (Vec2d to);
+	
+	//clamping
+	void clamping(Vec2d& c);
+	
+	// =
+	Collider operator= ( Collider b);
+	
+			
 };
 
 
