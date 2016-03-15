@@ -83,7 +83,7 @@ Vec2d Collider::directionTo (Vec2d to)
 	auto height = worldSize.y;
 	
 	//creer un vector contenant toutes les possibilités de Vec2d
-	vector <Vec2d> tab_test(8);
+	vector <Vec2d> tab_test(8);	//ne reconnait pas le type vector,c'est un problème
 	tab_test.push_back(to.x,to.y+height);
 	tab_test.push_back(to.x,to.y-height);
 	tab_test.push_back(to.x+width,to.y);
@@ -100,7 +100,7 @@ Vec2d Collider::directionTo (Vec2d to)
 		{	vect = tab_test[i];								//nouvelle valeur pour vect
 		}
 	}
-	return vect;
+	return vect; //ne rend probablement pas le bon vecteur
 }
 
 Collider Collider::directionTo(Collider c)
@@ -112,5 +112,5 @@ Collider Collider::directionTo(Collider c)
 
 double distanceTo(Vec2d to)
 {
-	return directionTo(to).lenght();
+	return directionTo(to).lenght(); 	//besoin d'une methode applicquée à l'instance courante, pas le to, ne fonctionne pas
 }
