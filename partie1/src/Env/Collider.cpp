@@ -52,21 +52,28 @@ void Collider::clamping(Vec2d& c)
 	}
 } */
 
-// getters
+//getters
 
- const Vec2d& Collider::getPosition ()
+ const Vec2d& Collider::getPosition() const 
 {
 	return centre;
 }
 
-double Collider::getRadius()
+double Collider::getRadius() const
 {
 	return rayon;
 }
 
+
 //deplacement
 
-Vec2d Collider::directionTo (Vec2d to)
+
+double Collider::distanceTo(Vec2d to) const
+{
+	return directionTo(to).length();
+}
+
+Vec2d Collider::directionTo (Vec2d to) const
 {
 	Vec2d from (centre);
 	auto worldSize = getApp().getWorldSize();
@@ -108,7 +115,62 @@ Vec2d Collider::directionTo (Vec2d to)
 	return result;
 }
 
-double distanceTo(Vec2d to)
+
+
+
+//booléens
+
+bool Collider::isColliderInside(const Collider& other) const
 {
-	return directionTo(to).lenght();
+	if ((rayon >= other.getRadius()) and (other.distanceTo(getPosition())) <= (rayon-other.getRadius())) /*ici j hesite entre distanceTo(other.getPosition()) et other.distanceTo(*this), 
+	je pense que les 2 marchent mais si jamais essaye l'autre. j'ai pas pu tester sans la fonction distanceTo */
+	{
+		return true; // si other est dans l'instance courante
+	} else {
+		return false;
+	}
+}
+
+bool Collider::isColliding(const Collider& other) const
+{
+	if ((distanceTo(other.getPosition())) <= (rayon+other.getRadius()))
+	{
+		return true;
+	} else
+	{
+		return false;
+	}
+}
+
+bool Collider::isPointInside(const Vec2d& poin) const
+{
+	if (distanceTo(poin) <= rayon)
+	{
+		return true;
+	}else
+	{
+		return false;
+	}
+}
+
+bool operator>(const Collider& body1,const Collider& body2)
+{
+	return body1.isColliderInside(body2);
+}
+
+bool operator|(const Collider& body1,const Collider& body2)//je suis pas sur qu'on puisse utiliser des méthodes sur des trucs si ils sont constants.
+{
+	return body1.isColliding(body2);
+}
+
+bool operator>(const Collider& body, const Vec2d& point)
+{
+	return body.isPointInside(point);
+}
+
+std::ostream& operator<<(std::ostream& sortie, Collider c)
+{
+	sortie << "Collider: position = " << c.getPosition() << "radius =" << c.getRadius() << endl;
+	
+	return sortie;
 }
