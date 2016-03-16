@@ -108,3 +108,7 @@ Vec2d Collider::directionTo (Vec2d to)
 	return result;
 }
 
+double distanceTo(Vec2d to)
+{
+	return directionTo(to).lenght();
+}
