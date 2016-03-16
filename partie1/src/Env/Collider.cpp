@@ -69,30 +69,42 @@ double Collider::getRadius()
 Vec2d Collider::directionTo (Vec2d to)
 {
 	Vec2d from (centre);
-	Vec2d vect(to);
-	
 	auto worldSize = getApp().getWorldSize();
-	auto width= worldSize.x;
-	auto height = worldSize.y;
+	double* dimension(nullptr);
+	double* coordinatei(nullptr);
+	double* coordinatef(nullptr);
+	//creer un pointeur
 	
-	//creer un vector contenant toutes les possibilités de Vec2d
-	vector <Vec2d> tab_test(8);
-	tab_test.pushback(0,height);
-	tab_test.pushback(0,-height);
-	tab_test.pushback(width,0);
-	tab_test.pushback(-width,0);
-	tab_test.pushback(width,height);
-	tab_test.pushback(width,-height);
-	tab_test.pushback(-width,-height);
-	tab_test.pushback(-width,height);
-	
-	//tester les vecteurs possibles et rendre le plus court
-	for (int i(0); i <8; i++)
+	for (int i(0); i <2 ; i++)
 	{
-		if (distance(from,tab_test[i]) < distance (from,vect)//test, si distanceplus petite
-		{	vect = tab_test[i];								//nouvelle valeur pour vect
+		if (i==0)
+		{	//*dimension= new double(worldSize.x); Set for x
+			dimension = new double(worldSize.x);
+			//*dimension;
+			coordinatei= new double(from.x);
+			coordinatef= new double(to.x);
+			
+		}
+		
+		if (i==1)
+		{	// Set for y
+			*dimension = worldSize.y;
+			*coordinatei = from.y;
+			*coordinatef = to.y;	
+		}
+		
+		if ((*coordinatei-*coordinatef)<(-*dimension/2))
+		{
+			*coordinatef-=*dimension;
+		}
+		if ((*coordinatei-*coordinatef)>(*dimension/2))
+		{
+			*coordinatef+=*dimension;
 		}
 	}
-	return vect;
+	
+	Vec2d result ((from.x-to.x),(from.y-to.y));
+	
+	return result;
 }
 
