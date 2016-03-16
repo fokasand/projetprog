@@ -10,13 +10,14 @@ class Collider
 			Vec2d centre;
 			double rayon;
 	public :
+	
 	//constructeur, verifier que r positif ou nul,
 			Collider (Vec2d c, double r);
 			Collider (const Collider& a);
 			
 	//getters
-			const Vec2d& getPosition ();
-			double getRadius();
+	const Vec2d& getPosition() const;
+	double getRadius() const;
 			
 	//déplacement
 	Vec2d directionTo (Vec2d to);
@@ -26,6 +27,16 @@ class Collider
 	
 	// =
 	Collider operator= ( Collider b);
+	
+	// booléens
+	
+	bool isColliderInside(const Collider& other) const;
+	bool isColliding(const Collider& other) const;
+	bool isPointInside(const Vec2d& point) const;
+	
+	// distances
+	Vec2d directionTo (Vec2d to) const;
+	double distanceTo(Vec2d to) const;
 	
 			
 };
