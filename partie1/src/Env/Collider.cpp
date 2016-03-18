@@ -22,8 +22,8 @@ Collider::Collider (const Collider& a) :
 void Collider::clamping(Vec2d& c)
 {
 	Vec2d worldSize = getApp().getWorldSize();
-	/*double width = worldSize.x;
-	double height= worldSize.y;*/ //on en a pas vraiment besoin si ?
+	double width = worldSize.x;
+	double height= worldSize.y; //on en a pas vraiment besoin si ? ben si banane sinon il sait pas ce que c'est width et height.
 	
 	while (c.x> width)
 	{
@@ -97,7 +97,7 @@ Vec2d Collider::directionTo (Vec2d to) const
 			*coordinatef-=*dimension;
 		}
 		if ((*coordinatei-*coordinatef)>(*dimension/2)) //test si la coordonnee pointee de to n'est pas trop petite
-		{						// si oui on l'incremente de la taille du monde
+								// si oui on l'incremente de la taille du monde
 		{
 			*coordinatef+=*dimension;
 		}
@@ -114,7 +114,7 @@ Vec2d Collider::directionTo (Collider c) const
 	Vec2d to(c.getPosition());
 	return 	directionTo(to);
 }
-}
+
 
 //booléens
 
@@ -151,24 +151,29 @@ bool Collider::isPointInside(const Vec2d& poin) const
 	}
 }
 
-bool operator>(const Collider& body1,const Collider& body2)
+bool Collider::operator>(const Collider& body2)
 {
-	return body1.isColliderInside(body2);
+	return isColliderInside(body2);
 }
 
-bool operator|(const Collider& body1,const Collider& body2)//je suis pas sur qu'on puisse utiliser des méthodes sur des trucs si ils sont constants.
+bool Collider::operator|(const Collider& body2)//je suis pas sur qu'on puisse utiliser des méthodes sur des trucs si ils sont constants.
 {
-	return body1.isColliding(body2);
+	return isColliding(body2);
 }
 
-bool operator>(const Collider& body, const Vec2d& point)
+bool Collider::operator>(const Vec2d& point)
 {
-	return body.isPointInside(point);
+	return isPointInside(point);
 }
 
-std::ostream& operator<<(std::ostream& sortie, Collider c)
+std::ostream& Collider::affiche(std::ostream& sortie) const
 {
-	sortie << "Collider: position = " << c.getPosition() << "radius =" << c.getRadius() << endl;
-	
-	return sortie;
+sortie << "Collider: position = " << getPosition() << "radius =" << getRadius() << std:: endl;
+
+return sortie;
+}
+
+std::ostream& operator<<(std::ostream& sortie, Collider const& c)
+{
+return c.affiche(sortie);
 }
