@@ -8,9 +8,10 @@ Collider::Collider (Vec2d c, double r) :
 		centre(c),
 		rayon(r)
 {
-	assert(rayon >=0);
+	assert(rayon >=0); // gestion de l'erreur pour r negatif
 }
 
+//constructeur par copie
 Collider::Collider (const Collider& a) :
 	centre( a.getPosition()),
 	rayon(a.getRadius())
@@ -21,8 +22,8 @@ Collider::Collider (const Collider& a) :
 void Collider::clamping(Vec2d& c)
 {
 	Vec2d worldSize = getApp().getWorldSize();
-	double width = worldSize.x;
-	double height= worldSize.y;
+	/*double width = worldSize.x;
+	double height= worldSize.y;*/ //on en a pas vraiment besoin si ?
 	
 	while (c.x> width)
 	{
@@ -43,23 +44,6 @@ void Collider::clamping(Vec2d& c)
 		c.y += worldSize.y;
 	}
 }
-
-/*void Collider::clamping(Vec2d& c)
-{
-	auto worldSize = getApp().getWorldSize();
-	auto width= worldSize.x;
-	auto height = worldSize.y;
-	
-	while (c.x> width)
-	{
-		c.x-= width;
-	}
-	
-	while (c.y > height)
-	{
-		c.y-=height;
-	}
-} */
 
 //getters
 
@@ -94,26 +78,26 @@ Vec2d Collider::directionTo (Vec2d to) const
 	for (int i(0); i <2 ; i++)
 	{
 		if (i==0)
-		{	//*dimension= new double(worldSize.x); Set for x
+		{	//*dimension= new double(worldSize.x); Set all pointer to x coordinates
 			dimension = new double(worldSize.x);
-			//*dimension;
 			coordinatei= new double(from.x);
 			coordinatef= new double(to.x);
 			
 		}
 		
 		if (i==1)
-		{	// Set for y
+		{	// Set all pointer to y coordinates
 			*dimension = worldSize.y;
 			*coordinatei = from.y;
 			*coordinatef = to.y;	
 		}
 		
-		if ((*coordinatei-*coordinatef)<(-*dimension/2))
-		{
+		if ((*coordinatei-*coordinatef)<(-*dimension/2)) //test si la coordonnee pointee de to n'est pas trop grande
+		{						// si oui on la decremente de la taille du monde
 			*coordinatef-=*dimension;
 		}
-		if ((*coordinatei-*coordinatef)>(*dimension/2))
+		if ((*coordinatei-*coordinatef)>(*dimension/2)) //test si la coordonnee pointee de to n'est pas trop petite
+		{						// si oui on l'incremente de la taille du monde
 		{
 			*coordinatef+=*dimension;
 		}
