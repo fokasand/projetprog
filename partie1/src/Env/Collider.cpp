@@ -33,6 +33,15 @@ void Collider::clamping(Vec2d& c)
 	{
 		c.y -= worldSize.y;
 	}
+		while (c.x< 0)
+	{
+		c.x += worldSize.x;
+	}
+	
+	while (c.y< 0)
+	{
+		c.y += worldSize.y;
+	}
 }
 
 /*void Collider::clamping(Vec2d& c)
