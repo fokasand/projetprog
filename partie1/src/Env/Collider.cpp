@@ -119,13 +119,18 @@ Vec2d Collider::directionTo (Vec2d to) const
 		}
 	}
 	
-	Vec2d result ((from.x-to.x),(from.y-to.y));
+	Vec2d result (((from.x)-(to.x)),((from.y)-(to.y)));
 	
 	return result;
 }
 
 
-
+Vec2d Collider::directionTo (Collider c) const
+{
+	Vec2d to(c.getPosition());
+	return 	directionTo(to);
+}
+}
 
 //booléens
 
