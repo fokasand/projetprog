@@ -203,3 +203,9 @@ Collider& Collider:: operator=(Collider b)
 	swap(*this,b);
 	return *this;
 }
+
+Collider& Collider::operator+=(const Collider& b)
+{	
+	Vec2d dx (b.getPosition())
+	return *this.move(dx);
+}
