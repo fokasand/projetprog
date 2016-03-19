@@ -2,6 +2,7 @@
 #include <iostream>
 #include <Application.hpp>
 #include <vector>
+#include <utility>
 
 //constructeur, verifier que r positif ou nul
 Collider::Collider (Vec2d c, double r) :	
@@ -151,6 +152,8 @@ bool Collider::isPointInside(const Vec2d& poin) const
 	}
 }
 
+//opérateurs:
+
 bool Collider::operator>(const Collider& body2)
 {
 	return isColliderInside(body2);
@@ -176,4 +179,10 @@ return sortie;
 std::ostream& operator<<(std::ostream& sortie, Collider const& c)
 {
 return c.affiche(sortie);
+}
+
+Collider& Collider:: operator=(Collider b)
+{
+	swap(*this,b);
+	return *this;
 }
