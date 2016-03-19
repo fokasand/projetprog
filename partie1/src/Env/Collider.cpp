@@ -25,6 +25,7 @@ void Collider::clamping(Vec2d& c)
 	Vec2d worldSize = getApp().getWorldSize();
 	double width = worldSize.x;
 	double height= worldSize.y; //on en a pas vraiment besoin si ? ben si banane sinon il sait pas ce que c'est width et height.
+					// mais ça sert a rien de continuer à utiliser worldSize dans les calculs alors utiliser soit que height et width ou woldSize.x ou y direct
 	
 	while (c.x> width)
 	{
@@ -74,23 +75,25 @@ Vec2d Collider::directionTo (Vec2d to) const
 	double* dimension(nullptr);
 	double* coordinatei(nullptr);
 	double* coordinatef(nullptr);
-	//creer un pointeur
+	double width = worldSize.x;
+	double height= worldSize.y;
+	//creer deux pointeurs
 	
 	for (int i(0); i <2 ; i++)
 	{
 		if (i==0)
 		{	//*dimension= new double(worldSize.x); Set all pointer to x coordinates
-			dimension = new double(worldSize.x);
-			coordinatei= new double(from.x);
-			coordinatef= new double(to.x);
+			dimension = &width;
+			coordinatei= &from.x;
+			coordinatef= &to.x;
 			
 		}
 		
 		if (i==1)
 		{	// Set all pointer to y coordinates
-			*dimension = worldSize.y;
-			*coordinatei = from.y;
-			*coordinatef = to.y;	
+			dimension = &height;
+			coordinatei = &from.y;
+			coordinatef = &to.y;	
 		}
 		
 		if ((*coordinatei-*coordinatef)<(-*dimension/2)) //test si la coordonnee pointee de to n'est pas trop grande
