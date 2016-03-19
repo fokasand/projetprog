@@ -9,9 +9,8 @@ Collider::Collider (const Vec2d& c, const double& r) :
 		centre(c),
 		rayon(r)
 {
-	assert(rayon >=0);
-	*this.clamping();
-	// gestion de l'erreur pour r negatif
+	assert(rayon >=0); // gestion de l'erreur pour r negatif
+	clamping();
 }
 
 //constructeur par copie
@@ -24,29 +23,29 @@ Collider::Collider (const Collider& a) :
  //clamping
  
  void Collider::clamping() //takes current Collider and operates on its center
- {
+ {	
  	Vec2d worldSize = getApp().getWorldSize();
  	double width = worldSize.x;
  	double height= worldSize.y; //on en a pas vraiment besoin si ? ben si banane sinon il sait pas ce que c'est width et height.
  					// mais ça sert a rien de continuer à utiliser worldSize dans les calculs alors utiliser soit que height et width ou woldSize.x ou y direct
- 	
-	while (center.x> width)
+					// oui c'est vrai on peut mettre que worldsize dans les  comparateurs je pense
+	while (centre.x> width)
  	{
-		center.x -= worldSize.x;
+		centre.x -= worldSize.x;
  	}
  	
-	while (center.y> height)
+	while (centre.y> height)
  	{
-		center.y -= worldSize.y;
+		centre.y -= worldSize.y;
  	}
- 		while (c.x< 0)
+ 		while (centre.x< 0)
  	{
-		center.x += worldSize.x;
+		centre.x += worldSize.x;
  	}
  	
-	while (center.y< 0)
+	while (centre.y< 0)
  	{
-		center.y += worldSize.y;
+		centre.y += worldSize.y;
  	}
  }
 
@@ -66,7 +65,7 @@ double Collider::getRadius() const
 //deplacement
 
 
-double Collider::distanceTo(const Vec2d& to) const
+double Collider::distanceTo(Vec2d to) const
 {
 	return directionTo(to).length();
 }
@@ -129,11 +128,10 @@ Vec2d Collider::directionTo (const Collider& c) const
 	return 	directionTo(to);
 }
 
-void move(const Vec2d& dx)
+void Collider::move(const Vec2d& dx)
 {
-	//should it be *this.centre+=dx ?
 	centre+=dx;
-	*this.clamping();
+	clamping();
 }
 
 //booléens
@@ -173,6 +171,12 @@ bool Collider::isPointInside(const Vec2d& poin) const
 
 //opérateurs:
 
+Collider& Collider::operator+=(const Vec2d& b)
+{	
+	move(b);
+	return *this;
+}
+
 bool Collider::operator>(const Collider& body2) const
 {
 	return isColliderInside(body2);
@@ -209,8 +213,4 @@ return c.affiche(sortie);
 }
 
 
-Collider& Collider::operator+=(const Collider& b)
-{	
-	Vec2d dx (b.getPosition())
-	return *this.move(dx);
-}
+
