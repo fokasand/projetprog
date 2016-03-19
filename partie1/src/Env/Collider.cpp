@@ -9,7 +9,9 @@ Collider::Collider (const Vec2d& c, const double& r) :
 		centre(c),
 		rayon(r)
 {
-	assert(rayon >=0); // gestion de l'erreur pour r negatif
+	assert(rayon >=0);
+	*this.clamping();
+	// gestion de l'erreur pour r negatif
 }
 
 //constructeur par copie
@@ -18,33 +20,35 @@ Collider::Collider (const Collider& a) :
 	rayon(a.getRadius())
 	{}
 	
-//clamping
 
-void Collider::clamping(Vec2d& c)
-{
-	Vec2d worldSize = getApp().getWorldSize();
-	double width = worldSize.x;
-	double height= worldSize.y; //on en a pas vraiment besoin si ? ben si banane sinon il sait pas ce que c'est width et height.
-	
-	while (c.x> width)
-	{
-		c.x -= worldSize.x;
-	}
-	
-	while (c.y> height)
-	{
-		c.y -= worldSize.y;
-	}
-		while (c.x< 0)
-	{
-		c.x += worldSize.x;
-	}
-	
-	while (c.y< 0)
-	{
-		c.y += worldSize.y;
-	}
-}
+ //clamping
+ 
+ void Collider::clamping() //takes current Collider and operates on its center
+ {
+ 	Vec2d worldSize = getApp().getWorldSize();
+ 	double width = worldSize.x;
+ 	double height= worldSize.y; //on en a pas vraiment besoin si ? ben si banane sinon il sait pas ce que c'est width et height.
+ 					// mais ça sert a rien de continuer à utiliser worldSize dans les calculs alors utiliser soit que height et width ou woldSize.x ou y direct
+ 	
+	while (center.x> width)
+ 	{
+		center.x -= worldSize.x;
+ 	}
+ 	
+	while (center.y> height)
+ 	{
+		center.y -= worldSize.y;
+ 	}
+ 		while (c.x< 0)
+ 	{
+		center.x += worldSize.x;
+ 	}
+ 	
+	while (center.y< 0)
+ 	{
+		center.y += worldSize.y;
+ 	}
+ }
 
 //getters
 
