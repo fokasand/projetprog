@@ -22,7 +22,7 @@ class Collider
 	double getRadius() const;
 			
 	//déplacement
-	Vec2d directionTo (const Collider& c) const;
+	Vec2d directionTo (Collider c) const;
 	Vec2d directionTo (Vec2d to) const;
 	void move(const Vec2d& dx);
 	
@@ -30,6 +30,7 @@ class Collider
 	// distances
 	
 	double distanceTo(Vec2d to) const;
+	double distanceTo(Collider c) const;
 	
 	//clamping
 	void clamping();
