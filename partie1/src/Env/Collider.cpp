@@ -5,12 +5,11 @@
 #include <utility>
 
 //constructeur, verifier que r positif ou nul
-Collider::Collider (Vec2d c, double r) :	
+Collider::Collider (const Vec2d& c, const double& r) :	
 		centre(c),
 		rayon(r)
 {
 	assert(rayon >=0); // gestion de l'erreur pour r negatif
-	*this.clamping();
 }
 
 //constructeur par copie
@@ -21,30 +20,29 @@ Collider::Collider (const Collider& a) :
 	
 //clamping
 
-void Collider::clamping() //takes current Collider and operates on its center
+void Collider::clamping(Vec2d& c)
 {
 	Vec2d worldSize = getApp().getWorldSize();
 	double width = worldSize.x;
 	double height= worldSize.y; //on en a pas vraiment besoin si ? ben si banane sinon il sait pas ce que c'est width et height.
-					// mais ça sert a rien de continuer à utiliser worldSize dans les calculs alors utiliser soit que height et width ou woldSize.x ou y direct
 	
-	while (center.x> width)
+	while (c.x> width)
 	{
-		center.x -= worldSize.x;
+		c.x -= worldSize.x;
 	}
 	
-	while (center.y> height)
+	while (c.y> height)
 	{
-		center.y -= worldSize.y;
+		c.y -= worldSize.y;
 	}
 		while (c.x< 0)
 	{
-		center.x += worldSize.x;
+		c.x += worldSize.x;
 	}
 	
-	while (center.y< 0)
+	while (c.y< 0)
 	{
-		center.y += worldSize.y;
+		c.y += worldSize.y;
 	}
 }
 
@@ -64,7 +62,7 @@ double Collider::getRadius() const
 //deplacement
 
 
-double Collider::distanceTo(Vec2d to) const
+double Collider::distanceTo(const Vec2d& to) const
 {
 	return directionTo(to).length();
 }
@@ -121,7 +119,7 @@ Vec2d Collider::directionTo (Vec2d to) const
 }
 
 
-Vec2d Collider::directionTo (Collider c) const
+Vec2d Collider::directionTo (const Collider& c) const
 {
 	Vec2d to(c.getPosition());
 	return 	directionTo(to);
@@ -171,38 +169,41 @@ bool Collider::isPointInside(const Vec2d& poin) const
 
 //opérateurs:
 
-bool Collider::operator>(const Collider& body2)
+bool Collider::operator>(const Collider& body2) const
 {
 	return isColliderInside(body2);
 }
 
-bool Collider::operator|(const Collider& body2)//je suis pas sur qu'on puisse utiliser des méthodes sur des trucs si ils sont constants.
+bool Collider::operator|(const Collider& body2) const
 {
 	return isColliding(body2);
 }
 
-bool Collider::operator>(const Vec2d& point)
+bool Collider::operator>(const Vec2d& point) const
 {
 	return isPointInside(point);
 }
 
+Collider& Collider:: operator=(Collider b)
+{
+	std::swap(*this,b);
+	return *this;
+}
+
+//opérateur <<
+
 std::ostream& Collider::affiche(std::ostream& sortie) const
 {
-sortie << "Collider: position = " << getPosition() << "radius =" << getRadius() << std:: endl;
+sortie << "Collider: position : x=" << getPosition().x <<"y=" << getPosition().y << "radius =" << getRadius() << std:: endl;
 
 return sortie;
 }
 
-std::ostream& operator<<(std::ostream& sortie, Collider const& c)
+std::ostream& operator<<(std::ostream& sortie, const Collider& c)
 {
 return c.affiche(sortie);
 }
 
-Collider& Collider:: operator=(Collider b)
-{
-	swap(*this,b);
-	return *this;
-}
 
 Collider& Collider::operator+=(const Collider& b)
 {	
