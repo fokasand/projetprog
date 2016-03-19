@@ -10,6 +10,7 @@ Collider::Collider (Vec2d c, double r) :
 		rayon(r)
 {
 	assert(rayon >=0); // gestion de l'erreur pour r negatif
+	*this.clamping();
 }
 
 //constructeur par copie
@@ -20,30 +21,30 @@ Collider::Collider (const Collider& a) :
 	
 //clamping
 
-void Collider::clamping(Vec2d& c)
+void Collider::clamping() //takes current Collider and operates on its center
 {
 	Vec2d worldSize = getApp().getWorldSize();
 	double width = worldSize.x;
 	double height= worldSize.y; //on en a pas vraiment besoin si ? ben si banane sinon il sait pas ce que c'est width et height.
 					// mais ça sert a rien de continuer à utiliser worldSize dans les calculs alors utiliser soit que height et width ou woldSize.x ou y direct
 	
-	while (c.x> width)
+	while (center.x> width)
 	{
-		c.x -= worldSize.x;
+		center.x -= worldSize.x;
 	}
 	
-	while (c.y> height)
+	while (center.y> height)
 	{
-		c.y -= worldSize.y;
+		center.y -= worldSize.y;
 	}
 		while (c.x< 0)
 	{
-		c.x += worldSize.x;
+		center.x += worldSize.x;
 	}
 	
-	while (c.y< 0)
+	while (center.y< 0)
 	{
-		c.y += worldSize.y;
+		center.y += worldSize.y;
 	}
 }
 
@@ -126,6 +127,12 @@ Vec2d Collider::directionTo (Collider c) const
 	return 	directionTo(to);
 }
 
+void move(Vec2d dx)
+{
+	//should it be *this.centre+=dx ?
+	centre+=dx;
+	*this.clamping();
+}
 
 //booléens
 
