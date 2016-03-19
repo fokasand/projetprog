@@ -70,7 +70,7 @@ double Collider::distanceTo(Vec2d to) const
 	return directionTo(to).length();
 }
 
-double Collider::distanceTo(const Collider& c) const
+double Collider::distanceTo(Collider c) const
 {
 	return distanceTo(c.getPosition());
 }
@@ -127,7 +127,7 @@ Vec2d Collider::directionTo (Vec2d to) const
 }
 
 
-Vec2d Collider::directionTo (const Collider& c) const
+Vec2d Collider::directionTo (Collider c) const
 {
 	Vec2d to(c.getPosition());
 	return 	directionTo(to);
@@ -216,6 +216,3 @@ std::ostream& operator<<(std::ostream& sortie, const Collider& c)
 {
 return c.affiche(sortie);
 }
-
-
-
