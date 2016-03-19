@@ -32,7 +32,7 @@ class Collider
 	void clamping(Vec2d& c);
 	
 	// =
-	Collider operator= ( Collider b);
+	Collider& operator=(Collider b);
 	
 	// booléens
 	
