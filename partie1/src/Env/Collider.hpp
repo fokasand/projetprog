@@ -24,7 +24,7 @@ class Collider
 	//déplacement
 	Vec2d directionTo (const Collider& c) const;
 	Vec2d directionTo (Vec2d to) const;
-	void  move(Vec2d dx);
+	void move(const Vec2d& dx);
 	
 	
 	// distances
