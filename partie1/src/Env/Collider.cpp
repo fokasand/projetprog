@@ -70,6 +70,11 @@ double Collider::distanceTo(Vec2d to) const
 	return directionTo(to).length();
 }
 
+double Collider::distanceTo(const Collider& c) const
+{
+	return distanceTo(c.getPosition());
+}
+
 Vec2d Collider::directionTo (Vec2d to) const
 {
 	Vec2d from (centre);
@@ -138,7 +143,7 @@ void Collider::move(const Vec2d& dx)
 
 bool Collider::isColliderInside(const Collider& other) const
 {
-	if ((rayon >= other.getRadius()) and (other.distanceTo(getPosition())) <= (rayon-other.getRadius())) /*ici j hesite entre distanceTo(other.getPosition()) et other.distanceTo(*this), 
+	if ((rayon >= other.getRadius()) and ((distanceTo(other)) <= (rayon-other.getRadius()))) /*ici j hesite entre distanceTo(other.getPosition()) et other.distanceTo(*this), 
 	je pense que les 2 marchent mais si jamais essaye l'autre. j'ai pas pu tester sans la fonction distanceTo */
 	{
 		return true; // si other est dans l'instance courante
