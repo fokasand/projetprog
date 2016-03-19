@@ -127,7 +127,7 @@ Vec2d Collider::directionTo (Collider c) const
 	return 	directionTo(to);
 }
 
-void move(Vec2d dx)
+void move(const Vec2d& dx)
 {
 	//should it be *this.centre+=dx ?
 	centre+=dx;
