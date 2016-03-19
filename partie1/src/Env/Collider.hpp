@@ -23,13 +23,16 @@ class Collider
 			
 	//déplacement
 	Vec2d directionTo (Collider c) const;
+	Vec2d directionTo (Vec2d to) const
+	void  move(Vec2d dx);
+	
 	
 	// distances
-	Vec2d directionTo (Vec2d to) const;
+	;
 	double distanceTo(Vec2d to) const;
 	
 	//clamping
-	void clamping(Vec2d& c);
+	void clamping();
 	
 	// =
 	Collider& operator=(Collider b);
@@ -44,6 +47,7 @@ class Collider
 	bool operator>(const Vec2d& point);
 	bool operator>(const Collider& body2);
 	bool operator|(const Collider& body2);
+	Collider& operator+=(const Collider& b); // I4m not sure if return type should be Collider or Collider&
 	
 	//aide pour <<
 	
