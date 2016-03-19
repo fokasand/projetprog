@@ -107,6 +107,13 @@ Vec2d Collider::directionTo (Vec2d to) const
 		}
 	}
 	
+	delete dimension;
+	delete coordinatei;
+	delete coordinatef;
+	dimension=nullptr;
+	coordinatei=nullptr;
+	coordinatef=nullptr;
+	
 	Vec2d result (((from.x)-(to.x)),((from.y)-(to.y)));
 	
 	return result;
