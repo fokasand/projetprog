@@ -9,8 +9,10 @@ using namespace std;
 class Collider 
 {
 	private :
-			Vec2d centre;
-			double rayon;
+	
+	Vec2d centre;
+	double rayon;
+	
 	public :
 	
 	friend void swap(Collider& a, Collider& b);
@@ -28,7 +30,6 @@ class Collider
 	Vec2d directionTo (Vec2d to) const;
 	void move(const Vec2d& dx);
 	
-	
 	// distances
 	
 	double distanceTo(Vec2d to) const;
@@ -36,22 +37,16 @@ class Collider
 	
 	//clamping
 	void clamping();
-	
-	// =
-	Collider& operator=(Collider b);
-	
+
 	// booléens
 	
 	bool isColliderInside(const Collider& other) const;
 	bool isColliding(const Collider& other) const;
 	bool isPointInside(const Vec2d& point) const;
 	
-	//opérateurs
+	// =
 	
-	bool operator>(const Vec2d& point) const;
-	bool operator>(const Collider& body2) const;
-	bool operator|(const Collider& body2) const;
-	Collider& operator+=(const Vec2d& b); // I4m not sure if return type should be Collider or Collider&
+	Collider& operator=(Collider b);
 	
 	//aide pour <<
 	
@@ -59,7 +54,14 @@ class Collider
 
 };
 
+//opérateurs externes:
 std::ostream& operator<<(std::ostream& sortie, const Collider& c);
+bool operator>(const Collider& body, const Vec2d& point);
+bool operator>(const Collider& body1,const Collider& body2);
+bool operator|(const Collider& body1,const Collider& body2);
+void operator+=(Collider& c,const Vec2d& b); 
+
+//aide pour =
 void swap(Collider& a, Collider& b);
 
 
