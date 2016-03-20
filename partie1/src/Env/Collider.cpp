@@ -120,9 +120,9 @@ Vec2d Collider::directionTo (Vec2d to) const
 	coordinatei=nullptr;
 	coordinatef=nullptr;
 	
-	Vec2d result (((from.x)-(to.x)),((from.y)-(to.y)));
 	
-	return result;
+	return to ; // for some reason the coordinates of to haven't been changed by the pointers within the function, 
+		// to should've been updated
 }
 
 
