@@ -26,8 +26,7 @@ Collider::Collider (const Collider& a) :
  {	
  	Vec2d worldSize = getApp().getWorldSize();
  	double width = worldSize.x;
- 	double height= worldSize.y; //on en a pas vraiment besoin si ? ben si banane sinon il sait pas ce que c'est width et height.
- 					// mais ça sert a rien de continuer à utiliser worldSize dans les calculs alors utiliser soit que height et width ou woldSize.x ou y direct
+ 	double height= worldSize.y; //je mettraitp lutot width et height partout pour pouvoir changer les valeurs facilement, independament de worldSize
 					// oui c'est vrai on peut mettre que worldsize dans les  comparateurs je pense
 	while (centre.x> width)
  	{
