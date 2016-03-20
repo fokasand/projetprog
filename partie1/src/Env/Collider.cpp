@@ -164,29 +164,9 @@ bool Collider::isPointInside(const Vec2d& poin) const
 	}
 }
 
-//opérateurs:
+//opérateurs internes:
 
-Collider& Collider::operator+=(const Vec2d& b)
-{	
-	move(b);
-	return *this;
-}
-
-bool Collider::operator>(const Collider& body2) const
-{
-	return isColliderInside(body2);
-}
-
-bool Collider::operator|(const Collider& body2) const
-{
-	return isColliding(body2);
-}
-
-bool Collider::operator>(const Vec2d& point) const
-{
-	return isPointInside(point);
-}
-
+// =
 Collider& Collider:: operator=(Collider b)
 {
 	swap(*this,b);
@@ -199,8 +179,9 @@ void swap(Collider& a, Collider& b)
 	std::swap(a.centre.y,b.centre.y);
 	std::swap(a.rayon,b.rayon);
 }
+//opérateurs externes:
 
-//opérateur <<
+// <<
 
 std::ostream& Collider::affiche(std::ostream& sortie) const
 {
@@ -212,4 +193,26 @@ return sortie;
 std::ostream& operator<<(std::ostream& sortie, const Collider& c)
 {
 return c.affiche(sortie);
+}
+
+//booléens
+
+bool operator|(const Collider& body1,const Collider& body2)
+{
+	return body1.isColliding(body2);
+}
+ bool operator>(const Collider& body1,const Collider& body2)
+{
+	return body1.isColliderInside(body2);
+}
+bool operator>(const Collider& body, const Vec2d& point)
+{
+	return body.isPointInside(point);
+}
+
+//+=
+
+void operator+=(Collider& c,const Vec2d& b)
+{	
+	c.move(b);
 }
