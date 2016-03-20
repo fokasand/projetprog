@@ -26,7 +26,8 @@ Collider::Collider (const Collider& a) :
  {	
  	Vec2d worldSize = getApp().getWorldSize();
  	double width = worldSize.x;
- 	double height= worldSize.y; //je mettraitp lutot width et height partout pour pouvoir changer les valeurs facilement, independament de worldSize
+ 	double height= worldSize.y; //on en a pas vraiment besoin si ? ben si banane sinon il sait pas ce que c'est width et height.
+ 					// mais ça sert a rien de continuer à utiliser worldSize dans les calculs alors utiliser soit que height et width ou woldSize.x ou y direct
 					// oui c'est vrai on peut mettre que worldsize dans les  comparateurs je pense
 	while (centre.x> width)
  	{
@@ -88,48 +89,38 @@ Vec2d Collider::directionTo (Vec2d to) const
 	for (int i(0); i <2 ; i++)
 	{
 		if (i==0)
-		{	//*dimension= new double(worldSize.x); Set all pointer to x coordinates
+		{	//dimension= new double(worldSize.x); Set all pointer to x coordinates
 			dimension = &width;
 			coordinatei= &from.x;
 			coordinatef= &to.x;
-			
 		}
-		
 		if (i==1)
 		{	// Set all pointer to y coordinates
 			dimension = &height;
 			coordinatei = &from.y;
 			coordinatef = &to.y;	
-		}
-		
+		}	
 		if ((*coordinatei-*coordinatef)<(-*dimension/2)) //test si la coordonnee pointee de to n'est pas trop grande
 		{						// si oui on la decremente de la taille du monde
-			*coordinatef-=*dimension;
+			*coordinatef= *coordinatef-*dimension;
 		}
 		if ((*coordinatei-*coordinatef)>(*dimension/2)) //test si la coordonnee pointee de to n'est pas trop petite
 								// si oui on l'incremente de la taille du monde
 		{
-			*coordinatef+=*dimension;
+			*coordinatef= *coordinatef+*dimension;
 		}
 	}
-	
-	delete dimension;
-	delete coordinatei;
-	delete coordinatef;
 	dimension=nullptr;
 	coordinatei=nullptr;
 	coordinatef=nullptr;
 	
-	
-	return to ; // for some reason the coordinates of to haven't been changed by the pointers within the function, 
-		// to should've been updated
+	Vec2d result (((to.x)-(from.x)),((to.y)-(from.y))); 
+	return result;
 }
-
 
 Vec2d Collider::directionTo (Collider c) const
 {
-	Vec2d to(c.getPosition());
-	return 	directionTo(to);
+	return 	directionTo(c.getPosition());
 }
 
 void Collider::move(const Vec2d& dx)
@@ -142,8 +133,7 @@ void Collider::move(const Vec2d& dx)
 
 bool Collider::isColliderInside(const Collider& other) const
 {
-	if ((rayon >= other.getRadius()) and ((distanceTo(other)) <= (rayon-other.getRadius()))) /*ici j hesite entre distanceTo(other.getPosition()) et other.distanceTo(*this), 
-	je pense que les 2 marchent mais si jamais essaye l'autre. j'ai pas pu tester sans la fonction distanceTo */
+	if ((rayon >= other.getRadius()) and ((distanceTo(other)) <= (rayon-other.getRadius())))
 	{
 		return true; // si other est dans l'instance courante
 	} else {
@@ -151,11 +141,12 @@ bool Collider::isColliderInside(const Collider& other) const
 	}
 }
 
+
 bool Collider::isColliding(const Collider& other) const
 {
-	if ((distanceTo(other.getPosition())) <= (rayon+other.getRadius()))
+	if ((distanceTo(other)) <= (rayon+other.getRadius()))
 	{
-		return true;
+		return true; // si other est en collision avec l'instance courante
 	} else
 	{
 		return false;
@@ -200,6 +191,12 @@ Collider& Collider:: operator=(Collider b)
 {
 	std::swap(*this,b);
 	return *this;
+}
+
+void swap(Collider& a, Collider& b)
+{
+	std::swap(a.centre,b.centre);
+	std::swap(a.rayon,b.rayon);
 }
 
 //opérateur <<
