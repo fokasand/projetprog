@@ -13,6 +13,8 @@ class Collider
 			double rayon;
 	public :
 	
+	friend void swap(Collider& a, Collider& b);
+	
 	//constructeur, verifier que r positif ou nul,
 	Collider (const Vec2d& c,const double& r);
 	Collider (const Collider& a);
@@ -58,7 +60,7 @@ class Collider
 };
 
 std::ostream& operator<<(std::ostream& sortie, const Collider& c);
-
+void swap(Collider& a, Collider& b);
 
 
 #endif
