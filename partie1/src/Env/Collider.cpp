@@ -189,13 +189,14 @@ bool Collider::operator>(const Vec2d& point) const
 
 Collider& Collider:: operator=(Collider b)
 {
-	std::swap(*this,b);
+	swap(*this,b);
 	return *this;
 }
 
 void swap(Collider& a, Collider& b)
 {
-	std::swap(a.centre,b.centre);
+	std::swap(a.centre.x,b.centre.x);
+	std::swap(a.centre.y,b.centre.y);
 	std::swap(a.rayon,b.rayon);
 }
 
