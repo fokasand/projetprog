@@ -5,7 +5,7 @@
 #include "Utility/Vertex.hpp"
 
 //initialisation ensemble de textures
-void World::reloadCacheTructure()
+void World::reloadCacheStructure()
 
 {	//vector contenant l'ensemble de sommets
 	vector<sf::Vertex> Vertexes (generateVertexes(getTerrain()["textures"],nbCell ,cellSize));
