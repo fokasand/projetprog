@@ -37,12 +37,14 @@ void World::updateCache()
 	renderingCache_.display();
 }
 
+//acces rapide aux configurations
 j::Value getTerrain()
 {
 	return (getAppConfig()["simulation"]["world"]);
 }
 
-void World::reset(bool regenerate=1)
+//reinitialiser le terrain
+void World::reset(bool regenerate)
 {
 		if (regenerate == 1)
 		{
@@ -57,6 +59,7 @@ void World::reset(bool regenerate=1)
 		}
 }
 
+//set les parametres de la grille
 void World::reloadConfig()
 {
 	nbCells = getTerrain()["cells"].toInt();
