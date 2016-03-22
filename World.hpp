@@ -5,7 +5,7 @@ class World{};
 
 //draw
 
-World::drawOn(sf::RenderTarget& target);
+void World::drawOn(sf::RenderTarget& target);
 
 #endif
 
