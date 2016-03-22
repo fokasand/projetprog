@@ -4,13 +4,19 @@
 class World{
 	private :
 	//variable regroupant la texture totale à afficher
-			 sf::RenderTexture renderingCache_
+			 sf::RenderTexture renderingCache_;
+	//sommets liés à chaque texture
+			 vector <sf::Vertex> grassVertexes_, 
+				   		waterVertexes_,
+						rockVertexes_;
 	public:
 	
 	};
 
-//draw
+//initialisation ensembles de textures
+void reloadCacheTructure();
 
+//draw
 void drawOn(sf::RenderTarget& target);
 
 #endif
