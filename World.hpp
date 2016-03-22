@@ -1,6 +1,8 @@
 #ifndef WORLD_H
 #define WORLD_H
 
+enum class Kind : short { herbe, eau, roche};
+
 class World{
 	private :
 			//variable regroupant la texture totale à afficher
