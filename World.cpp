@@ -8,7 +8,7 @@
 void World::reloadCacheStructure()
 
 {	//vector contenant l'ensemble de sommets
-	vector<sf::Vertex> Vertexes (generateVertexes(getTerrain()["textures"],nbCell ,cellSize));
+	std::vector<sf::Vertex> Vertexes (generateVertexes(getTerrain()["textures"],nbCells ,cellSize));
 	
 	//initialisation à tous les sommets de la grille
 	grassVertexes_=Vertexes;
@@ -16,38 +16,33 @@ void World::reloadCacheStructure()
 	rockVertexes_=Vertexes;
 	
 	//initialisation de la texture
-	renderingCache_.create(nbCell*cellSize, nbCell*cellSize);
+	renderingCache_.create(nbCells*cellSize, nbCells*cellSize);
 }
 
-//mettre a jour rendering_Cache
-void World::updateCache()
-{
-	renderingCache_ .clear();
-	
-	renderingCache_.display();
-}
-
+//fonction draw
 void World::drawOn(sf::RenderTarget& target)
 {
 	sf::Sprite cache(renderingCache_.getTexture());
 	target.draw(cache);
 }
 
+//mettre a jour rendering_Cache
+void World::updateCache()
+{
+	renderingCache_ .clear();
+	sf::RenderStates rs;
+  auto textures = getTerrain()["textures"];
+  rs.texture = &getAppTexture(textures["rock"].toString()); // ici pour la texture liée à la roche
+  renderingCache_.draw(rockVertexes_.data(), rockVertexes_.size(), sf::Quads, rs);
+	renderingCache_.display();
+}
+
 j::Value getTerrain()
 {
 	return (getAppConfig()["simulation"]["world"]);
 }
- 
-void World::reloadConfig()
-{
-	nbCells = getTerrain()["cells"].toInt();
-	cellSize = getTerrain()["size"].toDouble();
-	
-	cells_ = std::vector<Kind> (nbCells*nbCells, Kind::roche);
-}
 
-
-void reset(bool regenerate=1)
+void World::reset(bool regenerate=1)
 {
 		if (regenerate == 1)
 		{
@@ -60,4 +55,12 @@ void reset(bool regenerate=1)
 			reloadCacheStructure();
 			updateCache();
 		}
+}
+
+void World::reloadConfig()
+{
+	nbCells = getTerrain()["cells"].toInt();
+	cellSize = getTerrain()["size"].toDouble();
+	
+	cells_ = std::vector<Kind> (nbCells*nbCells, Kind::roche);
 }
