@@ -7,9 +7,14 @@ class World{
 			sf::RenderTexture renderingCache_;
 			
 			//sommets liés à chaque texture
-			 vector <sf::Vertex> grassVertexes_, 
-								waterVertexes_,
-								 rockVertexes_;
+			std:: vector <sf::Vertex> grassVertexes_, 
+			waterVertexes_,
+			rockVertexes_;
+			
+			std::vector<Kind> cells_;
+			int nbCells;
+			float cellSize;
+			
 	public:
 			
 			//initialisation ensembles de textures
@@ -17,8 +22,11 @@ class World{
 
 			//draw
 			void drawOn(sf::RenderTarget& target);
+			// reload
+			void reloadConfig();
 	};
 
+j::Value getTerrain();
 
 #endif
 
