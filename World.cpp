@@ -3,7 +3,9 @@
 #include <World.hpp>
 #include <iostream>
 
-void drawOn(sf::RenderTarget& target)
+void World::drawOn(sf::RenderTarget& target)
 {
-
+	sf::Sprite cache(renderingCache_.getTexture());
+	target.draw(cache);
 }
+
