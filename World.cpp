@@ -7,7 +7,7 @@
 void World::reloadCacheTructure()
 
 {	//vector contenant l'ensemble de sommets
-	vector<sf::Vertex> Vertexes (generateVertexes(getTerrain["textures"],nbCell ,cellSize));
+	vector<sf::Vertex> Vertexes (generateVertexes(getTerrain()["textures"],nbCell ,cellSize));
 	
 	//initialisation à tous les sommets de la grille
 	grassVertexes_=Vertexes;
