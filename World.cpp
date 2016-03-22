@@ -24,3 +24,8 @@ void World::drawOn(sf::RenderTarget& target)
 	target.draw(cache);
 }
 
+j::Value getTerrain()
+{
+	return (getAppConfig()["simulation"]["world"]);
+}
+ 
