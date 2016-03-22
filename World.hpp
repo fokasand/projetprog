@@ -20,7 +20,7 @@ class World{
 	public:
 			
 			//initialisation ensembles de textures
-			void reloadCacheTructure();
+			void reloadCacheStructure();
 
 			//draw
 			void drawOn(sf::RenderTarget& target);
@@ -29,6 +29,8 @@ class World{
 			
 			//mettre a jour rendering_Cache
 			void updateCache();
+			//reset
+			void reset(bool regenerate=1);
 	};
 
 j::Value getTerrain();
