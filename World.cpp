@@ -1,7 +1,8 @@
 #include <Application.hpp>
 #include <SFML/Graphics.hpp>
-#include <World.hpp>
+#include "World.hpp"
 #include <iostream>
+#include "Utility/Vertex.hpp"
 
 //initialisation ensemble de textures
 void World::reloadCacheTructure()
