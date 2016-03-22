@@ -29,3 +29,10 @@ j::Value getTerrain()
 	return (getAppConfig()["simulation"]["world"]);
 }
  
+void World::reloadConfig()
+{
+	nbCells = getTerrain()["cells"].toInt();
+	cellSize = getTerrain()["size"].toDouble();
+	
+	cells_ = std::vector<Kind> (nbCells*nbCells, Kind::roche);
+}
