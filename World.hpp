@@ -2,38 +2,38 @@
 #define WORLD_H
 
 enum class Kind : short { herbe, eau, roche};
-
 class World{
 	private :
 			//variable regroupant la texture totale à afficher
 			sf::RenderTexture renderingCache_;
 			
 			//sommets liés à chaque texture
-			std:: vector <sf::Vertex> grassVertexes_, 
-			waterVertexes_,
-			rockVertexes_;
-			
+			 std::vector <sf::Vertex> grassVertexes_, 
+								waterVertexes_,
+								 rockVertexes_;
+								 
 			std::vector<Kind> cells_;
 			int nbCells;
 			float cellSize;
-			
 	public:
+			//mettre a jour rendering_Cache
+			void updateCache();
 			
 			//initialisation ensembles de textures
 			void reloadCacheStructure();
 
 			//draw
 			void drawOn(sf::RenderTarget& target);
-			// reload
+			
+			//reload
 			void reloadConfig();
 			
-			//mettre a jour rendering_Cache
-			void updateCache();
 			//reset
-			void reset(bool regenerate=1);
+			void reset(bool regenerate=true);
 	};
-
+	
 j::Value getTerrain();
+
 
 #endif
 
