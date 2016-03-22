@@ -19,6 +19,14 @@ void World::reloadCacheTructure()
 	renderingCache_.create(nbCell*cellSize, nbCell*cellSize);
 }
 
+//mettre a jour rendering_Cache
+void World::updateCache()
+{
+	renderingCache_ .clear();
+	
+	renderingCache_.display();
+}
+
 void World::drawOn(sf::RenderTarget& target)
 {
 	sf::Sprite cache(renderingCache_.getTexture());
