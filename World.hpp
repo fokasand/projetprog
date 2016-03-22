@@ -11,7 +11,7 @@ class World{
 
 //draw
 
-void World::drawOn(sf::RenderTarget& target);
+void drawOn(sf::RenderTarget& target);
 
 #endif
 
