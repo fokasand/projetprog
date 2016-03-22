@@ -45,3 +45,19 @@ void World::reloadConfig()
 	
 	cells_ = std::vector<Kind> (nbCells*nbCells, Kind::roche);
 }
+
+
+void reset(bool regenerate=1)
+{
+		if (regenerate == 1)
+		{
+			// ajouter regeneration aléatoire du terrain
+			regenerate = 0;
+		}
+		if (regenerate == 0)
+		{
+			reloadConfig();
+			reloadCacheStructure();
+			updateCache();
+		}
+}
