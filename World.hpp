@@ -26,6 +26,9 @@ class World{
 			void drawOn(sf::RenderTarget& target);
 			// reload
 			void reloadConfig();
+			
+			//mettre a jour rendering_Cache
+			void updateCache();
 	};
 
 j::Value getTerrain();
