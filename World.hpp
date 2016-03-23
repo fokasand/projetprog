@@ -13,8 +13,8 @@ class World{
 								 rockVertexes_;
 								 
 			std::vector<Kind> cells_;
-			int nbCells;
-			float cellSize;
+			int nbCells_;
+			float cellSize_;
 	public:
 			//mettre a jour rendering_Cache
 			void updateCache();
