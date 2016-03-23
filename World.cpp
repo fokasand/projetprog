@@ -29,21 +29,18 @@ void World::drawOn(sf::RenderTarget& target)
 //mettre a jour rendering_Cache
 void World::updateCache()
 {
-	renderingCache_ .clear();
+	renderingCache_.clear();
 	sf::RenderStates rs;
-  auto textures = getTerrain()["textures"];
-  rs.texture = &getAppTexture(textures["rock"].toString()); // ici pour la texture liée à la roche
+  rs.texture = &getAppTexture(getTerrain()["textures"]["rock"].toString()); // ici pour la texture liée à la roche
   renderingCache_.draw(rockVertexes_.data(), rockVertexes_.size(), sf::Quads, rs);
 	renderingCache_.display();
 }
 
-//acces rapide aux configurations
 j::Value getTerrain()
 {
-	return (getAppConfig()["simulation"]["world"]);
+	return getAppConfig()["simulation"]["world"];
 }
 
-//reinitialiser le terrain
 void World::reset(bool regenerate)
 {
 		if (regenerate == 1)
@@ -59,11 +56,11 @@ void World::reset(bool regenerate)
 		}
 }
 
-//set les parametres de la grille
+
 void World::reloadConfig()
 {
 	nbCells = getTerrain()["cells"].toInt();
-	cellSize = getTerrain()["size"].toDouble();
+	cellSize = getTerrain()["size"].toDouble() / nbCells;
 	
 	cells_ = std::vector<Kind> (nbCells*nbCells, Kind::roche);
 }
