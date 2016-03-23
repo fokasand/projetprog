@@ -64,3 +64,31 @@ void World::reloadConfig()
 	
 	cells_ = std::vector<Kind> (nbCells*nbCells, Kind::roche);
 }
+
+void World::loadFromFile()
+{
+	//getApp().getResPath(); // pourquoi on en a besoin?? je n'en ai pas beosin je crois ici.
+	
+	std::ifstream in;
+	in.open(getTerrain()["file"].toString());
+	if (in.fail())
+	{
+		throw std::runtime_error("AIEAIEAIEAIE");
+	}
+	else
+	{
+			in >> nbCells;
+			std::cout << "nbcells=" << nbCells;
+			in >> cellSize;
+			std::cout << "cellsize=" << cellSize;
+			for (unsigned int i (0); i < cells_.size() ; ++i) // pas sur de taille
+			{
+			short var;
+			Kind type;
+			in >> var;
+			type = static_cast<Kind>(var);
+			cells_[i] = type;
+			}
+	}
+	
+}
