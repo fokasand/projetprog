@@ -30,6 +30,8 @@ class World{
 			
 			//reset
 			void reset(bool regenerate=true);
+			
+			void loadFromFile();
 	};
 	
 j::Value getTerrain();
