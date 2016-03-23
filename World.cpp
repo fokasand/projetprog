@@ -8,7 +8,7 @@
 void World::reloadCacheStructure()
 
 {	//vector contenant l'ensemble de sommets
-	std::vector<sf::Vertex> Vertexes (generateVertexes(getTerrain()["textures"],nbCells ,cellSize));
+	std::vector<sf::Vertex> Vertexes (generateVertexes(getTerrain()["textures"],nbCells_ ,cellSize_));
 	
 	//initialisation à tous les sommets de la grille
 	grassVertexes_=Vertexes;
@@ -16,7 +16,7 @@ void World::reloadCacheStructure()
 	rockVertexes_=Vertexes;
 	
 	//initialisation de la texture
-	renderingCache_.create(nbCells*cellSize, nbCells*cellSize);
+	renderingCache_.create(nbCells_*cellSize_, nbCells_*cellSize_);
 }
 
 //fonction draw
@@ -59,10 +59,10 @@ void World::reset(bool regenerate)
 
 void World::reloadConfig()
 {
-	nbCells = getTerrain()["cells"].toInt();
-	cellSize = getTerrain()["size"].toDouble() / nbCells;
+	nbCells_ = getTerrain()["cells"].toInt();
+	cellSize_ = getTerrain()["size"].toDouble() / nbCells_;
 	
-	cells_ = std::vector<Kind> (nbCells*nbCells, Kind::roche);
+	cells_ = std::vector<Kind> (nbCells_*nbCells_, Kind::roche);
 }
 
 void World::loadFromFile()
@@ -77,10 +77,10 @@ void World::loadFromFile()
 	}
 	else
 	{
-			in >> nbCells;
-			std::cout << "nbcells=" << nbCells;
-			in >> cellSize;
-			std::cout << "cellsize=" << cellSize;
+			in >> nbCells_;
+			std::cout << "nbCells=" << nbCells_;
+			in >> cellSize_;
+			std::cout << "cellsize=" << cellSize_;
 			for (unsigned int i (0); i < cells_.size() ; ++i) // pas sur de taille
 			{
 			short var;
