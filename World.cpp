@@ -8,7 +8,7 @@
 void World::reloadCacheStructure()
 
 {	//vector contenant l'ensemble de sommets
-	std::vector<sf::Vertex> Vertexes (generateVertexes(getTerrain()["textures"],nbCells_ ,cellSize_));
+	std::vector<sf::Vertex> Vertexes (generateVertexes(getTerrain()["textures"],nbCells ,cellSize));
 	
 	//initialisation à tous les sommets de la grille
 	grassVertexes_=Vertexes;
@@ -16,7 +16,7 @@ void World::reloadCacheStructure()
 	rockVertexes_=Vertexes;
 	
 	//initialisation de la texture
-	renderingCache_.create(nbCells_*cellSize_, nbCells_*cellSize_);
+	renderingCache_.create(nbCells*cellSize, nbCells*cellSize);
 }
 
 //fonction draw
@@ -31,8 +31,49 @@ void World::updateCache()
 {
 	renderingCache_.clear();
 	sf::RenderStates rs;
-  rs.texture = &getAppTexture(getTerrain()["textures"]["rock"].toString()); // ici pour la texture liée à la roche
-  renderingCache_.draw(rockVertexes_.data(), rockVertexes_.size(), sf::Quads, rs);
+	rs.texture = &getAppTexture(getTerrain()["textures"]["rock"].toString()); // ici pour la texture liée à la roche
+	renderingCache_.draw(rockVertexes_.data(), rockVertexes_.size(), sf::Quads, rs);
+	rs.texture = &getAppTexture(getTerrain()["textures"]["water"].toString()); // ici pour la texture liée à la eau
+	renderingCache_.draw(waterVertexes_.data(), waterVertexes_.size(), sf::Quads, rs);
+	rs.texture = &getAppTexture(getTerrain()["textures"]["grass"].toString()); // ici pour la texture liée à l'herbe
+	renderingCache_.draw(grassVertexes_.data(), grassVertexes_.size(), sf::Quads, rs);
+	
+	
+	for (auto& cellule : cells_)
+	{	
+			if (cellule == Kind::water)
+			{
+				 std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(cellule.x, cellule.y, nbCells );
+				 
+				 for (int i = 0; i <4 ; i++)
+				 {
+					 rockVertexes_[indexes_for_cell[i]].color.a = 0;
+					 grassVertexes_[indexes_for_cell[i]].color.a = 0;
+					 waterVertexes_[indexes_for_cell[i]].color.a = 255;
+				 }
+				 
+			}
+			
+			if (cellule == Kind::rock)
+			{
+				 std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(cellule.x, cellule.y, nbCells ); //what are x and y ?
+				 for (int i = 0; i <4 ; i++)
+				 {
+					 waterVertexes_[indexes_for_cell[i]].color.a = 0;
+					 grassVertexes_[indexes_for_cell[i]].color.a = 0;
+					 rockVertexes_[indexes_for_cell[i]].color.a = 255;
+				 }
+			} else {
+						std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(cellule.x, cellule.y, nbCells );
+				 for (int i = 0; i <4 ; i++)
+				 {
+					 waterVertexes_[indexes_for_cell[i]].color.a = 0;
+					 rockVertexes_[indexes_for_cell[i]].color.a = 0;
+					 grassVertexes_[indexes_for_cell[i]].color.a = 255;
+				 }
+				}
+		}
+	
 	renderingCache_.display();
 }
 
@@ -59,10 +100,10 @@ void World::reset(bool regenerate)
 
 void World::reloadConfig()
 {
-	nbCells_ = getTerrain()["cells"].toInt();
-	cellSize_ = getTerrain()["size"].toDouble() / nbCells_;
+	nbCells = getTerrain()["cells"].toInt();
+	cellSize = getTerrain()["size"].toDouble() / nbCells;
 	
-	cells_ = std::vector<Kind> (nbCells_*nbCells_, Kind::roche);
+	cells_ = std::vector<Kind> (nbCells*nbCells, Kind::rock);
 }
 
 void World::loadFromFile()
@@ -77,10 +118,10 @@ void World::loadFromFile()
 	}
 	else
 	{
-			in >> nbCells_;
-			std::cout << "nbCells=" << nbCells_;
-			in >> cellSize_;
-			std::cout << "cellsize=" << cellSize_;
+			in >> nbCells;
+			std::cout << "nbcells=" << nbCells;
+			in >> cellSize;
+			std::cout << "cellsize=" << cellSize;
 			for (unsigned int i (0); i < cells_.size() ; ++i) // pas sur de taille
 			{
 			short var;
