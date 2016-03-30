@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "World.hpp"
 #include <iostream>
+#include <fstream>
 #include "Utility/Vertex.hpp"
 
 //initialisation ensemble de textures
@@ -38,12 +39,15 @@ void World::updateCache()
 	rs.texture = &getAppTexture(getTerrain()["textures"]["grass"].toString()); // ici pour la texture liée à l'herbe
 	renderingCache_.draw(grassVertexes_.data(), grassVertexes_.size(), sf::Quads, rs);
 	
+	int y_coord ;
 	
-	for (auto& cellule : cells_)
+	for(size_t i(0); i<cells_.size(); i++)
+	
 	{	
-			if (cellule == Kind::water)
+			y_coord = i/nbCells;
+			if (cells_[i] == Kind::water)
 			{
-				 std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(cellule.x, cellule.y, nbCells );
+				 std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(i%nbCells, y_coord, nbCells ));
 				 
 				 for (int i = 0; i <4 ; i++)
 				 {
@@ -54,9 +58,9 @@ void World::updateCache()
 				 
 			}
 			
-			if (cellule == Kind::rock)
+			if (cells_[i] == Kind::rock)
 			{
-				 std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(cellule.x, cellule.y, nbCells ); //what are x and y ?
+				 std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(i%nbCells, y_coord, nbCells )); //what are x and y ?
 				 for (int i = 0; i <4 ; i++)
 				 {
 					 waterVertexes_[indexes_for_cell[i]].color.a = 0;
@@ -64,7 +68,7 @@ void World::updateCache()
 					 rockVertexes_[indexes_for_cell[i]].color.a = 255;
 				 }
 			} else {
-						std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(cellule.x, cellule.y, nbCells );
+						std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(i%nbCells, y_coord, nbCells ));
 				 for (int i = 0; i <4 ; i++)
 				 {
 					 waterVertexes_[indexes_for_cell[i]].color.a = 0;
