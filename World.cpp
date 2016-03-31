@@ -37,8 +37,8 @@ void World::updateCache()
 	sf::RenderStates rsherbe;
 	sf::RenderStates rsroche;
 	rseau.texture = &getAppTexture(getTerrain()["textures"]["water"].toString()); // ici pour la texture liée à la eau
-	rsherbe.texture = &getAppTexture(getTerrain()["textures"]["rock"].toString()); // ici pour la texture liée à la roche
-	rsroche.texture = &getAppTexture(getTerrain()["textures"]["grass"].toString()); // ici pour la texture liée à l'herbe
+	rsroche.texture = &getAppTexture(getTerrain()["textures"]["rock"].toString()); // ici pour la texture liée à la roche
+	rsherbe.texture = &getAppTexture(getTerrain()["textures"]["grass"].toString()); // ici pour la texture liée à l'herbe
 	
 	int y_coord ;
 	for(size_t j(0); j<cells_.size(); ++j)
