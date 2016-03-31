@@ -152,6 +152,5 @@ void World::loadFromFile()
 	}
 
 	reloadCacheStructure();
-	
 	updateCache();
 }
