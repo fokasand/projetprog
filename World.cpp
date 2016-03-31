@@ -123,11 +123,9 @@ void World::reloadConfig()
 void World::loadFromFile()
 {
 	reloadConfig();
-	//getApp().getResPath(); // pourquoi on en a besoin?? je n'en ai pas beosin je crois ici.
 	std::ifstream in;
-	std::string i ("res/world.map");
+	std::string i (getApp().getResPath()+getTerrain()["file"].toString());
 	in.open(i);
-	//getApp().getResPath()+getTerrain()["file"].toString() est "res/world.map"
 	if (in.fail())
 	{	
 		throw std::runtime_error("AIEAIEAIEAIE");
@@ -140,7 +138,7 @@ void World::loadFromFile()
 			in >> cellSize_;
 			in >> std::ws;
 			std::cout <<cells_.size() << std::endl;
-			for (size_t i (0); i < cells_.size() ; ++i) // pas sur de taille
+			for (size_t i (0); i < cells_.size() ; ++i)
 			{
 			in >> std::ws;
 			short var;
