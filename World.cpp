@@ -9,7 +9,7 @@
 void World::reloadCacheStructure()
 
 {	//vector contenant l'ensemble de sommets
-	std::vector<sf::Vertex> Vertexes (generateVertexes(getTerrain()["textures"],nbCells ,cellSize));
+	std::vector<sf::Vertex> Vertexes (generateVertexes(getTerrain()["textures"],nbCells_ ,cellSize_));
 	
 	//initialisation à tous les sommets de la grille
 	grassVertexes_=Vertexes;
@@ -17,7 +17,7 @@ void World::reloadCacheStructure()
 	rockVertexes_=Vertexes;
 	
 	//initialisation de la texture
-	renderingCache_.create(nbCells*cellSize, nbCells*cellSize);
+	renderingCache_.create(nbCells_*cellSize_, nbCells_*cellSize_);
 }
 
 //fonction draw
@@ -28,26 +28,27 @@ void World::drawOn(sf::RenderTarget& target)
 }
 
 //mettre a jour rendering_Cache
+
 void World::updateCache()
 {
 	renderingCache_.clear();
 	sf::RenderStates rs;
+	
 	rs.texture = &getAppTexture(getTerrain()["textures"]["rock"].toString()); // ici pour la texture liée à la roche
-	renderingCache_.draw(rockVertexes_.data(), rockVertexes_.size(), sf::Quads, rs);
+	
 	rs.texture = &getAppTexture(getTerrain()["textures"]["water"].toString()); // ici pour la texture liée à la eau
-	renderingCache_.draw(waterVertexes_.data(), waterVertexes_.size(), sf::Quads, rs);
+	
 	rs.texture = &getAppTexture(getTerrain()["textures"]["grass"].toString()); // ici pour la texture liée à l'herbe
-	renderingCache_.draw(grassVertexes_.data(), grassVertexes_.size(), sf::Quads, rs);
 	
 	int y_coord ;
 	
-	for(size_t i(0); i<cells_.size(); i++)
+	for(size_t j(0); j<cells_.size(); ++j)
 	
-	{	
-			y_coord = i/nbCells;
-			if (cells_[i] == Kind::water)
+		{	
+			y_coord = j/nbCells_;
+			if (cells_[j] == Kind::water)
 			{
-				 std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(i%nbCells, y_coord, nbCells ));
+				 std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(j%nbCells_, y_coord, nbCells_ ));
 				 
 				 for (int i = 0; i <4 ; i++)
 				 {
@@ -58,25 +59,32 @@ void World::updateCache()
 				 
 			}
 			
-			if (cells_[i] == Kind::rock)
+			if (cells_[j] == Kind::rock)
 			{
-				 std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(i%nbCells, y_coord, nbCells )); //what are x and y ?
+				 std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(j%nbCells_, y_coord, nbCells_ )); //what are x and y ?
+				 
 				 for (int i = 0; i <4 ; i++)
 				 {
 					 waterVertexes_[indexes_for_cell[i]].color.a = 0;
 					 grassVertexes_[indexes_for_cell[i]].color.a = 0;
 					 rockVertexes_[indexes_for_cell[i]].color.a = 255;
 				 }
-			} else {
-						std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(i%nbCells, y_coord, nbCells ));
+			} 
+			
+			if (cells_[j] == Kind::grass)
+			{
+				std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(j%nbCells_, y_coord, nbCells_ ));
 				 for (int i = 0; i <4 ; i++)
 				 {
 					 waterVertexes_[indexes_for_cell[i]].color.a = 0;
 					 rockVertexes_[indexes_for_cell[i]].color.a = 0;
 					 grassVertexes_[indexes_for_cell[i]].color.a = 255;
 				 }
-				}
+			}
 		}
+	renderingCache_.draw(grassVertexes_.data(), grassVertexes_.size(), sf::Quads, rs);
+	renderingCache_.draw(waterVertexes_.data(), waterVertexes_.size(), sf::Quads, rs);
+	renderingCache_.draw(rockVertexes_.data(), rockVertexes_.size(), sf::Quads, rs);
 	
 	renderingCache_.display();
 }
@@ -104,30 +112,35 @@ void World::reset(bool regenerate)
 
 void World::reloadConfig()
 {
-	nbCells = getTerrain()["cells"].toInt();
-	cellSize = getTerrain()["size"].toDouble() / nbCells;
+	nbCells_ = getTerrain()["cells"].toInt();
+	cellSize_ = getTerrain()["size"].toDouble() / nbCells_;
 	
-	cells_ = std::vector<Kind> (nbCells*nbCells, Kind::rock);
+	cells_ = std::vector<Kind> (nbCells_*nbCells_, Kind::rock);
 }
 
 void World::loadFromFile()
 {
+	reloadConfig();
 	//getApp().getResPath(); // pourquoi on en a besoin?? je n'en ai pas beosin je crois ici.
-	
 	std::ifstream in;
-	in.open(getTerrain()["file"].toString());
+	std::string i ("res/world.map");
+	in.open(i);
+	//getApp().getResPath()+getTerrain()["file"].toString() est "res/world.map"
 	if (in.fail())
-	{
+	{	
 		throw std::runtime_error("AIEAIEAIEAIE");
 	}
 	else
-	{
-			in >> nbCells;
-			std::cout << "nbcells=" << nbCells;
-			in >> cellSize;
-			std::cout << "cellsize=" << cellSize;
-			for (unsigned int i (0); i < cells_.size() ; ++i) // pas sur de taille
+	{		
+		
+			in >> nbCells_;
+			in >> std::ws;
+			in >> cellSize_;
+			in >> std::ws;
+			std::cout <<cells_.size() << std::endl;
+			for (size_t i (0); i < cells_.size() ; ++i) // pas sur de taille
 			{
+			in >> std::ws;
 			short var;
 			Kind type;
 			in >> var;
@@ -135,5 +148,8 @@ void World::loadFromFile()
 			cells_[i] = type;
 			}
 	}
-	
+	std::cout <<"hello3" << std::endl;
+	reloadCacheStructure();
+	std::cout <<"hello32" << std::endl;
+	updateCache();
 }
