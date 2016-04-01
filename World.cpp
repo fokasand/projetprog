@@ -28,68 +28,51 @@ void World::drawOn(sf::RenderTarget& target)
 }
 
 //mettre a jour rendering_Cache
-
 void World::updateCache()
 {
+	//nettoyage
 	renderingCache_.clear();
 	
-	sf::RenderStates rseau;
-	sf::RenderStates rsherbe;
-	sf::RenderStates rsroche;
-	rseau.texture = &getAppTexture(getTerrain()["textures"]["water"].toString()); // ici pour la texture liée à la eau
-	rsroche.texture = &getAppTexture(getTerrain()["textures"]["rock"].toString()); // ici pour la texture liée à la roche
-	rsherbe.texture = &getAppTexture(getTerrain()["textures"]["grass"].toString()); // ici pour la texture liée à l'herbe
+	//dessine les textures dans le cache	
+	colour("water",Kind::water,waterVertexes_);
+	colour("rock",Kind::rock,rockVertexes_);
+	colour("grass",Kind::grass,grassVertexes_);
 	
-	int y_coord ;
-	for(size_t j(0); j<cells_.size(); ++j)
+	//affichage du cache
+	renderingCache_.display();
+}
+
+void World::colour (std::string tex, Kind type, std::vector <sf::Vertex> vertex)
+{
+		sf::RenderStates rs;
+		rs.texture = &getAppTexture(getTerrain()["textures"][tex].toString()); // ici pour la texture liée à la tex
+		
+		//coordonnée entière pour y
+		int y_coord ;
+		//parcour chaque cellule une à une 
+		for(size_t j(0); j<cells_.size(); ++j)
 	
 		{	
 			y_coord = j/nbCells_;
+			//contient les coordonnées dans sommetrs
 			std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(j%nbCells_, y_coord, nbCells_ ));
 			
-			if (cells_[j] == Kind::water)
+			if (cells_[j] == type)
 			{
 	 
 				 for (int i = 0; i <4 ; i++)
 				 {
+					 //pour chaque sommet, colorie pour la texture appropriée (après les avoir toutes mises en transparence)
 					 rockVertexes_[indexes_for_cell[i]].color.a = 0;
 					 grassVertexes_[indexes_for_cell[i]].color.a = 0;
-					 waterVertexes_[indexes_for_cell[i]].color.a = 255;
-				 }
-				 
-				 
-			}
-			
-			if (cells_[j] == Kind::rock)
-			{	
-				 
-				 for (int i = 0; i <4 ; i++)
-				 {
 					 waterVertexes_[indexes_for_cell[i]].color.a = 0;
-					 grassVertexes_[indexes_for_cell[i]].color.a = 0;
-					 rockVertexes_[indexes_for_cell[i]].color.a = 255;
+					 vertex[indexes_for_cell[i]].color.a = 255;
 				 }
-				 
-			} 
-			
-			if (cells_[j] == Kind::grass)
-			{
-				
-				 for (int i = 0; i <4 ; i++)
-				 {
-					 waterVertexes_[indexes_for_cell[i]].color.a = 0;
-					 rockVertexes_[indexes_for_cell[i]].color.a = 0;
-					 grassVertexes_[indexes_for_cell[i]].color.a = 255;
-				 }
-				 
-			}
+			}	
 		}
-	renderingCache_.draw(waterVertexes_.data(), waterVertexes_.size(), sf::Quads, rseau);
-	renderingCache_.draw(rockVertexes_.data(), rockVertexes_.size(), sf::Quads, rsroche);
-	renderingCache_.draw(grassVertexes_.data(), grassVertexes_.size(), sf::Quads, rsherbe);
-	
-	renderingCache_.display();
-}
+	renderingCache_.draw(vertex.data(), vertex.size(), sf::Quads, rs);
+}	
+
 
 j::Value getTerrain()
 {
@@ -123,9 +106,11 @@ void World::reloadConfig()
 void World::loadFromFile()
 {
 	reloadConfig();
+	//getApp().getResPath(); // pourquoi on en a besoin?? je n'en ai pas beosin je crois ici.
 	std::ifstream in;
-	std::string i (getApp().getResPath()+getTerrain()["file"].toString());
+	std::string i ("res/world.map");
 	in.open(i);
+	//getApp().getResPath()+getTerrain()["file"].toString() est "res/world.map"
 	if (in.fail())
 	{	
 		throw std::runtime_error("AIEAIEAIEAIE");
@@ -138,7 +123,7 @@ void World::loadFromFile()
 			in >> cellSize_;
 			in >> std::ws;
 			std::cout <<cells_.size() << std::endl;
-			for (size_t i (0); i < cells_.size() ; ++i)
+			for (size_t i (0); i < cells_.size() ; ++i) // pas sur de taille
 			{
 			in >> std::ws;
 			short var;
