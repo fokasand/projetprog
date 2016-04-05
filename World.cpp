@@ -115,9 +115,6 @@ void World::reset(bool regenerate=true)
 			
 		reloadCacheStructure();
 		updateCache();
-		// ajouter regeneration aléatoire du terrain
-		std::cout << "oui" << std::endl;
-			
 	}
 		
 	else
@@ -179,30 +176,27 @@ void World::step()
 	for (size_t i(0); i < seeds_.size(); ++i)
 	{
 		//déplacement aléatoire des graines d'herbe ou eau qui ne se teleportent pas 
+		
 		if (seeds_ [i].nature == Kind::grass or (seeds_[i].nature == Kind::water and !bernoulli(getTerrain()["seeds"]["water teleport probability"].toDouble())))
 		{
-			sf::Vector2i nouvelles (uniform(-1,1),uniform(-1,1)); //truc intermediaire à enlever
+			sf::Vector2i nouvelles (seeds_[i].coord.x+uniform(-1,1),seeds_[i].coord.y+uniform(-1,1)); //truc intermediaire à enlever
 			
 			//remettre la graine dans la fenetre si elle depasse
-			if (nouvelles.x > nbCells_-1) // modulariser
-			{
-				nouvelles.x = nbCells_-1;
-			}
-			if (nouvelles.y > nbCells_-1)
-			{
-				nouvelles.y = nbCells_-1;
-			}
-			
+			debVect(nouvelles);
 			seeds_[i].coord = nouvelles;
 		} else {
+			std::cerr << "cas 2:  eau tele" << std::endl;
 			//la graine d'eau se teleporte 
 			sf::Vector2i nouvelles (uniform(0, nbCells_-1),uniform(0, nbCells_-1)); //à modulariser !! 
 			seeds_[i].coord = nouvelles ;
 		}
 		
+		//meme code que dans reset A MODULARISER permet de donner le kind de la graine à la cellule de memes coordonnées 
+			if (cells_[toUnid(seeds_[i].coord.x, seeds_[i].coord.y)] != Kind::water)
+			{
+				cells_[toUnid(seeds_[i].coord.x, seeds_[i].coord.y)] = seeds_[i].nature;
+			}
 	}
-	
-	
 }
 
 // i déplacements			
@@ -219,7 +213,6 @@ void World::steps( int i, bool regeneration = false)
 }
 
 //fonctions conversions:
-
 int World::toUnid (int x, int y)
 {
 	return (y-1)*nbCells_+x;
@@ -232,3 +225,34 @@ sf::Vector2i World::toBid( int x)
 	retour.y= x/nbCells_;
 	return retour;
 }
+
+//débordements de la fenetre d'affichage
+
+int World::debSup (int c)
+{
+	if (c> nbCells_)
+	{
+		c =nbCells_-1;
+	}
+	return c;
+}
+
+int World::debInf (int c)
+{
+	if (c < 0)
+	{
+		c =0;
+	}
+	return c;
+}
+
+void World::debVect (sf::Vector2i coord)
+{
+	debSup(coord.x);
+	debInf(coord.x);
+	
+	debSup(coord.y);
+	debInf(coord.y);
+	
+}
+
