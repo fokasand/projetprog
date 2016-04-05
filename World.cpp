@@ -212,6 +212,73 @@ void World::steps( int i, bool regeneration = false)
 	}
 }
 
+//MODULARISER LE PLURIEL : fonction repeat pour smooths et steps
+
+//smooth
+void World::smooth()
+{	auto copie_de_cells_ = cells_;
+	
+	for (int x(0); x < nbCells_; ++x)
+	{
+		for (int y(0); y<nbCells_; ++y)
+		{
+			int Someau(0);
+			int Somherbe(0);
+			int Somtot(0);
+			
+			for (int h(-1); h<1; ++h)
+			{
+				for (int v(-1); v<1; ++v)
+				{			
+					if (not((v==0) and (h==0)))
+					{
+						if ((x+h>=0) and(y+v>=0) and (y+v <=nbCells_-1) and ( x+h<= nbCells_-1))
+						{
+							if (cells_[toUnid(x+h,y+v)]== Kind::water)
+							{
+								++Someau;
+								++Somtot;
+							}
+							if (cells_[toUnid(x+h,y+v)]== Kind::grass)
+							{
+								++Somherbe;
+								++Somtot;
+							}
+							else 
+							{
+								++Somtot;
+							}
+						}
+					}				
+				}
+			}
+			double n(Somherbe/Somtot);
+			if (n <= getTerrain()["generation"]["smoothness"]["grass neighbourhood ratio"].toDouble())
+			{
+				cells_[toUnid(x,y)] = Kind::grass;
+			}
+			n=Someau/Somtot;
+			if (n <= getTerrain()["generation"]["smoothness"]["water neighbourhood ratio"].toDouble())
+			{
+				cells_[toUnid(x,y)] = Kind::water;
+			}
+		}
+	std::swap(cells_, copie_de_cells_);	
+	}
+}
+
+void World::smooths( int i, bool regeneration = false)
+{
+	for (int j(0); j < i; ++j)
+	{
+		smooth();
+	}
+	if (regeneration)
+	{
+		updateCache();
+	}
+}
+
 //fonctions conversions:
 int World::toUnid (int x, int y)
 {
