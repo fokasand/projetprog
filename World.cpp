@@ -172,6 +172,52 @@ void World::loadFromFile()
 	updateCache();
 }
 
+// mvt des graines
+//un déplacement
+void World::step()
+{
+	for (size_t i(0); i < seeds_.size(); ++i)
+	{
+		//déplacement aléatoire des graines d'herbe ou eau qui ne se teleportent pas 
+		if (seeds_ [i].nature == Kind::grass or (seeds_[i].nature == Kind::water and !bernoulli(getTerrain()["seeds"]["water teleport probability"].toDouble())))
+		{
+			sf::Vector2i nouvelles (uniform(-1,1),uniform(-1,1)); //truc intermediaire à enlever
+			
+			//remettre la graine dans la fenetre si elle depasse
+			if (nouvelles.x > nbCells_-1) // modulariser
+			{
+				nouvelles.x = nbCells_-1;
+			}
+			if (nouvelles.y > nbCells_-1)
+			{
+				nouvelles.y = nbCells_-1;
+			}
+			
+			seeds_[i].coord = nouvelles;
+		} else {
+			//la graine d'eau se teleporte 
+			sf::Vector2i nouvelles (uniform(0, nbCells_-1),uniform(0, nbCells_-1)); //à modulariser !! 
+			seeds_[i].coord = nouvelles ;
+		}
+		
+	}
+	
+	
+}
+
+// i déplacements			
+void World::steps( int i, bool regeneration = false)
+{
+	for (int j(0); j < i; ++j)
+	{
+		step();
+	}
+	if (regeneration)
+	{
+		updateCache();
+	}
+}
+
 //fonctions conversions:
 
 int World::toUnid (int x, int y)
