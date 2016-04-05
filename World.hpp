@@ -44,7 +44,7 @@ class World{
 			void reloadConfig();
 			
 			//reset
-			void reset(bool regenerate=true);
+			void reset(bool regenerate=false);
 			
 			//fichier
 			void loadFromFile();
