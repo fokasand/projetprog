@@ -55,6 +55,9 @@ class World{
 			
 			void steps( int i, bool regeneration);
 			
+			//conversions
+			int toUnid (int x, int y); // to unidimensional 
+			sf::Vector2i toBid( int x); // to bidimensional
 			
 	};
 	
