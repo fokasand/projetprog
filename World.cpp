@@ -61,7 +61,7 @@ void World::colour (std::string tex, Kind type, std::vector <sf::Vertex> vertex)
 			if (cells_[j] == type)
 			{
 	 
-				 for (int i = 0; i <4 ; i++)
+				 for (int i = 0; i <4 ; ++i)
 				 {
 					 //pour chaque sommet, colorie pour la texture appropriée (après les avoir toutes mises en transparence)
 					 rockVertexes_[indexes_for_cell[i]].color.a = 0;
@@ -80,36 +80,64 @@ j::Value getTerrain()
 	return getAppConfig()["simulation"]["world"];
 }
 
-void World::reset(bool regenerate)
+void World::reset(bool regenerate=true)
 {
-		if (regenerate == 1)
+	
+
+		if (regenerate)
 		{
+			reloadConfig();
+			
 			//initialisation de seeds_ avec les graines
 			for (int i(0); i < nbGrass_ ; ++i)
 			{
-				sf::Vertor2i coord (uniform(0, nbCells-1),uniform(0, nbCells-1));
-				Seed graine(coord, Kind::grass);
-				seeds_.push_back();
+				sf::Vector2i coord (uniform(0, nbCells_-1) ,uniform(0, nbCells_-1));
+				Seed graine = {coord,Kind::grass};
+				seeds_.push_back(graine);
 			}
 			
+			// d'abord grass puis water pour que l'eau ne soit pas écrasé si jamais il y avait 2 graines ayant les memes coordonnées
+			std::cout << "oui" << std::endl;
 			for (int i(0); i < nbWater_ ; ++i)
 			{
-				sf::Vertor2i coord (uniform(0, nbCells-1),uniform(0, nbCells-1));
-				Seed graine(coord, Kind::water);
-				seeds_.push_back();
+				sf::Vector2i coord (uniform(0, nbCells_-1),uniform(0, nbCells_-1));
+				Seed graine = {coord,Kind::water};
+				seeds_.push_back(graine);
+			}
+			
+			for (Seed graine : seeds_)
+			{
+				std::cout << graine.coord.x << std::endl;
+				std::cout << graine.coord.y << std::endl;
 			}
 			
 			for (size_t i(0); i <seeds_.size() ; ++i)
 			{
-				
+				if (cells_[toUnid(seeds_[i].coord.x, seeds_[i].coord.y)] != Kind::water)
+				{
+					cells_[toUnid(seeds_[i].coord.x, seeds_[i].coord.y)] = seeds_[i].nature;
+				}
 			}
 			
+			for (size_t i(0); i<cells_.size(); ++i)
+			{
+				if (cells_[i] == Kind::rock) {
+					std::cout << "r";}
+				if (cells_[i] == Kind::grass)
+				{ std:: cout <<"b";}
+				if (cells_[i] == Kind::water)
+				{ std::cout << "o";}
+			}
 			
+			reloadCacheStructure();
+			updateCache();
 			// ajouter regeneration aléatoire du terrain
-			//regenerate = 0;
+			std::cout << "oui" << std::endl;
+			
 		}
 		
-		if (regenerate == 0)
+		else
+		
 		{
 			reloadConfig();
 			reloadCacheStructure();
@@ -130,12 +158,9 @@ void World::reloadConfig()
 
 void World::loadFromFile()
 {
-	reloadConfig();
-	//getApp().getResPath(); // pourquoi on en a besoin?? je n'en ai pas beosin je crois ici.
 	std::ifstream in;
-	std::string i ("res/world.map");
+	std::string i (getApp().getResPath()+getTerrain()["file"].toString());
 	in.open(i);
-	//getApp().getResPath()+getTerrain()["file"].toString() est "res/world.map"
 	if (in.fail())
 	{	
 		throw std::runtime_error("AIEAIEAIEAIE");
@@ -143,23 +168,35 @@ void World::loadFromFile()
 	else
 	{		
 		
-			in >> nbCells_;
+		in >> nbCells_;
+		in >> std::ws;
+		in >> cellSize_;			in >> std::ws;
+		std::cout <<cells_.size() << std::endl; //test
+		for (size_t i (0); i < cells_.size() ; ++i) // parcours le tableau de cellules
+		{
 			in >> std::ws;
-			in >> cellSize_;
-			in >> std::ws;
-			std::cout <<cells_.size() << std::endl; //test
-			for (size_t i (0); i < cells_.size() ; ++i) // parcours le tableau de cellules
-			{
-				in >> std::ws;
-				short var; //t'es sur que tu veux l'initialiser à chaque tour de boucle ?
-				Kind type;
-				in >> var;
-				type = static_cast<Kind>(var);
-				cells_[i] = type;
-			}
+			short var; //t'es sur que tu veux l'initialiser à chaque tour de boucle ?
+			Kind type;
+			in >> var;
+			type = static_cast<Kind>(var);
+			cells_[i] = type;
+		}
 	}
 
 	reloadCacheStructure();
 	updateCache();
 }
 
+//fonctions conversions:
+
+int World::toUnid (int x, int y)
+{
+	return (y-1)*nbCells_+x;
+}
+
+sf::Vector2i World::toBid( int x)
+{
+	sf::Vector2i retour;
+	retour.x= x%nbCells_;
+	retour.y= x/nbCells_;
+}
