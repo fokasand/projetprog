@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include "Utility/Vertex.hpp"
+#include <Random/Random.hpp>
 
 //initialisation ensemble de textures
 void World::reloadCacheStructure()
@@ -42,6 +43,7 @@ void World::updateCache()
 	renderingCache_.display();
 }
 
+//fonction colour en aide
 void World::colour (std::string tex, Kind type, std::vector <sf::Vertex> vertex)
 {
 		sf::RenderStates rs;
@@ -51,10 +53,9 @@ void World::colour (std::string tex, Kind type, std::vector <sf::Vertex> vertex)
 		int y_coord ;
 		//parcour chaque cellule une à une 
 		for(size_t j(0); j<cells_.size(); ++j)
-	
 		{	
 			y_coord = j/nbCells_;
-			//contient les coordonnées dans sommetrs
+			//contient les coordonnées dans sommets
 			std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(j%nbCells_, y_coord, nbCells_ ));
 			
 			if (cells_[j] == type)
@@ -83,9 +84,31 @@ void World::reset(bool regenerate)
 {
 		if (regenerate == 1)
 		{
+			//initialisation de seeds_ avec les graines
+			for (int i(0); i < nbGrass_ ; ++i)
+			{
+				sf::Vertor2i coord (uniform(0, nbCells-1),uniform(0, nbCells-1));
+				Seed graine(coord, Kind::grass);
+				seeds_.push_back();
+			}
+			
+			for (int i(0); i < nbWater_ ; ++i)
+			{
+				sf::Vertor2i coord (uniform(0, nbCells-1),uniform(0, nbCells-1));
+				Seed graine(coord, Kind::water);
+				seeds_.push_back();
+			}
+			
+			for (size_t i(0); i <seeds_.size() ; ++i)
+			{
+				
+			}
+			
+			
 			// ajouter regeneration aléatoire du terrain
-			regenerate = 0;
+			//regenerate = 0;
 		}
+		
 		if (regenerate == 0)
 		{
 			reloadConfig();
@@ -99,6 +122,8 @@ void World::reloadConfig()
 {
 	nbCells_ = getTerrain()["cells"].toInt();
 	cellSize_ = getTerrain()["size"].toDouble() / nbCells_;
+	nbWater_ = getTerrain()["seeds"]["water"];
+	nbGrass_ = getTerrain()["seeds"]["grass"]
 	
 	cells_ = std::vector<Kind> (nbCells_*nbCells_, Kind::rock);
 }
@@ -122,18 +147,19 @@ void World::loadFromFile()
 			in >> std::ws;
 			in >> cellSize_;
 			in >> std::ws;
-			std::cout <<cells_.size() << std::endl;
-			for (size_t i (0); i < cells_.size() ; ++i) // pas sur de taille
+			std::cout <<cells_.size() << std::endl; //test
+			for (size_t i (0); i < cells_.size() ; ++i) // parcours le tableau de cellules
 			{
-			in >> std::ws;
-			short var;
-			Kind type;
-			in >> var;
-			type = static_cast<Kind>(var);
-			cells_[i] = type;
+				in >> std::ws;
+				short var; //t'es sur que tu veux l'initialiser à chaque tour de boucle ?
+				Kind type;
+				in >> var;
+				type = static_cast<Kind>(var);
+				cells_[i] = type;
 			}
 	}
 
 	reloadCacheStructure();
 	updateCache();
 }
+
