@@ -122,8 +122,8 @@ void World::reloadConfig()
 {
 	nbCells_ = getTerrain()["cells"].toInt();
 	cellSize_ = getTerrain()["size"].toDouble() / nbCells_;
-	nbWater_ = getTerrain()["seeds"]["water"];
-	nbGrass_ = getTerrain()["seeds"]["grass"]
+	nbWater_ = getTerrain()["seeds"]["water"].toInt();
+	nbGrass_ = getTerrain()["seeds"]["grass"].toInt();
 	
 	cells_ = std::vector<Kind> (nbCells_*nbCells_, Kind::rock);
 }
