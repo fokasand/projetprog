@@ -84,65 +84,49 @@ void World::reset(bool regenerate=true)
 {
 	
 
-		if (regenerate)
+	if (regenerate)		{
+		reloadConfig();
+		
+		//initialisation de seeds_ avec les graines
+		for (int i(0); i < nbGrass_ ; ++i)
 		{
-			reloadConfig();
-			
-			//initialisation de seeds_ avec les graines
-			for (int i(0); i < nbGrass_ ; ++i)
-			{
-				sf::Vector2i coord (uniform(0, nbCells_-1) ,uniform(0, nbCells_-1));
-				Seed graine = {coord,Kind::grass};
-				seeds_.push_back(graine);
-			}
-			
-			// d'abord grass puis water pour que l'eau ne soit pas écrasé si jamais il y avait 2 graines ayant les memes coordonnées
-			std::cout << "oui" << std::endl;
-			for (int i(0); i < nbWater_ ; ++i)
-			{
-				sf::Vector2i coord (uniform(0, nbCells_-1),uniform(0, nbCells_-1));
-				Seed graine = {coord,Kind::water};
-				seeds_.push_back(graine);
-			}
-			
-			for (Seed graine : seeds_)
-			{
-				std::cout << graine.coord.x << std::endl;
-				std::cout << graine.coord.y << std::endl;
-			}
-			
-			for (size_t i(0); i <seeds_.size() ; ++i)
-			{
-				if (cells_[toUnid(seeds_[i].coord.x, seeds_[i].coord.y)] != Kind::water)
-				{
-					cells_[toUnid(seeds_[i].coord.x, seeds_[i].coord.y)] = seeds_[i].nature;
-				}
-			}
-			
-			for (size_t i(0); i<cells_.size(); ++i)
-			{
-				if (cells_[i] == Kind::rock) {
-					std::cout << "r";}
-				if (cells_[i] == Kind::grass)
-				{ std:: cout <<"b";}
-				if (cells_[i] == Kind::water)
-				{ std::cout << "o";}
-			}
-			
-			reloadCacheStructure();
-			updateCache();
-			// ajouter regeneration aléatoire du terrain
-			std::cout << "oui" << std::endl;
-			
+			sf::Vector2i coord (uniform(0, nbCells_-1) ,uniform(0, nbCells_-1));
+			Seed graine = {coord,Kind::grass};
+			seeds_.push_back(graine);
 		}
 		
-		else
-		
+		// d'abord grass puis water pour que l'eau ne soit pas écrasé si jamais il y avait 2 graines ayant les memes coordonnées
+	
+		for (int i(0); i < nbWater_ ; ++i)
 		{
-			reloadConfig();
-			reloadCacheStructure();
-			updateCache();
+			sf::Vector2i coord (uniform(0, nbCells_-1),uniform(0, nbCells_-1));
+			Seed graine = {coord,Kind::water};
+			seeds_.push_back(graine);
 		}
+		
+		for (size_t i(0); i <seeds_.size() ; ++i)
+		{
+			if (cells_[toUnid(seeds_[i].coord.x, seeds_[i].coord.y)] != Kind::water)
+			{
+				cells_[toUnid(seeds_[i].coord.x, seeds_[i].coord.y)] = seeds_[i].nature;
+			}
+		}
+
+			
+		reloadCacheStructure();
+		updateCache();
+		// ajouter regeneration aléatoire du terrain
+		std::cout << "oui" << std::endl;
+			
+	}
+		
+	else
+		
+	{
+		reloadConfig();
+		reloadCacheStructure();
+		updateCache();
+	}
 }
 
 
@@ -158,6 +142,7 @@ void World::reloadConfig()
 
 void World::loadFromFile()
 {
+	reloadConfig();
 	std::ifstream in;
 	std::string i (getApp().getResPath()+getTerrain()["file"].toString());
 	in.open(i);
