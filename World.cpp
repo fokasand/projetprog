@@ -230,4 +230,5 @@ sf::Vector2i World::toBid( int x)
 	sf::Vector2i retour;
 	retour.x= x%nbCells_;
 	retour.y= x/nbCells_;
+	return retour;
 }
