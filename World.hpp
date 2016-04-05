@@ -28,26 +28,32 @@ class World{
 			int nbWater_;
 			int nbGrass_;
 			
-			//coloriage et transparence
+			//colore ou met en transparence les sommets dans chache vertex et 
 			void colour (std::string tex, Kind type, std::vector <sf::Vertex> vertex);
 	public:
-			//mettre a jour rendering_Cache
-			void updateCache();
 			
-			//initialisation ensembles de textures
-			void reloadCacheStructure();
-
-			//draw
-			void drawOn(sf::RenderTarget& target);
-			
-			//reload
+			//charge les paramètres  de la fenetre à part
 			void reloadConfig();
 			
-			//reset
-			void reset(bool regenerate=false);
+			//nettoie renderingCache, y dessine les 3 Vertexes en couleur ou transparence selon le type de la cellule, affiche la cache
+			void updateCache();
 			
-			//fichier
+			//creation des trois Vertexe liés au texture et création du cache contenant les textures à afficher
+			void reloadCacheStructure();
+
+			//dessine la texture stockée dans renderingCache sur la fenetre
+			void drawOn(sf::RenderTarget& target);
+			
+			//reset
+			void reset(bool regenerate);
+			
+			//load toute una map depuis un fichier
 			void loadFromFile();
+			
+			//mvt graines
+			void step();
+			
+			void steps( int i, bool regeneration);
 			
 			
 	};
