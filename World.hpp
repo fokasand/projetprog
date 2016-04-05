@@ -69,6 +69,10 @@ class World{
 			
 			void steps( int i, bool regeneration);
 			
+			//lissage
+			
+			void smooth();
+			void smooths(int i, bool regenearation);
 			
 		};
 	
