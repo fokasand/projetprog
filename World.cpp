@@ -112,7 +112,8 @@ void World::reset(bool regenerate=true)
 			}
 		}
 
-			
+		steps(getTerrain()["generation"]["steps"].toInt(),false); //false est par défaut normalement, pk ne marche pas ?
+		smooths(getTerrain()["generation"]["smoothness"]["level"].toInt(),false);
 		reloadCacheStructure();
 		updateCache();
 	}
@@ -300,7 +301,7 @@ sf::Vector2i World::toBid( int x)
 
 int World::debSup (int c)
 {
-	if (c> nbCells_)
+	if (c>= nbCells_)
 	{
 		c =nbCells_-1;
 	}
