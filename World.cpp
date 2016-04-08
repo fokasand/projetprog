@@ -222,24 +222,25 @@ void World::smooth()
 	{
 		for (int y(0); y<nbCells_; ++y)
 		{
-			int Someau(0);
-			int Somherbe(0);
-			int Somtot(0);
-			
-			for (int h(-1); h<1; ++h)
+			double Someau(0.0);
+			double Somherbe(0.0);
+			double Somtot(0.0);
+			for (int h(-1); h<=1; ++h)
 			{
-				for (int v(-1); v<1; ++v)
-				{			
+				for (int v(-1); v<=1; ++v)
+				{		
 					if (not((v==0) and (h==0)))
 					{
-						if ((x+h>=0) and(y+v>=0) and (y+v <=nbCells_-1) and ( x+h<= nbCells_-1))
+						if ((x+h>=0) and (y+v>=0) and (y+v <=nbCells_-1) and (x+h<= nbCells_-1))
 						{
-							if (cells_[toUnid(x+h,y+v)]== Kind::water)
+						
+							if (copie_de_cells_[toUnid(x+h,y+v)] == Kind::water)
 							{
+							
 								++Someau;
 								++Somtot;
 							}
-							if (cells_[toUnid(x+h,y+v)]== Kind::grass)
+							if (copie_de_cells_[toUnid(x+h,y+v)] == Kind::grass)
 							{
 								++Somherbe;
 								++Somtot;
@@ -252,19 +253,20 @@ void World::smooth()
 					}				
 				}
 			}
-			double n(Somherbe/Somtot);
-			if (n <= getTerrain()["generation"]["smoothness"]["grass neighbourhood ratio"].toDouble())
+			
+			if ((Somherbe/Somtot) >= getTerrain()["generation"]["smoothness"]["grass neighbourhood ratio"].toDouble())
 			{
-				cells_[toUnid(x,y)] = Kind::grass;
+				copie_de_cells_[toUnid(x,y)] = Kind::grass;
 			}
-			n=Someau/Somtot;
-			if (n <= getTerrain()["generation"]["smoothness"]["water neighbourhood ratio"].toDouble())
+			
+			if ((Someau/Somtot) >= getTerrain()["generation"]["smoothness"]["water neighbourhood ratio"].toDouble())
 			{
-				cells_[toUnid(x,y)] = Kind::water;
+				copie_de_cells_[toUnid(x,y)] = Kind::water;
+				std::cout << Someau/Somtot << std::endl;
 			}
 		}
-	std::swap(cells_, copie_de_cells_);	
 	}
+std::swap(cells_, copie_de_cells_);	
 }
 
 void World::smooths( int i, bool regeneration = false)
@@ -272,6 +274,7 @@ void World::smooths( int i, bool regeneration = false)
 	for (int j(0); j < i; ++j)
 	{
 		smooth();
+		std::cout << j << "0%" << endl;
 	}
 	if (regeneration)
 	{
