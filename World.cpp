@@ -35,9 +35,10 @@ void World::updateCache()
 	renderingCache_.clear();
 	
 	//dessine les textures dans le cache	
-	colour("water",Kind::water,waterVertexes_);
+	
 	colour("rock",Kind::rock,rockVertexes_);
 	colour("grass",Kind::grass,grassVertexes_);
+	colour("water",Kind::water,waterVertexes_);
 	
 	//affichage du cache
 	renderingCache_.display();
@@ -112,8 +113,7 @@ void World::reset(bool regenerate=true)
 			}
 		}
 
-		steps(getTerrain()["generation"]["steps"].toInt(),false); //false est par défaut normalement, pk ne marche pas ?
-		smooths(getTerrain()["generation"]["smoothness"]["level"].toInt(),false);
+			
 		reloadCacheStructure();
 		updateCache();
 	}
@@ -153,12 +153,12 @@ void World::loadFromFile()
 		
 		in >> nbCells_;
 		in >> std::ws;
-		in >> cellSize_;			in >> std::ws;
-		std::cout <<cells_.size() << std::endl; //test
-		for (size_t i (0); i < cells_.size() ; ++i) // parcours le tableau de cellules
+		in >> cellSize_;			
+		in >> std::ws;
+		for (size_t i (0); i < cells_.size() ; ++i) 
 		{
 			in >> std::ws;
-			short var; //t'es sur que tu veux l'initialiser à chaque tour de boucle ?
+			short var;
 			Kind type;
 			in >> var;
 			type = static_cast<Kind>(var);
@@ -178,7 +178,7 @@ void World::step()
 	{
 		//déplacement aléatoire des graines d'herbe ou eau qui ne se teleportent pas 
 		
-		if (seeds_ [i].nature == Kind::grass or (seeds_[i].nature == Kind::water and !bernoulli(getTerrain()["seeds"]["water teleport probability"].toDouble())))
+		if (seeds_[i].nature == Kind::grass or (seeds_[i].nature == Kind::water and !bernoulli(getTerrain()["seeds"]["water teleport probability"].toDouble())))
 		{
 			sf::Vector2i nouvelles (seeds_[i].coord.x+uniform(-1,1),seeds_[i].coord.y+uniform(-1,1)); //truc intermediaire à enlever
 			
@@ -212,7 +212,6 @@ void World::steps( int i, bool regeneration = false)
 		updateCache();
 	}
 }
-
 
 //MODULARISER LE PLURIEL : fonction repeat pour smooths et steps
 
@@ -284,39 +283,46 @@ void World::smooths( int i, bool regeneration = false)
 //fonctions conversions:
 int World::toUnid (int x, int y)
 {
+	if((y)*nbCells_+x <0)
+	{
+		std::cout << "inferieur a0" << std::endl;
+	}
+	if((y)*nbCells_+x > nbCells_*nbCells_)
+	{
+		std::cout << "tu depasses la grille" << std::endl;
+	}
+	
+	
 	return y*nbCells_+x;
 }
 
-/*sf::Vector2i World::toBid( int x)
+sf::Vector2i World::toBid( int x)
 {
 	sf::Vector2i retour;
 	retour.x= x%nbCells_;
 	retour.y= x/nbCells_;
 	return retour;
 }
-*/
 
 //débordements de la fenetre d'affichage
 
-int World::debSup (int c)
+void World::debSup (int& c)
 {
 	if (c>= nbCells_)
 	{
 		c =nbCells_-1;
 	}
-	return c;
 }
 
-int World::debInf (int c)
+void World::debInf (int& c)
 {
 	if (c < 0)
 	{
 		c =0;
 	}
-	return c;
 }
 
-void World::debVect (sf::Vector2i coord)
+void World::debVect (sf::Vector2i& coord)
 {
 	debSup(coord.x);
 	debInf(coord.x);
