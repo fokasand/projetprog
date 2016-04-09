@@ -113,7 +113,8 @@ void World::reset(bool regenerate=true)
 			}
 		}
 
-			
+		steps(getTerrain()["generation"]["steps"].toInt(),false); //false est par défaut normalement, pk ne marche pas ?
+		smooths(getTerrain()["generation"]["smoothness"]["level"].toInt(),false);	
 		reloadCacheStructure();
 		updateCache();
 	}
