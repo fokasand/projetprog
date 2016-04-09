@@ -213,6 +213,7 @@ void World::steps( int i, bool regeneration = false)
 	}
 }
 
+
 //MODULARISER LE PLURIEL : fonction repeat pour smooths et steps
 
 //smooth
@@ -221,7 +222,7 @@ void World::smooth()
 	
 	for (int x(0); x < nbCells_; ++x)
 	{
-		for (int y(0); y<nbCells_; ++y)
+		for (int y(0); y < nbCells_; ++y)
 		{
 			double Someau(0.0);
 			double Somherbe(0.0);
@@ -237,33 +238,31 @@ void World::smooth()
 						
 							if (copie_de_cells_[toUnid(x+h,y+v)] == Kind::water)
 							{
-							
 								++Someau;
-								++Somtot;
 							}
 							if (copie_de_cells_[toUnid(x+h,y+v)] == Kind::grass)
 							{
 								++Somherbe;
-								++Somtot;
 							}
-							else 
-							{
-								++Somtot;
-							}
+							++Somtot;
 						}
 					}				
 				}
 			}
 			
-			if ((Somherbe/Somtot) >= getTerrain()["generation"]["smoothness"]["grass neighbourhood ratio"].toDouble())
-			{
-				copie_de_cells_[toUnid(x,y)] = Kind::grass;
-			}
-			
 			if ((Someau/Somtot) >= getTerrain()["generation"]["smoothness"]["water neighbourhood ratio"].toDouble())
 			{
+				if (copie_de_cells_[toUnid(x,y)] != Kind::water)
+				{
 				copie_de_cells_[toUnid(x,y)] = Kind::water;
-				std::cout << Someau/Somtot << std::endl;
+				}
+			}
+			if ((Somherbe/Somtot) >= getTerrain()["generation"]["smoothness"]["grass neighbourhood ratio"].toDouble())
+			{	
+				if (copie_de_cells_[toUnid(x,y)] == Kind::rock)
+				{
+				copie_de_cells_[toUnid(x,y)] = Kind::grass;
+				}
 			}
 		}
 	}
@@ -275,7 +274,6 @@ void World::smooths( int i, bool regeneration = false)
 	for (int j(0); j < i; ++j)
 	{
 		smooth();
-		std::cout << j << "0%" << endl;
 	}
 	if (regeneration)
 	{
@@ -286,16 +284,17 @@ void World::smooths( int i, bool regeneration = false)
 //fonctions conversions:
 int World::toUnid (int x, int y)
 {
-	return (y-1)*nbCells_+x;
+	return y*nbCells_+x;
 }
 
-sf::Vector2i World::toBid( int x)
+/*sf::Vector2i World::toBid( int x)
 {
 	sf::Vector2i retour;
 	retour.x= x%nbCells_;
 	retour.y= x/nbCells_;
 	return retour;
 }
+*/
 
 //débordements de la fenetre d'affichage
 
