@@ -38,11 +38,11 @@ class World{
 			//débordements de la fenetre d'affichage
 			
 			//cordonnée superieure a nbCells
-			int debSup (int c);
+			void debSup (int& c);
 			//coordonnée inferieur à nbCells
-			int debInf(int c);
+			void debInf(int& c);
 			//verifie le vecteur de coordonnées
-			void debVect (sf::Vector2i coord); 
+			void debVect (sf::Vector2i& coord); 
 			
 	public:
 			
@@ -72,8 +72,7 @@ class World{
 			//lissage
 			
 			void smooth();
-			void smooths(int i, bool regenearation);
-			
+			void smooths(int i, bool regeneration);
 		};
 	
 j::Value getTerrain();
