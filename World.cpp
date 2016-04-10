@@ -107,10 +107,7 @@ void World::reset(bool regenerate=true)
 		
 		for (size_t i(0); i <seeds_.size() ; ++i)
 		{
-			if (cells_[toUnid(seeds_[i].coord.x, seeds_[i].coord.y)] != Kind::water)
-			{
-				cells_[toUnid(seeds_[i].coord.x, seeds_[i].coord.y)] = seeds_[i].nature;
-			}
+			seedTocell(i);
 		}
 
 		steps(getTerrain()["generation"]["steps"].toInt(),false); //false est par défaut normalement, pk ne marche pas ?
@@ -193,11 +190,7 @@ void World::step()
 			seeds_[i].coord = nouvelles ;
 		}
 		
-		//meme code que dans reset A MODULARISER permet de donner le kind de la graine à la cellule de memes coordonnées 
-			if (cells_[toUnid(seeds_[i].coord.x, seeds_[i].coord.y)] != Kind::water)
-			{
-				cells_[toUnid(seeds_[i].coord.x, seeds_[i].coord.y)] = seeds_[i].nature;
-			}
+		seedTocell(i);
 	}
 }
 
@@ -331,5 +324,14 @@ void World::debVect (sf::Vector2i& coord)
 	debSup(coord.y);
 	debInf(coord.y);
 	
+}
+
+//donner le type de la graine à la cellule ayant les mêmes coordonées 
+void World::seedTocell(size_t i)
+{
+	if (cells_[toUnid(seeds_[i].coord.x, seeds_[i].coord.y)] != Kind::water)
+			{
+				cells_[toUnid(seeds_[i].coord.x, seeds_[i].coord.y)] = seeds_[i].nature;
+			}
 }
 
