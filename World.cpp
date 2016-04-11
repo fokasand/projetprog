@@ -75,7 +75,7 @@ void World::colour (std::string tex, Kind type, std::vector <sf::Vertex> vertex)
 	renderingCache_.draw(vertex.data(), vertex.size(), sf::Quads, rs);
 }	
 
-
+//raccourci 
 j::Value getTerrain()
 {
 	return getAppConfig()["simulation"]["world"];
@@ -136,6 +136,7 @@ void World::reloadConfig()
 	cells_ = std::vector<Kind> (nbCells_*nbCells_, Kind::rock);
 }
 
+// load la configuration de la carte depuis un fichier
 void World::loadFromFile()
 {
 	reloadConfig();
@@ -168,15 +169,45 @@ void World::loadFromFile()
 	updateCache();
 }
 
+//sauvegarde la configuration dans un fichier
+/*void World::saveToFile()
+{
+	reloadConfig();
+	std::ofstream out;
+	std::string i (getApp().getResPath()+getTerrain()["file"].toString());
+	out.open(i);
+	if (out.fail())
+	{	
+		throw std::runtime_error("AIEAIEAIEAIE");
+	}
+	else
+	{		
+		
+		out << nbCells_;
+		out << cellSize_;			
+		//out << std::ws;
+		for (size_t i (0); i < cells_.size() ; ++i) 
+	
+			short var;
+			Kind type;
+			in >> var;
+			type = static_cast<Kind>(var);
+			cells_[i] = type;
+		}
+	}
+
+} */
+
 // mvt des graines
 //un déplacement
 void World::step()
 {
+	double waterprob (getTerrain()["seeds"]["water teleport probability"].toDouble());
 	for (size_t i(0); i < seeds_.size(); ++i)
 	{
 		//déplacement aléatoire des graines d'herbe ou eau qui ne se teleportent pas 
 		
-		if (seeds_[i].nature == Kind::grass or (seeds_[i].nature == Kind::water and !bernoulli(getTerrain()["seeds"]["water teleport probability"].toDouble())))
+		if (seeds_[i].nature == Kind::grass or (seeds_[i].nature == Kind::water and !bernoulli(waterprob)))
 		{
 			sf::Vector2i nouvelles (seeds_[i].coord.x+uniform(-1,1),seeds_[i].coord.y+uniform(-1,1)); //truc intermediaire à enlever
 			
@@ -207,12 +238,14 @@ void World::steps( int i, bool regeneration = false)
 	}
 }
 
-//MODULARISER LE PLURIEL : fonction repeat pour smooths et steps
+//MODULARISER LE PLURIEL : fonction repeat pour smooths et steps
 
 //smooth
 void World::smooth()
 {	auto copie_de_cells_ = cells_;
 	
+	double wsmooth (getTerrain()["generation"]["smoothness"]["water neighbourhood ratio"].toDouble());
+	double gsmooth (getTerrain()["generation"]["smoothness"]["grass neighbourhood ratio"].toDouble());
 	for (int x(0); x < nbCells_; ++x)
 	{
 		for (int y(0); y < nbCells_; ++y)
@@ -243,14 +276,14 @@ void World::smooth()
 				}
 			}
 			
-			if ((Someau/Somtot) >= getTerrain()["generation"]["smoothness"]["water neighbourhood ratio"].toDouble())
+			if ((Someau/Somtot) >= wsmooth )
 			{
 				if (copie_de_cells_[toUnid(x,y)] != Kind::water)
 				{
 				copie_de_cells_[toUnid(x,y)] = Kind::water;
 				}
 			}
-			if ((Somherbe/Somtot) >= getTerrain()["generation"]["smoothness"]["grass neighbourhood ratio"].toDouble())
+			if ((Somherbe/Somtot) >= gsmooth)
 			{	
 				if (copie_de_cells_[toUnid(x,y)] == Kind::rock)
 				{
@@ -334,4 +367,3 @@ void World::seedTocell(size_t i)
 				cells_[toUnid(seeds_[i].coord.x, seeds_[i].coord.y)] = seeds_[i].nature;
 			}
 }
-
