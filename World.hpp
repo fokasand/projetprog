@@ -10,6 +10,8 @@ struct Seed {
 
 class World{
 	private :
+			// destructeur
+			
 			//variable regroupant la texture totale à afficher
 			sf::RenderTexture renderingCache_;
 			
@@ -44,16 +46,24 @@ class World{
 			//verifie le vecteur de coordonnées
 			void debVect (sf::Vector2i& coord); 
 			
-	public:
+			//mvt graines
+			void step();
 			
-			//charge les paramètres  de la fenetre à partir du fichier
-			void reloadConfig();
+			//lissage
+			void smooth();
 			
 			//nettoie renderingCache, y dessine les 3 Vertexes en couleur ou transparence selon le type de la cellule, affiche la cache
 			void updateCache();
 			
 			//creation des trois Vertexe liés au texture et création du cache contenant les textures à afficher
 			void reloadCacheStructure();
+			
+			//donner le type de la graine à la cellule ayant les mêmes coordonées 
+			void seedTocell(size_t i);
+	public:
+			
+			//charge les paramètres  de la fenetre à partir du fichier
+			void reloadConfig();
 
 			//dessine la texture stockée dans renderingCache sur la fenetre
 			void drawOn(sf::RenderTarget& target);
@@ -64,14 +74,13 @@ class World{
 			//load toute una map depuis un fichier
 			void loadFromFile();
 			
-			//mvt graines
-			void step();
+			//sauvegarde la configuration dans un fichier
+			void saveToFile();
 			
+			//mvt graines
 			void steps( int i, bool regeneration);
 			
 			//lissage
-			
-			void smooth();
 			void smooths(int i, bool regeneration);
 		};
 	
@@ -79,4 +88,3 @@ j::Value getTerrain();
 
 
 #endif
-
