@@ -52,14 +52,15 @@ class World{
 			//lissage
 			void smooth();
 			
-			//nettoie renderingCache, y dessine les 3 Vertexes en couleur ou transparence selon le type de la cellule, affiche la cache
-			void updateCache();
-			
 			//creation des trois Vertexe liés au texture et création du cache contenant les textures à afficher
 			void reloadCacheStructure();
 			
 			//donner le type de la graine à la cellule ayant les mêmes coordonées 
 			void seedTocell(size_t i);
+			
+			//bloquer la copie
+			World& operator=(World const&) = delete;
+			
 	public:
 			
 			//charge les paramètres  de la fenetre à partir du fichier
@@ -82,6 +83,9 @@ class World{
 			
 			//lissage
 			void smooths(int i, bool regeneration);
+			
+			//nettoie renderingCache, y dessine les 3 Vertexes en couleur ou transparence selon le type de la cellule, affiche la cache
+			void updateCache();
 		};
 	
 j::Value getTerrain();
