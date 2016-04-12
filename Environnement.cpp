@@ -1,22 +1,49 @@
 #include <Application.hpp>
-#include "World.hpp"
 #include <SFML/Graphics.hpp>
-#include "Environnement.hpp"
+#include "Env.hpp"
 
-	//regeneration de l'environnement
-	void Environnement::reset()
+//constructeur par défaut
+Env::Env()
+{
+	try {
+		std::cerr << "loadWorldFromFile" << std::endl;
+		loadWorldFromFile();
+		
+		}
+	catch(std::runtime_error error)
 	{
-		World_.World::reset(true);
+		std::cerr << "regeneration aléatoire" << std::endl;
+		world_.reset(true);
 	}
+}
+
+//regeneration de l'environnement
+void Env::reset()
+{
+	std::cerr << "env reset" << std::endl;
+	world_.reset(true);
+}
+
+//evolution de l'environnement sur un temps dt
+void Env::update(sf::Time dt)
+{
 	
-	//evolution de l'environnement sur un temps dt
-	void Environnement::update(sf::Time dt)
-	{
-		World_.World::updateCache();
-	}
-	
-	//dessin de l'environnement
-	void Environnement::drawOn(sf::RenderTarget& target)
-	{
-		World_.World::drawOn(target);
-	}
+}
+
+//dessin de l'environnement
+void Env::drawOn(sf::RenderTarget& target)
+{
+	world_.drawOn(target);
+}
+
+//génération d'un environnement à partir d'un fichier
+void Env::loadWorldFromFile()
+{
+	world_.loadFromFile();
+}
+
+void Env::saveWorldToFile()
+{
+	world_.saveToFile();
+}
+
