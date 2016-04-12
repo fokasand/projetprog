@@ -87,6 +87,7 @@ void World::reset(bool regenerate=true)
 
 	if (regenerate)		{
 		reloadConfig();
+		reloadCacheStructure();
 		
 		//initialisation de seeds_ avec les graines
 		for (int i(0); i < nbGrass_ ; ++i)
@@ -112,7 +113,7 @@ void World::reset(bool regenerate=true)
 
 		steps(getTerrain()["generation"]["steps"].toInt(),false); //false est par défaut normalement, pk ne marche pas ?
 		smooths(getTerrain()["generation"]["smoothness"]["level"].toInt(),false);	
-		reloadCacheStructure();
+		
 		updateCache();
 	}
 		
@@ -178,7 +179,7 @@ void World::loadFromFile()
 	out.open(i);
 	if (out.fail())
 	{	
-		throw std::runtime_error("AIEAIEAIEAIE");
+		throw std::runtime_error("fichier non ouvert");
 	}
 	else
 	{		
