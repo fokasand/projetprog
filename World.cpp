@@ -171,9 +171,8 @@ void World::loadFromFile()
 }
 
 //sauvegarde la configuration dans un fichier
-/*void World::saveToFile()
-{
-	reloadConfig();
+void World::saveToFile()
+{		
 	std::ofstream out;
 	std::string i (getApp().getResPath()+getTerrain()["file"].toString());
 	out.open(i);
@@ -184,20 +183,16 @@ void World::loadFromFile()
 	else
 	{		
 		
-		out << nbCells_;
-		out << cellSize_;			
-		//out << std::ws;
+		out << nbCells_ << std::endl;
+		out << cellSize_ << std::endl;
 		for (size_t i (0); i < cells_.size() ; ++i) 
-	
-			short var;
-			Kind type;
-			in >> var;
-			type = static_cast<Kind>(var);
-			cells_[i] = type;
+		{
+			short var (static_cast<short>(cells_[i]));
+			out << var << " ";
 		}
 	}
 
-} */
+} 
 
 // mvt des graines
 //un déplacement
