@@ -99,7 +99,7 @@ class World{
 			void smooths(int i, bool regeneration);
 		};
 	
-j::Value getTerrain();
+j::Value getTerrain(); // raccourci pour accöder aux données
 
 
 #endif
