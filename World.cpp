@@ -65,11 +65,22 @@ void World::colour (std::string tex, Kind type, std::vector <sf::Vertex> vertex)
 		sf::RenderStates rs;
 		rs.texture = &getAppTexture(getTerrain()["textures"][tex].toString()); // ici pour la texture liée à la tex
 		
+		//coordonnée entière pour y
+		int y_coord ;
+		
 		//parcour chaque cellule une à une 
 		for(size_t j(0); j<cells_.size(); ++j)
 		{	
-			//contient les coordonnées des sommets
-			std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(toBid(j).x, toBid(j).y, nbCells_ ));
+			y_coord = j/nbCells_;
+			
+			// virer y coord, remplacer ligne d'après par:
+			
+			//std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(toBid(j).x, toBid(j).y, nbCells_ ));
+			
+			//contient les coordonnées dans sommets
+			std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(j%nbCells_, y_coord, nbCells_ ));
+
+
 			
 			if (cells_[j] == type)
 			{
@@ -87,8 +98,8 @@ void World::colour (std::string tex, Kind type, std::vector <sf::Vertex> vertex)
 			if (type == Kind::water) // on ne remplit le cache d'humidité seulement lorsqu'on remplit les cellules d'eau, on choisit cela arbitrairement pour ne remplir les vertexes
 												// qu'une fois.
 					 {
-						unsigned int niveaubleu ((humide_[j] - minHumidity)/ (maxHumidity - minHumidity) * 255);
-						std::cout << niveaubleu << std::endl;
+						unsigned int niveaubleu (((humide_[j] - minHumidity)/ (maxHumidity - minHumidity)) * 255);
+						//std::cout << niveaubleu << std::endl;
 						for (int i(0); i<4; ++i)
 						{
 							humidityVertexes_[indexes_for_cell[i]].color = sf::Color(0, 0, niveaubleu);
@@ -96,7 +107,7 @@ void World::colour (std::string tex, Kind type, std::vector <sf::Vertex> vertex)
 					 } 
 					 	
 		}
-		std::cout << minHumidity << maxHumidity << std::endl;
+		//std::cout << minHumidity << " " << maxHumidity << std::endl;
 	renderingCache_.draw(vertex.data(), vertex.size(), sf::Quads, rs);
 }	
 
@@ -129,6 +140,7 @@ void World::reset(bool regenerate=true)
 			sf::Vector2i coord (uniform(0, nbCells_-1),uniform(0, nbCells_-1));
 			Seed graine = {coord,Kind::water};
 			seeds_.push_back(graine);
+		
 			humidcalc(toUnid(coord.x,coord.y));
 		}
 		
@@ -138,6 +150,7 @@ void World::reset(bool regenerate=true)
 		}
 
 		steps(getTerrain()["generation"]["steps"].toInt(),false); //false est par défaut normalement, pk ne marche pas ?
+		std::cout << "oula" << std::endl;
 		smooths(getTerrain()["generation"]["smoothness"]["level"].toInt(),false);	
 		
 		updateCache();
@@ -166,7 +179,7 @@ void World::reloadConfig()
 	l = getTerrain()["generation"]["humidity"]["decay rate"].toDouble();
 	double t(getTerrain()["generation"]["humidity"]["threshold"].toDouble());
 
-	while (e * exp(-humidityRange_ / l) < t)
+	while (e * exp(-humidityRange_ / l) > t)
 	{
 		 ++humidityRange_;
 	}
@@ -180,7 +193,6 @@ void World::humidcalc(int pos)
 	int rayon(1);
 	int xpos(toBid(pos).x);
 	int ypos(toBid(pos).y);
-	 
 	while(rayon < humidityRange_)
 	{
 	for (int x(-humidityRange_);x<=(humidityRange_+ 1); ++x)
@@ -189,12 +201,17 @@ void World::humidcalc(int pos)
 		{
 			if (std::hypot(xpos+x, ypos+y) <= humidityRange_)
 			{
+				if ((xpos+x >= 0) and (ypos+y >= 0) and (xpos+x <nbCells_) and (ypos+y < nbCells_))
+				//modulariser cette partie dans un booléen que l'on utilisera aussi pour smooth?
+				{
 				humide_[toUnid(xpos+x,ypos+y)] += e * exp(- std::hypot(xpos+x, ypos+y)  / l);
+				}
 			}
 		}
 	}
 	++rayon;	
 	}
+	std::cout << "les choses ont lieu" << std::endl;
 }
 
 void World::minmaxhumid()
