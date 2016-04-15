@@ -11,14 +11,24 @@ struct Seed {
 class World{
 	private :
 			// destructeur
-			
+		
 			//variable regroupant la texture totale à afficher
 			sf::RenderTexture renderingCache_;
-			
+					
 			//sommets liés à chaque texture
-			 std::vector <sf::Vertex> grassVertexes_, 
-								waterVertexes_,
-								 rockVertexes_;
+			std::vector <sf::Vertex> grassVertexes_, 
+									waterVertexes_,
+									rockVertexes_;
+			//humidité:
+			std::vector<double> humide_;
+			int humidityRange_;
+			double e;
+			double l;
+			std::vector <sf::Vertex> humidityVertexes_;
+			double minHumidity;
+			double maxHumidity;
+			//cache de l'humidité:
+			sf::RenderTexture humideCache_;
 			
 			//tableau de cellules					 
 			std::vector<Kind> cells_;
@@ -52,16 +62,20 @@ class World{
 			//lissage
 			void smooth();
 			
+			//nettoie renderingCache, y dessine les 3 Vertexes en couleur ou transparence selon le type de la cellule, affiche la cache
+			void updateCache();
+			
 			//creation des trois Vertexe liés au texture et création du cache contenant les textures à afficher
 			void reloadCacheStructure();
 			
 			//donner le type de la graine à la cellule ayant les mêmes coordonées 
 			void seedTocell(size_t i);
-			
-			//bloquer la copie
-			World& operator=(World const&) = delete;
-			
 	public:
+			//calcule le taux d'humidité d'une cellule et le range dans humide
+			void humidcalc(int pos);
+			
+			//calcule les minimum et maximum d'humiditö et les stocke en attribut pour les utiliser dans updatecache
+			void minmaxhumid();
 			
 			//charge les paramètres  de la fenetre à partir du fichier
 			void reloadConfig();
@@ -83,9 +97,6 @@ class World{
 			
 			//lissage
 			void smooths(int i, bool regeneration);
-			
-			//nettoie renderingCache, y dessine les 3 Vertexes en couleur ou transparence selon le type de la cellule, affiche la cache
-			void updateCache();
 		};
 	
 j::Value getTerrain();
