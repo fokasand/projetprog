@@ -46,6 +46,7 @@ void World::updateCache()
 {
 	//nettoyage
 	renderingCache_.clear();
+	humideCache_.clear();
 	
 	//calcule les niveaux d'humidité max et min
 	minmaxhumid();
@@ -57,6 +58,7 @@ void World::updateCache()
 	
 	//affichage du cache
 	renderingCache_.display();
+	humideCache_.display();
 }
 
 //fonction colour en aide
@@ -141,7 +143,7 @@ void World::reset(bool regenerate=true)
 			Seed graine = {coord,Kind::water};
 			seeds_.push_back(graine);
 		
-			humidcalc(toUnid(coord.x,coord.y));
+			humidcalc(toUnid(coord.x,coord.y)); // fais pour 1 graine.
 		}
 		
 		for (size_t i(0); i <seeds_.size() ; ++i)
@@ -190,11 +192,9 @@ void World::reloadConfig()
 //humidité
 void World::humidcalc(int pos)
 {
-	int rayon(1);
 	int xpos(toBid(pos).x);
 	int ypos(toBid(pos).y);
-	while(rayon < humidityRange_)
-	{
+	std::cout << "x=" << xpos << " y=" << ypos << " pos=" << pos << std::endl;
 	for (int x(-humidityRange_);x<=(humidityRange_+ 1); ++x)
 	{
 		for (int y(-humidityRange_);y<=(humidityRange_+ 1); ++y)
@@ -209,9 +209,6 @@ void World::humidcalc(int pos)
 			}
 		}
 	}
-	++rayon;	
-	}
-	std::cout << "les choses ont lieu" << std::endl;
 }
 
 void World::minmaxhumid()
@@ -473,7 +470,7 @@ void World::seedTocell(size_t i)
 				cells_[toUnid(seeds_[i].coord.x, seeds_[i].coord.y)] = seeds_[i].nature;
 				if (seeds_[i].nature == Kind::water)
 				{
-					humidcalc(i);
+					humidcalc(toUnid(seeds_[i].coord.x, seeds_[i].coord.y));
 				}
 			}
 }
