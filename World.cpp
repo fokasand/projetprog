@@ -200,9 +200,9 @@ void World::humidcalc(int pos)
 	{
 		for (int y(-humidityRange_);y<=(humidityRange_+ 1); ++y)
 		{
-			if (std::hypot(xpos+x, ypos+y) <= humidityRange_)
+			if (std::hypot(-x, -y) <= humidityRange_)
 			{
-				if ((xpos+x >= 0) and (ypos+y >= 0) and (xpos+x <nbCells_) and (ypos+y < nbCells_) and not((x==0) and y==0)) // ou alors on compte aussi x==0 et y== 0? je pense que non
+				if ((xpos+x >= 0) and (ypos+y >= 0) and (xpos+x < nbCells_) and (ypos+y < nbCells_) and not((x==0) and y==0)) // ou alors on compte aussi x==0 et y== 0? je pense que non
 				//modulariser cette partie dans un booléen que l'on utilisera aussi pour smooth?
 				{
 				humide_[toUnid(xpos+x,ypos+y)] += e * exp(- std::hypot(-x, -y)  / l);
