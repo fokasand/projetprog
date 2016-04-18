@@ -5,7 +5,6 @@
 #include <fstream>
 #include "Utility/Vertex.hpp"
 #include <Random/Random.hpp>
-#include <cmath>
 
 //initialisation ensemble de textures
 void World::reloadCacheStructure()
@@ -52,67 +51,69 @@ void World::updateCache()
 	minmaxhumid();
 	
 	//dessine les textures dans renderingCache_	
+	sf::RenderStates rsrock;
+	sf::RenderStates rsgrass;
+	sf::RenderStates rswater;
+	rsrock.texture = &getAppTexture(getTerrain()["textures"]["rock"].toString()); // ici pour la texture liée à la tex
+	rsgrass.texture = &getAppTexture(getTerrain()["textures"]["grass"].toString());
+	rswater.texture = &getAppTexture(getTerrain()["textures"]["water"].toString());
 	
-	colour("rock",Kind::rock,rockVertexes_);
-	colour("grass",Kind::grass,grassVertexes_);
-	colour("water",Kind::water,waterVertexes_); // associe un niveau de bleu a chaque sommet dans humidityvertexes
 	
+
+	//parcour chaque cellule une à une 
+	for(size_t j(0); j<cells_.size(); ++j)
+	{	
+		//contient les coordonnées dans sommets
+		std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(toBid(j).x, toBid(j).y, nbCells_ ));
+		if (cells_[j] == Kind::rock)
+		{
+		for (int i = 0; i <4 ; ++i)
+		 {
+			 //pour chaque sommet, colorie pour la texture appropriée (après les avoir toutes mises en transparence)
+			 rockVertexes_[indexes_for_cell[i]].color.a = 255;
+			 grassVertexes_[indexes_for_cell[i]].color.a = 0;
+			 waterVertexes_[indexes_for_cell[i]].color.a = 0;
+		 }
+		}
+		if (cells_[j] == Kind::grass)
+		{
+		for (int i = 0; i <4 ; ++i)
+		 {
+			 //pour chaque sommet, colorie pour la texture appropriée (après les avoir toutes mises en transparence)
+			 rockVertexes_[indexes_for_cell[i]].color.a = 0;
+			 grassVertexes_[indexes_for_cell[i]].color.a = 255;
+			 waterVertexes_[indexes_for_cell[i]].color.a = 0;
+		 }
+		}
+		if (cells_[j] == Kind::water)
+		{
+		for (int i = 0; i <4 ; ++i)
+		{
+			 //pour chaque sommet, colorie pour la texture appropriée (après les avoir toutes mises en transparence)
+			 rockVertexes_[indexes_for_cell[i]].color.a = 0;
+			 grassVertexes_[indexes_for_cell[i]].color.a = 0;
+			 waterVertexes_[indexes_for_cell[i]].color.a = 255;
+		 }
+		}
+	
+		double niveaubleu (((humide_[j] - minHumidity)/ (maxHumidity - minHumidity)) * 255);
+		for (int i(0); i<4; ++i)
+		{
+			humidityVertexes_[indexes_for_cell[i]].color = sf::Color(0, 0, niveaubleu);
+		}
+				
+	}
+	
+	std::cout << minHumidity << " " << maxHumidity << std::endl;
+	renderingCache_.draw(rockVertexes_.data(), rockVertexes_.size(), sf::Quads, rsrock);
+	renderingCache_.draw(grassVertexes_.data(), grassVertexes_.size(), sf::Quads, rsgrass);
+	renderingCache_.draw(waterVertexes_.data(), waterVertexes_.size(), sf::Quads, rswater);
 	//affichage du cache
 	renderingCache_.display();
 	humideCache_.display();
 }
 
-//fonction colour en aide
-void World::colour (std::string tex, Kind type, std::vector <sf::Vertex> vertex)
-{
-	sf::RenderStates rs;
-	rs.texture = &getAppTexture(getTerrain()["textures"][tex].toString()); // ici pour la texture liée à la tex
-	
-	//coordonnée entière pour y
-	int y_coord ;
-	
-	//parcour chaque cellule une à une 
-	for(size_t j(0); j<cells_.size(); ++j)
-	{	
-		y_coord = j/nbCells_;
-		
-		// virer y coord, remplacer ligne d'après par:
-		
-		//std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(toBid(j).x, toBid(j).y, nbCells_ ));
-		
-		//contient les coordonnées dans sommets
-		std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(j%nbCells_, y_coord, nbCells_ ));
 
-
-		
-		if (cells_[j] == type)
-		{
- 
-		 for (int i = 0; i <4 ; ++i)
-		 {
-			 //pour chaque sommet, colorie pour la texture appropriée (après les avoir toutes mises en transparence)
-			 rockVertexes_[indexes_for_cell[i]].color.a = 0;
-			 grassVertexes_[indexes_for_cell[i]].color.a = 0;
-			 waterVertexes_[indexes_for_cell[i]].color.a = 0;
-			 vertex[indexes_for_cell[i]].color.a = 255;
-		 }
-		}
-		
-		if (type == Kind::water) // on ne remplit le cache d'humidité seulement lorsqu'on remplit les cellules d'eau, on choisit cela arbitrairement pour ne remplir les vertexes
-								// qu'une fois.
-		 {
-			double niveaubleu (((humide_[j] - minHumidity)/ (maxHumidity - minHumidity)) * 255);
-			for (int i(0); i<4; ++i)
-			{
-				humidityVertexes_[indexes_for_cell[i]].color = sf::Color(0, 0, niveaubleu);
-			}
-		 } 
-					
-	}
-	
-	std::cout << minHumidity << " " << maxHumidity << std::endl;
-	renderingCache_.draw(vertex.data(), vertex.size(), sf::Quads, rs);
-}	
 
 //raccourci 
 j::Value getTerrain()
