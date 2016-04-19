@@ -1,13 +1,18 @@
 #ifndef ENV_H
 #define ENV_H
 #include "World.hpp"
+#include <Application.hpp>
+#include <SFML/Graphics.hpp>
+#include "Flower.hpp"
+
+//racourci données de configuration pour env
+j::Value getEnv();
 
 class Env {
 	
-	public:
+public:
 	//constucteur
 	Env();
-	
 	//attribus
 	World world_;
 	
@@ -26,6 +31,17 @@ class Env {
 	//sauvegarder l'environnement dans un ficher
 	void saveWorldToFile();	
 	
+	// ajout de fleur dans env
+	void addFlowerAt (Vec2d p);
+	
+	//bloquer copie end Ev
+	Env(const Env& e)= delete;
+	
+private:
+	//collection de fleurs
+	std::vector <std::unique_ptr<Flower>> flowers_;
+	
+
 };
 
 #endif
