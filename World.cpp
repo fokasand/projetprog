@@ -497,17 +497,3 @@ sf::Vector2i World::toBid( int x)
 		throw std::out_of_range(" coordonnée unidimensionnelle ne fait pas partie du tableau.");
 	}
 }
-
-
-//getters
-float World::getcellSize_()
-{
-	return cellSize_;
-}
-
-int World::getnbCells_()
-{
-	return nbCells_;
-}
-
-
