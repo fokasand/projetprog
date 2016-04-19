@@ -2,8 +2,11 @@
 #define FLOWER_H
 #include "Collider.hpp"
 #include "Utility/Utility.hpp"
-#include <SFML/Graphics.hpp> // a include ici ou dans cpp ?
+#include <SFML/Graphics.hpp>
+#include <Application.hpp>
+#include <Random/Random.hpp>
 
+j::Value getFlower(); // raccourci pour acceder aux données
 
 class Flower : public Collider {
 	
@@ -18,8 +21,13 @@ class Flower : public Collider {
 	void drawOn(sf::RenderTarget& target) const;
 	
 	protected : 
+	
 	double pollen;
-	sf::Texture const& texture;
+	// indice maximal de texture -> creation d'un int pour pouvoir utiliser uniform
+	int max; 
+	//initialisation de la textre de la fleur, ne change plus
+	sf::Texture const texture;
+	
 	
 	
 };
