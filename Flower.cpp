@@ -25,10 +25,8 @@ double Flower::takePollen (double take)
 //dessiner les fleurs
 void Flower::drawOn(sf::RenderTarget& target) const 
 {
-	
 	auto flowerSprite = buildSprite(centre, rayon, texture);
       target.draw(flowerSprite);
-	
 }
 
 //racourci pour les données de configuration
