@@ -497,3 +497,26 @@ sf::Vector2i World::toBid( int x)
 		throw std::out_of_range(" coordonnée unidimensionnelle ne fait pas partie du tableau.");
 	}
 }
+
+//guetter for cells
+std::vector<Kind> World::getcells ()
+{
+	return cells_;
+}
+
+//verifie que one fleur peut être plantée
+bool World::isGrowable(const Vec2d&p)
+{
+	if (cells_[toUnid(toGrid(p.x),(p.y))]== Kind::grass)
+	{
+		return true;
+	}
+	return false ;
+}
+
+//convertir du graphique à tableau
+int World::toGrid(double p)
+{
+	p/= cellSize_;
+	return p;
+}
