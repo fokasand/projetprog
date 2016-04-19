@@ -488,3 +488,8 @@ void World::seedTocell(size_t i)
 				}
 			}
 }
+
+int World::toGrid(double x)
+{
+	return x/cellSize_;
+}
