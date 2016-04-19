@@ -46,9 +46,7 @@ void Env::addFlowerAt (Vec2d p)
 		double min (getEnv()["initial"]["flower"]["nectar"]["min"].toDouble());
 		double max (getEnv()["initial"]["flower"]["nectar"]["max"].toDouble());
 		double r (getEnv()["initial"]["flower"]["size"]["manual"].toDouble());
-		std::unique_ptr<Flower> p1 (new Flower(p,r,uniform(min,max)));
-		flowers_.push_back(p1);
-		
+		flowers_.push_back(std::unique_ptr<Flower>  (new Flower(p,r,uniform(min,max))));
 	}
 
 }
