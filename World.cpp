@@ -1,10 +1,9 @@
 #include <Application.hpp>
-#include <SFML/Graphics.hpp>
 #include "World.hpp"
 #include <iostream>
 #include <fstream>
-#include "Utility/Vertex.hpp"
-#include <Random/Random.hpp>
+#include "Env.hpp"
+
 
 //initialisation ensemble de textures
 void World::reloadCacheStructure()
@@ -28,8 +27,6 @@ void World::drawOn(sf::RenderTarget& target)
 {
 	if (getTerrain()["show humidity"].toBool())
 	{	
-		sf::RenderStates rs;
-		humideCache_.draw(humidityVertexes_.data(), humidityVertexes_.size(), sf::Quads, rs);
 		sf::Sprite cachehumide(humideCache_.getTexture());
 		target.draw(cachehumide);
 	}
@@ -38,6 +35,19 @@ void World::drawOn(sf::RenderTarget& target)
 	sf::Sprite cache(renderingCache_.getTexture());
 	target.draw(cache);
 	}
+	
+	if(isDebugOn())
+	{	
+		double x = toGrid(getApp().getCursorPositionInView().x);
+		double y = toGrid(getApp().getCursorPositionInView().y);
+		if ((x < nbCells_) and (x >= 0) and (y < nbCells_) and (y >=0))
+		{
+			Vec2d affiche (getApp().getCursorPositionInView().x -60,getApp().getCursorPositionInView().y );
+			auto const text = buildText(to_nice_string(humide_[toUnid(x,y)]), affiche , getAppFont(), 30, sf::Color::Red);
+			target.draw(text);
+		}
+		
+	} 
 }
 
 //mettre a jour rendering_Cache et humide cache
@@ -54,12 +64,13 @@ void World::updateCache()
 	sf::RenderStates rsrock;
 	sf::RenderStates rsgrass;
 	sf::RenderStates rswater;
+	
+	sf::RenderStates rshumide;
+	
 	rsrock.texture = &getAppTexture(getTerrain()["textures"]["rock"].toString()); // ici pour la texture liée à la tex
 	rsgrass.texture = &getAppTexture(getTerrain()["textures"]["grass"].toString());
 	rswater.texture = &getAppTexture(getTerrain()["textures"]["water"].toString());
 	
-	
-
 	//parcour chaque cellule une à une 
 	for(size_t j(0); j<cells_.size(); ++j)
 	{	
@@ -104,10 +115,10 @@ void World::updateCache()
 				
 	}
 	
-	std::cout << minHumidity << " " << maxHumidity << std::endl;
 	renderingCache_.draw(rockVertexes_.data(), rockVertexes_.size(), sf::Quads, rsrock);
 	renderingCache_.draw(grassVertexes_.data(), grassVertexes_.size(), sf::Quads, rsgrass);
 	renderingCache_.draw(waterVertexes_.data(), waterVertexes_.size(), sf::Quads, rswater);
+	humideCache_.draw(humidityVertexes_.data(), humidityVertexes_.size(), sf::Quads, rshumide);
 	//affichage du cache
 	renderingCache_.display();
 	humideCache_.display();
@@ -153,7 +164,6 @@ void World::reset(bool regenerate=true)
 		}
 
 		steps(getTerrain()["generation"]["steps"].toInt(),false); //false est par défaut normalement, pk ne marche pas ?
-		std::cout << "oula" << std::endl;
 		smooths(getTerrain()["generation"]["smoothness"]["level"].toInt(),false);	
 		
 		updateCache();
@@ -202,7 +212,7 @@ void World::humidcalc(int pos)
 		{
 			if (std::hypot(-x, -y) <= humidityRange_)
 			{
-				if ((xpos+x >= 0) and (ypos+y >= 0) and (xpos+x < nbCells_) and (ypos+y < nbCells_) and not((x==0) and y==0)) // ou alors on compte aussi x==0 et y== 0? je pense que non
+				if ((xpos+x >= 0) and (ypos+y >= 0) and (xpos+x < nbCells_) and (ypos+y < nbCells_) and not((x==0) and y==0))
 				//modulariser cette partie dans un booléen que l'on utilisera aussi pour smooth?
 				{
 				humide_[toUnid(xpos+x,ypos+y)] += e * exp(- std::hypot(-x, -y)  / l);
@@ -266,14 +276,6 @@ void World::loadFromFile()
 			double var;
 			in >> var;
 			humide_[i] = var;
-		}
-	}
-	for (unsigned int i(0); i<humide_.size(); ++i)
-	{
-		if (i==0 or i==humide_.size()-1)
-		{
-			
-		std::cout << humide_[i] << std::endl;
 		}
 	}
 	reloadCacheStructure();
@@ -417,36 +419,6 @@ void World::smooths( int i, bool regeneration = false)
 	}
 }
 
-//fonctions conversions:
-int World::toUnid (int x, int y)
-{
-	if((y)*nbCells_+x <0)
-	{
-		throw std::out_of_range( "les coordonnées reçues inférieures à l'indice minimum possible" ); 
-	}
-	if((y)*nbCells_+x > nbCells_*nbCells_)
-	{
-		throw std::out_of_range( "les coordonnées reçues dépassent l'indice maximum possible" ); 
-	}
-	
-	
-	return y*nbCells_+x;
-}
-
-sf::Vector2i World::toBid( int x)
-{
-	if ((x>= 0) and x < (nbCells_*nbCells_))
-	{
-		sf::Vector2i retour;
-		retour.x= x%nbCells_;
-		retour.y= x/nbCells_;
-		return retour;
-	}
-	else
-	{
-		throw std::out_of_range(" coordonnée unidimensionnelle ne fait pas partie du tableau.");
-	}
-}
 
 //débordements de la fenetre d'affichage
 
@@ -493,3 +465,49 @@ int World::toGrid(double x)
 {
 	return x/cellSize_;
 }
+
+
+//fonctions conversions:
+int World::toUnid (int x, int y)
+{
+	if((y)*nbCells_+x <0)
+	{
+		throw std::out_of_range( "les coordonnées reçues inférieures à l'indice minimum possible" ); 
+	}
+	if((y)*nbCells_+x > nbCells_*nbCells_)
+	{
+		throw std::out_of_range( "les coordonnées reçues dépassent l'indice maximum possible" ); 
+	}
+	
+	
+	return y*nbCells_+x;
+}
+
+sf::Vector2i World::toBid( int x)
+{
+	if ((x>= 0) and x < (nbCells_*nbCells_))
+	{
+		sf::Vector2i retour;
+		retour.x= x%nbCells_;
+		retour.y= x/nbCells_;
+		return retour;
+	}
+	else
+	{
+		throw std::out_of_range(" coordonnée unidimensionnelle ne fait pas partie du tableau.");
+	}
+}
+
+
+//getters
+float World::getcellSize_()
+{
+	return cellSize_;
+}
+
+int World::getnbCells_()
+{
+	return nbCells_;
+}
+
+
