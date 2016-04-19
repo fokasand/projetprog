@@ -13,6 +13,15 @@ class Env {
 public:
 	//constucteur
 	Env();
+	// destructeur
+	~Env() 
+	{
+		for (size_t i(0); i < flowers_.size() ; ++i)
+		{
+			flowers_[i].reset();
+		}
+		flowers_.clear();
+	}
 	//attribus
 	World world_;
 	
@@ -32,11 +41,13 @@ public:
 	void saveWorldToFile();	
 	
 	// ajout de fleur dans env
-	void addFlowerAt (Vec2d p);
+	bool addFlowerAt (Vec2d p);
 	
 	//bloquer copie end Ev
 	Env(const Env& e)= delete;
 	
+	//afficher anneau
+	void drawFlowerZone(sf::RenderTarget& target,Vec2d const& position);
 private:
 	//collection de fleurs
 	std::vector <std::unique_ptr<Flower>> flowers_;
