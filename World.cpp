@@ -461,12 +461,6 @@ void World::seedTocell(size_t i)
 			}
 }
 
-int World::toGrid(double x)
-{
-	return x/cellSize_;
-}
-
-
 //fonctions conversions:
 int World::toUnid (int x, int y)
 {
@@ -517,6 +511,7 @@ bool World::isGrowable(const Vec2d&p)
 //convertir du graphique à tableau
 int World::toGrid(double p)
 {
-	p/= cellSize_;
-	return p;
+	return p/= cellSize_;
 }
+
+
