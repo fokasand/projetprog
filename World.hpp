@@ -104,6 +104,13 @@ public:
 		//getter utilisé dans Env:
 		float getcellSize_();
 		int getnbCells_();
+		
+		//verifie que une fleur peut être plantée
+		bool isGrowable(const Vec2d&p);
+		
+		//convertir de graphique à tableau
+		int toGrid(double p);
+	
 	};
 	
 j::Value getTerrain();
