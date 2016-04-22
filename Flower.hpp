@@ -28,8 +28,6 @@ class Flower : public Collider {
 	//initialisation de la textre de la fleur, ne change plus
 	sf::Texture const texture;
 	
-	
-	
 };
 
 #endif
