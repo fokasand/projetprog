@@ -4,6 +4,11 @@
 #include <fstream>
 #include "Env.hpp"
 
+//raccourci 
+j::Value getTerrain()
+{
+	return getAppConfig()["simulation"]["world"];
+}
 
 //initialisation ensemble de textures
 void World::reloadCacheStructure()
@@ -17,7 +22,7 @@ void World::reloadCacheStructure()
 	rockVertexes_=Vertexes;
 	humidityVertexes_ =Vertexes;
 	
-	//initialisation de la texture
+	//initialisation de la texture à afficher 
 	renderingCache_.create(nbCells_*cellSize_, nbCells_*cellSize_);
 	humideCache_.create(nbCells_*cellSize_, nbCells_*cellSize_);
 }
@@ -36,6 +41,7 @@ void World::drawOn(sf::RenderTarget& target)
 	target.draw(cache);
 	}
 	
+	//activer le mode debugeur de humidity
 	if(isDebugOn())
 	{	
 		double x = toGrid(getApp().getCursorPositionInView().x);
@@ -53,7 +59,7 @@ void World::drawOn(sf::RenderTarget& target)
 //mettre a jour rendering_Cache et humide cache
 void World::updateCache()
 {
-	//nettoyage
+	//nettoyage des textures à afficher
 	renderingCache_.clear();
 	humideCache_.clear();
 	
@@ -80,27 +86,27 @@ void World::updateCache()
 		{
 		for (int i = 0; i <4 ; ++i)
 		 {
-			 //pour chaque sommet, colorie pour la texture appropriée (après les avoir toutes mises en transparence)
+			 //pour chaque sommet, colorie pour la texture appropriée 
 			 rockVertexes_[indexes_for_cell[i]].color.a = 255;
 			 grassVertexes_[indexes_for_cell[i]].color.a = 0;
 			 waterVertexes_[indexes_for_cell[i]].color.a = 0;
 		 }
 		}
+		
 		if (cells_[j] == Kind::grass)
 		{
 		for (int i = 0; i <4 ; ++i)
 		 {
-			 //pour chaque sommet, colorie pour la texture appropriée (après les avoir toutes mises en transparence)
 			 rockVertexes_[indexes_for_cell[i]].color.a = 0;
 			 grassVertexes_[indexes_for_cell[i]].color.a = 255;
 			 waterVertexes_[indexes_for_cell[i]].color.a = 0;
 		 }
 		}
+		
 		if (cells_[j] == Kind::water)
 		{
 		for (int i = 0; i <4 ; ++i)
 		{
-			 //pour chaque sommet, colorie pour la texture appropriée (après les avoir toutes mises en transparence)
 			 rockVertexes_[indexes_for_cell[i]].color.a = 0;
 			 grassVertexes_[indexes_for_cell[i]].color.a = 0;
 			 waterVertexes_[indexes_for_cell[i]].color.a = 255;
@@ -115,6 +121,7 @@ void World::updateCache()
 				
 	}
 	
+	// dessin de toutes les textures dans le cache à afficher
 	renderingCache_.draw(rockVertexes_.data(), rockVertexes_.size(), sf::Quads, rsrock);
 	renderingCache_.draw(grassVertexes_.data(), grassVertexes_.size(), sf::Quads, rsgrass);
 	renderingCache_.draw(waterVertexes_.data(), waterVertexes_.size(), sf::Quads, rswater);
@@ -124,14 +131,6 @@ void World::updateCache()
 	humideCache_.display();
 }
 
-
-
-//raccourci 
-j::Value getTerrain()
-{
-	return getAppConfig()["simulation"]["world"];
-}
-
 void World::reset(bool regenerate=true)
 {
 	if (regenerate)		
@@ -139,15 +138,18 @@ void World::reset(bool regenerate=true)
 		reloadConfig();
 		reloadCacheStructure();
 		seeds_.clear();
+		
 		//initialisation de seeds_ avec les graines
+		//ajout dans seeds_ d'une graine aux coordonnées aléatoires tant que le nombre de graines maximal n'est pas atteint
 		for (int i(0); i < nbGrass_ ; ++i)
 		{
-			sf::Vector2i coord (uniform(0, nbCells_-1) ,uniform(0, nbCells_-1));
+			//coordonnées aléatoires
+			sf::Vector2i coord (uniform(0, nbCells_-1) ,uniform(0, nbCells_-1))
 			Seed graine = {coord,Kind::grass};
 			seeds_.push_back(graine);
 		}
 		
-		// d'abord grass puis water pour que l'eau ne soit pas écrasé si jamais il y avait 2 graines ayant les memes coordonnées
+		// d'abord grass puis water pour que l'eau ne soit pas écrasée si jamais il y avait 2 graines ayant les mêmes coordonnées
 	
 		for (int i(0); i < nbWater_ ; ++i)
 		{
@@ -158,6 +160,7 @@ void World::reset(bool regenerate=true)
 			humidcalc(toUnid(coord.x,coord.y)); // fais pour 1 graine.
 		}
 		
+		//affecte la texture de la graine à la cellule pour chaque graine de seeds_
 		for (size_t i(0); i <seeds_.size() ; ++i)
 		{
 			seedTocell(i);
@@ -351,7 +354,7 @@ void World::steps( int i, bool regeneration = false)
 	}
 }
 
-//smooth
+//affecte la texture entourante majoritaire a chaque cellule
 void World::smooth()
 {	auto copie_de_cells_ = cells_;
 	
@@ -451,6 +454,7 @@ void World::debVect (sf::Vector2i& coord)
 //donner le type de la graine à la cellule ayant les mêmes coordonées 
 void World::seedTocell(size_t i)
 {
+	//sauf si la texture de la cellule est de l'eau
 	if (cells_[toUnid(seeds_[i].coord.x, seeds_[i].coord.y)] != Kind::water)
 			{
 				cells_[toUnid(seeds_[i].coord.x, seeds_[i].coord.y)] = seeds_[i].nature;
@@ -472,8 +476,6 @@ int World::toUnid (int x, int y)
 	{
 		throw std::out_of_range( "les coordonnées reçues dépassent l'indice maximum possible" ); 
 	}
-	
-	
 	return y*nbCells_+x;
 }
 
@@ -492,7 +494,7 @@ sf::Vector2i World::toBid( int x)
 	}
 }
 
-//guetter for cells
+//getter for cells
 std::vector<Kind> World::getcells ()
 {
 	return cells_;
@@ -501,7 +503,8 @@ std::vector<Kind> World::getcells ()
 //verifie que one fleur peut être plantée
 bool World::isGrowable(const Vec2d&p)
 {
-	if (cells_[toUnid(toGrid(p.x),(p.y))]== Kind::grass)
+	//verifier que le type de la cellule testée est de l'herbe
+	if (cells_[toUnid(toGrid(p.x),toGrid(p.y))]== Kind::grass)
 	{
 		return true;
 	}
@@ -509,9 +512,8 @@ bool World::isGrowable(const Vec2d&p)
 }
 
 //convertir du graphique à tableau
+// on peux faire une fonction prennant le vecteur comme argument directement
 int World::toGrid(double p)
-{
-	return p/= cellSize_;
+{ 
+	return p/cellSize_;
 }
-
-
