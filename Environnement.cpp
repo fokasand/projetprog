@@ -19,10 +19,22 @@ Env::Env()
 	}
 }
 
+//destructeur
+Env::~Env()
+{
+	for (size_t i(0); i < flowers_.size() ; ++i)
+	{
+		flowers_[i].reset();
+	}
+	flowers_.clear();
+}
 //regeneration de l'environnement
 void Env::reset()
 {
+	//reset le terrain
 	world_.reset(true);
+	
+	//liberer les pointeurs et nottoyer le tableau de Flower
 	for (size_t i(0); i < flowers_.size() ; ++i)
 	{
 		flowers_[i].reset();
