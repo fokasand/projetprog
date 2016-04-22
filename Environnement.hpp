@@ -13,15 +13,10 @@ class Env {
 public:
 	//constucteur
 	Env();
+	
 	// destructeur
-	~Env() 
-	{
-		for (size_t i(0); i < flowers_.size() ; ++i)
-		{
-			flowers_[i].reset();
-		}
-		flowers_.clear();
-	}
+	~Env();
+	
 	//attribus
 	World world_;
 	
