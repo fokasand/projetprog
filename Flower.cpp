@@ -32,3 +32,22 @@ j::Value getFlower()
 {
 	return getAppConfig()["simulation"]["flower"];
 }
+
+void Flower::update(sf::Time dt)
+{
+	if (pollen > 0)
+	{
+		pollen += dt.asSeconds() * log(getAppEnv().world_.humid(centre) / getFlower()["growth"]["threshold"].toDouble());
+	}
+	std::cout << pollen << " " << dt.asSeconds()* log(getAppEnv().world_.humid(centre) / getFlower()["growth"]["threshold"].toDouble()) <<std::endl;
+	if (pollen >= getFlower()["growth"]["split"].toDouble())
+	{
+		Vec2d pp;
+		do
+		{
+			double d (uniform(0.5*rayon, 2*rayon));
+			pp = centre + Vec2d::fromRandomAngle() * d;
+		} while (!getAppEnv().addFlowerAt(pp));
+		pollen = pollen/2;
+	}
+}
