@@ -517,3 +517,8 @@ int World::toGrid(double p)
 { 
 	return p/cellSize_;
 }
+
+double World::humid (Vec2d p)
+{
+	return humide_[toUnid(p.x,p.y)];
+}
