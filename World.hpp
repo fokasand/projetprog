@@ -15,8 +15,6 @@ Kind nature;
 
 class World{
 private :
-	// destructeur
-
 	//variable regroupant la texture totale à afficher
 	sf::RenderTexture renderingCache_;
 			
@@ -49,8 +47,10 @@ private :
 	
 	//cordonnée superieure a nbCells
 	void debSup (int& c);
-	//coordonnée inferieur à nbCells
+	
+	//coordonnée inferieure à nbCells
 	void debInf(int& c);
+	
 	//verifie le vecteur de coordonnées
 	void debVect (sf::Vector2i& coord); 
 	
@@ -68,6 +68,7 @@ private :
 	
 	//donner le type de la graine à la cellule ayant les mêmes coordonées 
 	void seedTocell(size_t i);
+	
 public:
 	//calcule le taux d'humidité d'une cellule et le range dans humide
 	void humidcalc(int pos);
@@ -93,7 +94,7 @@ public:
 	//mvt graines
 	void steps( int i, bool regeneration);
 	
-	//lissage
+	//lissage des textures
 	void smooths(int i, bool regeneration);
 	
 	//conversions
