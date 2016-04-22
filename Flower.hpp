@@ -20,6 +20,9 @@ class Flower : public Collider {
 	//dessiner les fleurs
 	void drawOn(sf::RenderTarget& target) const;
 	
+	//mettre a jour la fleur (quantité de pollen)
+	void update(sf::Time dt);
+	
 	protected : 
 	
 	double pollen;
