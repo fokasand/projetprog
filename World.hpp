@@ -111,6 +111,9 @@ public:
 	
 	//convertir de graphique à tableau
 	int toGrid(double p);
+	
+	//donne l'humidité à la position p (utilisé pour Flower)
+	double humid (Vec2d p);
 
 	};
 
