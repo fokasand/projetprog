@@ -1,11 +1,11 @@
 #include "FlowerGen.hpp"
 
-void FlowerGen::update(sf::Time dt)
+void FlowerGenerator::update(sf::Time dt)
 {
 	
 }
 
-void FlowerGen::reset()
+void FlowerGenerator::reset()
 {
 	t=sf::Time::Zero;
 }
