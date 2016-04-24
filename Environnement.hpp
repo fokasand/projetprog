@@ -13,10 +13,15 @@ class Env {
 public:
 	//constucteur
 	Env();
-	
 	// destructeur
-	~Env();
-	
+	~Env() 
+	{
+		for (size_t i(0); i < flowers_.size() ; ++i)
+		{
+			flowers_[i].reset();
+		}
+		flowers_.clear();
+	}
 	//attribus
 	World world_;
 	
@@ -47,8 +52,6 @@ private:
 	//collection de fleurs
 	std::vector <std::unique_ptr<Flower>> flowers_;
 	
-	//generation automatique
-	FlowerGenerator fgen;
 
 };
 
