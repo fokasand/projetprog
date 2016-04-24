@@ -19,22 +19,10 @@ Env::Env()
 	}
 }
 
-//destructeur
-Env::~Env()
-{
-	for (size_t i(0); i < flowers_.size() ; ++i)
-	{
-		flowers_[i].reset();
-	}
-	flowers_.clear();
-}
 //regeneration de l'environnement
 void Env::reset()
 {
-	//reset le terrain
 	world_.reset(true);
-	
-	//liberer les pointeurs et nottoyer le tableau de Flower
 	for (size_t i(0); i < flowers_.size() ; ++i)
 	{
 		flowers_[i].reset();
@@ -46,15 +34,15 @@ void Env::reset()
 //evolution de l'environnement sur un temps dt
 void Env::update(sf::Time dt)
 {
-
+	for (auto& fleur : flowers_)
+	{
+		fleur->update(dt);
+	}
 }
 
 //dessin de l'environnement
 void Env::drawOn(sf::RenderTarget& target)
 {
-	// remettre le compteur de temps à 0
-	fgen.reset();
-	
 	//dessin du terrain
 	world_.drawOn(target);
 	
