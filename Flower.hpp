@@ -30,7 +30,7 @@ class Flower : public Collider {
 	int max; 
 	//initialisation de la textre de la fleur, ne change plus
 	sf::Texture const texture;
-	
+
 };
 
 #endif
