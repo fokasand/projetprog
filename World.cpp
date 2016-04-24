@@ -144,7 +144,7 @@ void World::reset(bool regenerate=true)
 		for (int i(0); i < nbGrass_ ; ++i)
 		{
 			//coordonnées aléatoires
-			sf::Vector2i coord (uniform(0, nbCells_-1) ,uniform(0, nbCells_-1))
+			sf::Vector2i coord (uniform(0, nbCells_-1) ,uniform(0, nbCells_-1));
 			Seed graine = {coord,Kind::grass};
 			seeds_.push_back(graine);
 		}
