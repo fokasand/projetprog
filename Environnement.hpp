@@ -47,6 +47,8 @@ private:
 	//collection de fleurs
 	std::vector <std::unique_ptr<Flower>> flowers_;
 	
+	//generation automatique
+	FlowerGenerator fgen;
 
 };
 
