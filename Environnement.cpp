@@ -52,6 +52,9 @@ void Env::update(sf::Time dt)
 //dessin de l'environnement
 void Env::drawOn(sf::RenderTarget& target)
 {
+	// remettre le compteur de temps à 0
+	fgen.reset();
+	
 	//dessin du terrain
 	world_.drawOn(target);
 	
