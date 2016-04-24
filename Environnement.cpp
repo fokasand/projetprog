@@ -22,6 +22,8 @@ Env::Env()
 //regeneration de l'environnement
 void Env::reset()
 {
+	fgen_.reset();
+	
 	world_.reset(true);
 	for (size_t i(0); i < flowers_.size() ; ++i)
 	{
@@ -92,4 +94,3 @@ void Env::saveWorldToFile()
 {
 	world_.saveToFile();
 }
-
