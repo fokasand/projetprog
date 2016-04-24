@@ -4,6 +4,7 @@
 #include <Application.hpp>
 #include <SFML/Graphics.hpp>
 #include "Flower.hpp"
+#include "FlowerGen.hpp"
 
 //racourci données de configuration pour env
 j::Value getEnv();
@@ -48,10 +49,14 @@ public:
 	
 	//afficher anneau
 	void drawFlowerZone(sf::RenderTarget& target,Vec2d const& position);
+	
 private:
 	//collection de fleurs
 	std::vector <std::unique_ptr<Flower>> flowers_;
 	
+	FlowerGenerator fgen_;
+	
+	sf::Time t;
 
 };
 
