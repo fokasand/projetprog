@@ -17,6 +17,8 @@ class Flower : public Collider {
 	//retirer du pollen tant qu'il est disponible
 	double takePollen (double take);
 	
+	double getPollen(); // utilisé dans Env pour tuer les fleurs.
+	
 	//dessiner les fleurs
 	void drawOn(sf::RenderTarget& target) const;
 	
