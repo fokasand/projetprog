@@ -40,11 +40,16 @@ j::Value getFlower()
 
 void Flower::update(sf::Time dt)
 {
+	if (pollen<= 0) 
+	{
+		std::cout <<"la oui" << std::endl; // le segfault n'entre pas ici, l'erreur est simplement causé par le fait d'avoir du pollen négatif je crois. regarde ce que disait la prof par rapport aux logs etout dans l'autre formule.
+		getAppEnv().killFlower(); // dit qu'une fleur est morte, pour que Env regarde laquelle est morte.
+	}
 	if (pollen > 0)
 	{
 		pollen += dt.asSeconds() * log(getAppEnv().world_.humid(centre) / getFlower()["growth"]["threshold"].toDouble());
 	}
-	std::cout << pollen << " " << dt.asSeconds()* log(getAppEnv().world_.humid(centre) / getFlower()["growth"]["threshold"].toDouble()) <<std::endl;
+
 	if (pollen >= getFlower()["growth"]["split"].toDouble())
 	{
 		Vec2d pp;
@@ -55,4 +60,9 @@ void Flower::update(sf::Time dt)
 		} while (!getAppEnv().addFlowerAt(pp));
 		pollen = pollen/2;
 	}
+}
+
+double Flower::getPollen()
+{
+	return pollen;
 }
