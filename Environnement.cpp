@@ -1,5 +1,6 @@
 #include "Env.hpp"
 
+
 //racourci données de configuration pour env
 j::Value getEnv()
 {
@@ -33,6 +34,24 @@ void Env::reset()
 	
 }
 
+void Env::killFlower()
+{
+	for (size_t i(0); i < flowers_.size() ; ++i)
+	{
+		if (flowers_[i]->getPollen() <= 0)
+		{
+			std::cout << "bonjour" << std::endl;
+			flowers_[i].reset();
+			std::cout << "toujour" << std::endl;
+			flowers_[i]= nullptr;
+			std::cout << "ok" << std::endl;
+			flowers_.erase(std::remove(flowers_.begin(), flowers_.end(), nullptr), flowers_.end());
+		}
+	}
+
+	flowers_.erase(std::remove(flowers_.begin(), flowers_.end(), nullptr), flowers_.end());
+}
+
 //evolution de l'environnement sur un temps dt
 void Env::update(sf::Time dt)
 {
@@ -40,6 +59,7 @@ void Env::update(sf::Time dt)
 	{
 		fleur->update(dt);
 	}
+	fgen_.update(dt); // fait à l'étape 3, réponse question.
 }
 
 //dessin de l'environnement
