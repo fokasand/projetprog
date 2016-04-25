@@ -520,5 +520,5 @@ int World::toGrid(double p)
 
 double World::humid (Vec2d p)
 {
-	return humide_[toUnid(p.x,p.y)];
+	return humide_[toUnid(toGrid(p.x),toGrid(p.y))];
 }
