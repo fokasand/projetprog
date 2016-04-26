@@ -5,11 +5,13 @@
 #include <SFML/Graphics.hpp>
 #include "Flower.hpp"
 #include "FlowerGen.hpp"
+#include <Interface/Drawable.hpp>
+#include <Interface/Updatable.hpp>
 
 //racourci données de configuration pour env
 j::Value getEnv();
 
-class Env {
+class Env: public Drawable, public Updatable {
 	
 public:
 	//constucteur
@@ -30,10 +32,10 @@ public:
 	void reset();
 	
 	//evolution de l'environnement sur un temps dt
-	void update(sf::Time dt);
+	virtual void update(sf::Time dt) override;
 	
 	//dessin de l'environnement
-	void drawOn(sf::RenderTarget& target);
+	virtual void drawOn(sf::RenderTarget& target) const override;
 	
 	//génération de l'environnement à partir d'un fichier
 	void loadWorldFromFile();
