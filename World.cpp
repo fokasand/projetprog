@@ -28,7 +28,7 @@ void World::reloadCacheStructure()
 }
 
 //fonction draw
-void World::drawOn(sf::RenderTarget& target)
+void World::drawOn(sf::RenderTarget& target) const
 {
 	if (getTerrain()["show humidity"].toBool())
 	{	
