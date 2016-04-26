@@ -4,6 +4,7 @@
 #include "Utility/Utility.hpp"
 #include <Random/Random.hpp>
 #include <SFML/Graphics.hpp>
+#include <Interface/Drawable.hpp>
 
 j::Value getTerrain();
 
@@ -13,7 +14,7 @@ struct Seed {
 Kind nature;	
 };
 
-class World{
+class World : public Drawable{
 private :
 	//variable regroupant la texture totale à afficher
 	sf::RenderTexture renderingCache_;
@@ -80,7 +81,7 @@ public:
 	void reloadConfig();
 
 	//dessine la texture stockée dans renderingCache sur la fenetre
-	void drawOn(sf::RenderTarget& target);
+	virtual void drawOn(sf::RenderTarget& target) const override;
 	
 	//reset
 	void reset(bool regenerate);
