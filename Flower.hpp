@@ -10,7 +10,7 @@
 
 j::Value getFlower(); // raccourci pour acceder aux données
 
-class Flower : public Collider {
+class Flower : public Collider, public Drawable, public Updatable {
 	
 	public :
 	//constructeur de Flower avec 3 paramètres
