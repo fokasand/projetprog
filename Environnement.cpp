@@ -63,7 +63,7 @@ void Env::update(sf::Time dt)
 }
 
 //dessin de l'environnement
-void Env::drawOn(sf::RenderTarget& target)
+void Env::drawOn(sf::RenderTarget& target) const
 {
 	//dessin du terrain
 	world_.drawOn(target);
