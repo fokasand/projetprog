@@ -5,6 +5,8 @@
 #include <SFML/Graphics.hpp>
 #include <Application.hpp>
 #include <Random/Random.hpp>
+#include <Interface/Updatable.hpp>
+#include <Interface/Drawable.hpp>
 
 j::Value getFlower(); // raccourci pour acceder aux données
 
@@ -20,10 +22,10 @@ class Flower : public Collider {
 	double getPollen(); // utilisé dans Env pour tuer les fleurs.
 	
 	//dessiner les fleurs
-	void drawOn(sf::RenderTarget& target) const;
+	virtual void drawOn(sf::RenderTarget& target) const override;
 	
 	//mettre a jour la fleur (quantité de pollen)
-	void update(sf::Time dt);
+	virtual void update(sf::Time dt) override;
 	
 	protected : 
 	
