@@ -62,6 +62,9 @@ private:
 	
 	sf::Time t;
 
+	//effacer la collection de fleurs
+	void clearFlowers();
+
 };
 
 #endif
