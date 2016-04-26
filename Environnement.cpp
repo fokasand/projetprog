@@ -86,7 +86,7 @@ bool Env::addFlowerAt (Vec2d p)
 		double min (getEnv()["initial"]["flower"]["nectar"]["min"].toDouble());
 		double max (getEnv()["initial"]["flower"]["nectar"]["max"].toDouble());
 		double r (getEnv()["initial"]["flower"]["size"]["manual"].toDouble());
-		flowers_.push_back(std::unique_ptr<Flower> (new Flower(p,r,uniform(min,max))));	
+		flowers_.push_back(new Flower(p,r,uniform(min,max)));
 		
 		return true;
 	}
@@ -113,4 +113,14 @@ void Env::loadWorldFromFile()
 void Env::saveWorldToFile()
 {
 	world_.saveToFile();
+}
+
+void Env::clearFlowers() 
+{
+	for (size_t i(0); i < flowers_.size() ; ++i)
+		{
+			delete flowers_[i];
+			flowers_[i]= nullptr;
+		}
+	flowers_.clear();	
 }
