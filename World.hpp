@@ -2,8 +2,6 @@
 #define WORLD_H
 #include "Utility/Vertex.hpp"
 #include "Utility/Utility.hpp"
-#include <Random/Random.hpp>
-#include <SFML/Graphics.hpp>
 #include <Interface/Drawable.hpp>
 
 j::Value getTerrain();
@@ -118,7 +116,7 @@ public:
     int toGrid(double p) const;
 
     //donne l'humidité à la position p (utilisé pour Flower)
-    double humid (Vec2d p);
+    double howhumid (Vec2d const& p);
 
 };
 
