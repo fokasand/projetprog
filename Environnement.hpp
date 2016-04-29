@@ -1,8 +1,6 @@
 #ifndef ENV_H
 #define ENV_H
 #include "World.hpp"
-#include <Application.hpp>
-#include <SFML/Graphics.hpp>
 #include "Flower.hpp"
 #include "FlowerGen.hpp"
 #include <Interface/Drawable.hpp>
@@ -49,7 +47,7 @@ public:
     //tue une fleur
     void killFlower();
 
-
+	double howhumid(Vec2d const& p);
 private:
     //collection de fleurs
     std::vector <Flower*> flowers_;
