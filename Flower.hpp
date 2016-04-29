@@ -1,10 +1,6 @@
 #ifndef FLOWER_H
 #define FLOWER_H
 #include "Collider.hpp"
-#include "Utility/Utility.hpp"
-#include <SFML/Graphics.hpp>
-#include <Application.hpp>
-#include <Random/Random.hpp>
 #include <Interface/Updatable.hpp>
 #include <Interface/Drawable.hpp>
 
