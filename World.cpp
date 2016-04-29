@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include "Env.hpp"
+#include <Random/Random.hpp>
 
 //raccourci
 j::Value getTerrain()
@@ -414,11 +415,15 @@ void World::seedTocell(size_t i)
 //fonctions conversions:
 int World::toUnid (int x, int y) const
 {
-    if((y)*nbCells_+x <0) {
+    if((y)*nbCells_+x <0) 
+    {
+		cout << x <<"," << y << " et nbcells = " << nbCells_ << endl;
         throw std::out_of_range( "les coordonnées reçues inférieures à l'indice minimum possible" );
     }
-    if((y)*nbCells_+x > nbCells_*nbCells_) {
-        throw std::out_of_range( "les coordonnées reçues dépassent l'indice maximum possible" );
+    if((y)*nbCells_+x > nbCells_*nbCells_) 
+    {
+        cout << x <<"," << y << " et nbcells = " << nbCells_ << endl;
+        throw std::out_of_range( "les coordonnées reçues dépassent l'indice maximum possible:"  );
     }
     return y*nbCells_+x;
 }
@@ -446,11 +451,18 @@ bool World::isGrowable(const Vec2d&p) // ATTENTION, il peut tester des choses qu
 {
     double width = getApp().getWorldSize().x;
     double height= getApp().getWorldSize().y;
-    //verifier que le type de la cellule testée est de l'herbe
-    if (cells_[toUnid(toGrid(p.x),toGrid(p.y))]== Kind::grass && p.x <  width && p.y< height && p.x>= 0 && p.y >= 0) {
-        return true;
-    }
-    return false ;
+    //verifier que le type de la cellule testée est de l'herbe, et que le point appartient au monde.
+    if((p.x <  width) and (p.y< height) and (p.x> 0) and (p.y > 0))
+    {
+		if (cells_[toUnid(toGrid(p.x),toGrid(p.y))]== Kind::grass) 
+		{
+			return true;
+		}
+	}
+	else
+	{
+	return false ;
+	}
 }
 
 //convertir du graphique à tableau
@@ -460,7 +472,7 @@ int World::toGrid(double p) const
     return p/cellSize_;
 }
 
-double World::humid (Vec2d p)
+double World::howhumid (Vec2d const& p)
 {
     return humide_[toUnid(toGrid(p.x),toGrid(p.y))];
 }
