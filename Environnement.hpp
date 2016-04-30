@@ -48,6 +48,14 @@ public:
     void killFlower();
 
 	double howhumid(Vec2d const& p);
+	//ajouter une ruche
+	bool addHiveAt(const Vec2d& position);
+	
+	//rend un pointeur la ruche en collision avec l'argument
+	Hive* getCollidingHive(const Collider& body);
+	
+	//rend la fleur en collision avec l'argument
+	Flower* getCollidingFlower(const Collider& body);
 private:
     //collection de fleurs
     std::vector <Flower*> flowers_;
@@ -58,6 +66,11 @@ private:
 
     //vire les fleurs.
     void clearFlowers();
+    //efface les ruches
+    void clearHives();
+    
+    //collection ruches
+    vector<Hive> hives_;
 };
 
 #endif
