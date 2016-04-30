@@ -6,11 +6,22 @@ j::Value getHive()
 	return getAppConfig()["simulation"]["hive"];
 }
 //constructeur 
-Hive(const Vec2d& c,const double& r) 
-: Collider(c,r), nectar_(getAppConfig()["initial"]["nectar"].toDouble()),
+Hive::Hive(const Vec2d& c) 
+: Collider(c,getAppConfig()["simulation"]["env"]["initial"]["hive"]["manual"].toDouble), nectar_(getHive()["initial"]["nectar"].toDouble()),
 texture(getAppTexture(getHive()["textures"].toString)
 {}
 
+//destructeur
+~Hive::Hive()
+{
+	for (size_t i(0); i < bees_.size(); ++i)
+	{
+		delete bees_[i]:
+		bees_[i] = nullptr;
+	}
+	bees_.clear();
+}
+//redefinir le dessin pour les ruches
 void Hive::drawOn(sf::RenderTarget& targetWindow) const override
 {
 	auto hiveSprite = buildSprite(centre, rayon*2.5, texture);
