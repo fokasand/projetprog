@@ -118,6 +118,7 @@ public:
     //donne l'humidité à la position p (utilisé pour Flower)
     double howhumid (Vec2d const& p);
 
+    bool isHiveable(const Vec2d& position, double radius);
 };
 
 #endif
