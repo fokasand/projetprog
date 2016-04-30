@@ -124,7 +124,85 @@ double Env::howhumid(Vec2d const& p)
 	return world_.howhumid(p);
 }
 
+//destructeur de Env
 Env::~Env()
 {
-    clearFlowers();
+    clearFlowers(); 
+    clearHives();
+}
+
+//ajouter une ruche
+bool Env::addHiveAt(const Vec2d& position)
+{
+	//creer la ruche à tester
+	Hive hive (position)
+
+	//verifier que la ruche n'est pas en collision 
+	// avec un autre element
+	// verifier toutes les fleurs
+	for (size_t i(0); i < flowers_.size() ; ++i)
+	{
+		if(hive.isColliding(*flowers_[i]))
+		{
+			return false;
+		}
+	}
+	
+	//verifier toutes les ruches
+	for (size_t i(0); i < hives_.size() ; ++i)
+	{
+		Collider test(*hives_[i].getPosition(),
+		getEnv()["initial"]["hive"]["size"]["manual"].toDouble()*
+		getEnv()["initial"]["hive"]["hiveable factor"].toDouble());
+		
+		if(hive.isColliding(test)
+		{
+			return false;
+		}
+	}
+	
+	//si n'est en collision avec rien
+	//peut être ajoutée
+	hives_.push_back(new hive);
+	return true;
+}
+
+//rend la ruche en collision avec l'argument 
+//(la premiere dans la teableau qui soit en collision)
+Hive* Env::getCollidingHive(const Collider& body)
+{
+	for (size_t i(0); i < hives_.size() ; ++i)
+	{
+		Collider test(*hives_[i].getPosition(),
+		getEnv()["initial"]["hive"]["size"]["manual"].toDouble()*
+		getEnv()["initial"]["hive"]["hiveable factor"].toDouble());
+		
+		if(body.isColliding(test)
+		{
+			return hives_[i];
+		}
+	}
+	return nullptr;
+}
+
+//rend la fleur en collision avec l'argument
+Flower* Env::get CollidingFlower(const Collider& body)
+{
+	for (size_t i(0); i < flowers_.size() ; ++i)
+	{
+		if(body.isColliding(*flowers_[i]))
+		{
+			return flowers_[i];
+		}
+	}
+	return nullptr;		
+}
+
+void Env::clearHives()
+{
+	 for (size_t i(0); i < hives_.size() ; ++i) {
+        delete hives_[i];
+        hives_[i]= nullptr;
+    }
+    hives_.clear();
 }
