@@ -476,3 +476,8 @@ double World::howhumid (Vec2d const& p)
 {
     return humide_[toUnid(toGrid(p.x),toGrid(p.y))];
 }
+
+bool World::isHiveable(const Vec2d& position, double radius)
+{
+	return true;
+}
