@@ -1,4 +1,3 @@
-#include <Application.hpp>
 #include "World.hpp"
 #include <iostream>
 #include <fstream>
