@@ -103,11 +103,10 @@ public:
     //conversions
     int toUnid (int x, int y) const ; // to unidimensional
     sf::Vector2i toBid( int x) const; // to bidimensional
-    int toUnidToric ( int x, int y );// to toric unidimensional, utilisé dans le bonus
-    
+    int toUnidToric(int xpos,int ypos); // to toric bidimensional, utilisé pour le bonus 4.1
     //getter utilisé dans Env:
     float getcellSize_();
-    int getnbCells_();
+    int getnbCells_() const;
     std::vector<Kind> getcells ();
 
     //verifie que une fleur peut être plantée
@@ -118,9 +117,10 @@ public:
 
     //donne l'humidité à la position p (utilisé pour Flower)
     double howhumid (Vec2d const& p);
-
-    // vérifie que toutes les cellules autour de la position sont bien de l'herbe.
+	
+	// test si la zone torique autour de la position est bien de l'herbe partout.
     bool isHiveable(const Vec2d& position, double radius);
+
 };
 
 #endif
