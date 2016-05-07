@@ -48,6 +48,40 @@ Collider::Collider (const Collider& a) :
 		centre.y += worldSize.y;
  	}
  }
+ 
+ /*
+ fonction clamping à remplacer par :
+ //clamping
+
+void Collider::clamping() //takes current Collider and operates on its center
+{
+    clamping_(centre);
+}
+
+void clamping_(Vec2d& position) //méthode créée en dehors de collider pour pouvoir être utilisée sans créer de collider
+{
+	Vec2d worldSize = getApp().getWorldSize();
+	double width = worldSize.x;
+    double height= worldSize.y;
+    
+    while (position.x> width) {
+        position.x -= worldSize.x;
+    }
+
+    while (position.y> height) {
+        position.y -= worldSize.y;
+    }
+    while (position.x< 0) {
+        position.x += worldSize.x;
+    }
+
+    while (position.y< 0) {
+        position.y += worldSize.y;
+    }
+}
+
+// et ajouter la merde dans hpp
+*/
 
 //getters
 
