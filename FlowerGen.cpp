@@ -1,7 +1,6 @@
 #include "FlowerGen.hpp"
 #include "Env.hpp"
 #include <Random/Random.hpp>
-#include <Application.hpp>
 
 
 void FlowerGenerator::update(sf::Time dt)
