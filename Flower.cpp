@@ -50,7 +50,7 @@ void Flower::update(sf::Time dt)
         getAppEnv().killFlower(); // dit qu'une fleur est morte, pour que une méthode dans Env regarde laquelle est morte et l'enlève du tableau.
     } else 
     {
-        pollen += dt.asSeconds() * log( getAppEnv().howhumid(centre) / getFlower()["growth"]["threshold"].toDouble() );
+        pollen += dt.asSeconds() * log( getAppEnv().world_.howhumid(centre) / getFlower()["growth"]["threshold"].toDouble() );
         if (pollen >= getFlower()["growth"]["split"].toDouble()) 
         {
             Vec2d pp;
