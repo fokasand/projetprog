@@ -4,7 +4,7 @@
 #include "Bee.hpp"
 #include <Interface/Updatable.hpp>
 #include <Interface/Drawable.hpp>
-#include <Application.hpp>
+
 
 class Hive : public Collider, public Drawable, public Updatable{
 public:
