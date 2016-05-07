@@ -481,3 +481,9 @@ bool World::isHiveable(const Vec2d& position, double radius)
 {
 	return true;
 }
+
+//getter for number of cells
+int World::getnbCells_()const
+{
+	return nbCells_;
+}
