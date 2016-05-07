@@ -1,7 +1,6 @@
 #include "Flower.hpp"
 #include "Env.hpp"
 #include <Random/Random.hpp>
-#include <Application.hpp>
 
 
 //constructeur de flower avec 3 paramètres, initialise le collider,
