@@ -3,6 +3,7 @@
 #include <fstream>
 #include "Env.hpp"
 #include <Random/Random.hpp>
+#include <Application.hpp>
 
 //raccourci
 j::Value getTerrain()
