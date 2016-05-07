@@ -103,7 +103,8 @@ public:
     //conversions
     int toUnid (int x, int y) const ; // to unidimensional
     sf::Vector2i toBid( int x) const; // to bidimensional
-
+    int toUnidToric ( int x, int y );// to toric unidimensional, utilisé dans le bonus
+    
     //getter utilisé dans Env:
     float getcellSize_();
     int getnbCells_();
@@ -118,6 +119,7 @@ public:
     //donne l'humidité à la position p (utilisé pour Flower)
     double howhumid (Vec2d const& p);
 
+    // vérifie que toutes les cellules autour de la position sont bien de l'herbe.
     bool isHiveable(const Vec2d& position, double radius);
 };
 
