@@ -56,6 +56,10 @@ public:
 	
 	//rend la fleur en collision avec l'argument
 	Flower* getCollidingFlower(const Collider& body);
+	
+	//bonus 4.1:
+	void drawHiveableZone(sf::RenderTarget& target, Vec2d const& position);
+	sf::Color couleur();
 private:
     //collection de fleurs
     std::vector <Flower*> flowers_;
