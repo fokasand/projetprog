@@ -9,7 +9,7 @@ Hive::Hive(const Vec2d& c)
 : Collider::Collider(c,getAppConfig()["simulation"]["env"]["initial"]["hive"]["size"]["manual"].toDouble()),
 nectar_(getHive()["initial"]["nectar"].toDouble()),
 texture(getAppTexture(getHive()["texture"].toString()))
-{cerr << "une ruche est crée"<< std::endl;}
+{}
 
 //destructeur
 Hive::~Hive()
@@ -25,17 +25,18 @@ Hive::~Hive()
 //redefinir le dessin pour les ruches
 void Hive::drawOn(sf::RenderTarget& targetWindow) const
 {
-	cerr << "on dessine" << std::endl;
+
 	auto hiveSprite = buildSprite(centre, rayon*2.5, texture);
       targetWindow.draw(hiveSprite);	
       
       if(isDebugOn())
       {
-		 double x = getAppEnv().world_.toGrid(getApp().getCursorPositionInView().x);
-		double y = getAppEnv().world_.toGrid(getApp().getCursorPositionInView().y);
-		if ((x < getAppEnv().world_.getnbCells_()) and (x >= 0) and (y < getAppEnv().world_.getnbCells_()) and (y >=0))
+		Vec2d curseur (getApp().getCursorPositionInView());
+		double x = getAppEnv().world_.toGrid(curseur.x);
+		double y = getAppEnv().world_.toGrid(curseur.y);
+		if ((x < getAppEnv().world_.getnbCells_()) and (x >= 0) and (y < getAppEnv().world_.getnbCells_()) and (y >=0) and (*this > curseur))
 		{
-			Vec2d affiche (getApp().getCursorPositionInView().x -60,getApp().getCursorPositionInView().y );
+			Vec2d affiche (curseur.x +60,curseur.y );
 			auto const text = buildText(to_nice_string(nectar_), affiche , getAppFont(), 30, sf::Color::Green);
 			targetWindow.draw(text);
 		}
