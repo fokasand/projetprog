@@ -1,10 +1,10 @@
 #ifndef HIVE_H
 #define HIVE_H
 #include "Collider.hpp"
-#include <Application.hpp>
 #include "Bee.hpp"
 #include <Interface/Updatable.hpp>
 #include <Interface/Drawable.hpp>
+#include <Application.hpp>
 
 class Hive : public Collider, public Drawable, public Updatable{
 public:
