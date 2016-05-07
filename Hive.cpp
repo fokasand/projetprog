@@ -3,6 +3,7 @@
 #include "Utility/Utility.hpp"
 //probablement une dépendance circulaire qvec World
 #include "Env.hpp"
+#include <Application.hpp>
 
 //constructeur 
 Hive::Hive(const Vec2d& c) 
