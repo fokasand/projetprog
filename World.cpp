@@ -445,6 +445,17 @@ std::vector<Kind> World::getcells ()
 {
     return cells_;
 }
+//convertir du graphique à tableau
+// on peux faire une fonction prennant le vecteur comme argument directement
+int World::toGrid(double p) const
+{
+    return p/cellSize_;
+}
+
+double World::howhumid (Vec2d const& p)
+{
+    return humide_[toUnid(toGrid(p.x),toGrid(p.y))];
+}
 
 //verifie que one fleur peut être plantée
 bool World::isGrowable(const Vec2d&p) // ATTENTION, il peut tester des choses qui ne sont pas dans le monde, donc clamper avant de l'utiliser
@@ -465,59 +476,13 @@ bool World::isGrowable(const Vec2d&p) // ATTENTION, il peut tester des choses qu
 	}
 }
 
-//convertir du graphique à tableau
-// on peux faire une fonction prennant le vecteur comme argument directement
-int World::toGrid(double p) const
-{
-    return p/cellSize_;
-}
-
-double World::howhumid (Vec2d const& p)
-{
-    return humide_[toUnid(toGrid(p.x),toGrid(p.y))];
-}
-
-bool World::isHiveable(const Vec2d& position, double radius)
-{
-	return true;
-}
-
-//getter for number of cells
 int World::getnbCells_()const
 {
 	return nbCells_;
 }
-/*
-//verifie que one fleur peut être plantée
-bool World::isGrowable(const Vec2d&p) // ATTENTION, il peut tester des choses qui ne sont pas dans le monde, donc clamper avant de l'utiliser
-{
-    double width = getApp().getWorldSize().x;
-    double height= getApp().getWorldSize().y;
-    //verifier que le type de la cellule testée est de l'herbe, et que le point appartient au monde.
-    if((p.x <  width) and (p.y< height) and (p.x> 0) and (p.y > 0))
-    {
-		if (cells_[toUnid(toGrid(p.x),toGrid(p.y))]== Kind::grass) 
-		{
-			return true;
-		}
-	}
-	else
-	{
-	return false ;
-	}
-}
 
-//convertir du graphique à tableau
-// on peux faire une fonction prennant le vecteur comme argument directement
-int World::toGrid(double p) const
-{
-    return p/cellSize_;
-}
 
-double World::howhumid (Vec2d const& p)
-{
-    return humide_[toUnid(toGrid(p.x),toGrid(p.y))];
-}
+
 // méthode modifiée par lucien.
 bool World::isHiveable(const Vec2d& position, double radius)
 {
@@ -551,13 +516,13 @@ int World::toUnidToric ( int x, int y )
 	}
 	if (y>=nbCells_)
 	{
-		y-= nbCells;
+		y-= nbCells_;
 	}
 	if (x>=nbCells_)
 	{
-		x-= nbCells;
+		x-= nbCells_;
 	}
 	
 	return y*nbCells_+x;
 }
-/*
+
