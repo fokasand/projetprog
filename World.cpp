@@ -487,3 +487,76 @@ int World::getnbCells_()const
 {
 	return nbCells_;
 }
+
+//verifie que one fleur peut être plantée
+bool World::isGrowable(const Vec2d&p) // ATTENTION, il peut tester des choses qui ne sont pas dans le monde, donc clamper avant de l'utiliser
+{
+    double width = getApp().getWorldSize().x;
+    double height= getApp().getWorldSize().y;
+    //verifier que le type de la cellule testée est de l'herbe, et que le point appartient au monde.
+    if((p.x <  width) and (p.y< height) and (p.x> 0) and (p.y > 0))
+    {
+		if (cells_[toUnid(toGrid(p.x),toGrid(p.y))]== Kind::grass) 
+		{
+			return true;
+		}
+	}
+	else
+	{
+	return false ;
+	}
+}
+
+//convertir du graphique à tableau
+// on peux faire une fonction prennant le vecteur comme argument directement
+int World::toGrid(double p) const
+{
+    return p/cellSize_;
+}
+
+double World::howhumid (Vec2d const& p)
+{
+    return humide_[toUnid(toGrid(p.x),toGrid(p.y))];
+}
+// méthode modifiée par lucien.
+bool World::isHiveable(const Vec2d& position, double radius)
+{
+	int x (toGrid(position.x));
+	int y (toGrid(position.y)); // ces 3 lignes convertissent les coordonnées graphiques en coordonnées de la grille.
+	int rayon (toGrid(radius));
+	
+	for (int xpos(x-rayon); xpos< x+rayon; ++xpos) //peutetre faire d autres bornes comme dans smooth? x+1 je crois
+	{
+		for (int ypos(y-rayon); ypos< x+rayon; ++ypos)
+		{
+			if (cells_[toUnidToric(xpos,ypos)]!= Kind::grass)// ajout d'une fonction pour coordonnées toriques.
+			{
+				return false;
+			}
+		}
+	}
+	return true; // peut etre pas très joli?
+}
+
+// on utilisera la méthode tounidtoric et pas indexesForRect(CellCoord const& topLeft, CellCoord const& bottomRight) const.
+int World::toUnidToric ( int x, int y )
+{
+	if (y < 0)
+	{
+		y+= nbCells_;
+	}
+	if (x<0)
+	{
+		x+= nbCells_;
+	}
+	if (y>=nbCells_)
+	{
+		y-= nbCells;
+	}
+	if (x>=nbCells_)
+	{
+		x-= nbCells;
+	}
+	
+	return y*nbCells_+x;
+}
