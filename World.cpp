@@ -465,9 +465,13 @@ bool World::isGrowable(const Vec2d&p) // ATTENTION, il peut tester des choses qu
     //verifier que le type de la cellule testée est de l'herbe, et que le point appartient au monde.
     if((p.x <  width) and (p.y< height) and (p.x> 0) and (p.y > 0))
     {
-		if (cells_[toUnid(toGrid(p.x),toGrid(p.y))]== Kind::grass) 
+		if (cells_[toUnid(toGrid(p.x),toGrid(p.y))]== Kind::grass) // pour que tounid ne soit pas appelé avec des coordonnées incorrectes, on le met dans la condition
 		{
 			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 	else
@@ -481,48 +485,20 @@ int World::getnbCells_()const
 	return nbCells_;
 }
 
-
-
-// méthode modifiée par lucien.
 bool World::isHiveable(const Vec2d& position, double radius)
 {
-	int x (toGrid(position.x));
-	int y (toGrid(position.y)); // ces 3 lignes convertissent les coordonnées graphiques en coordonnées de la grille.
-	int rayon (toGrid(radius));
-	
-	for (int xpos(x-rayon); xpos< x+rayon; ++xpos) //peutetre faire d autres bornes comme dans smooth? x+1 je crois
+	for (int xpos(position.x-radius); xpos < position.x+radius ; ++xpos)
 	{
-		for (int ypos(y-rayon); ypos< x+rayon; ++ypos)
+		for (int ypos(position.y-radius); ypos < position.y+radius ; ++ypos)
 		{
-			if (cells_[toUnidToric(xpos,ypos)]!= Kind::grass)// ajout d'une fonction pour coordonnées toriques.
+			Vec2d v (xpos,ypos);
+			clamping_(v);
+			if (!isGrowable(v))
 			{
 				return false;
 			}
 		}
 	}
-	return true; // peut etre pas très joli?
-}
-
-// on utilisera la méthode tounidtoric et pas indexesForRect(CellCoord const& topLeft, CellCoord const& bottomRight) const.
-int World::toUnidToric ( int x, int y )
-{
-	if (y < 0)
-	{
-		y+= nbCells_;
-	}
-	if (x<0)
-	{
-		x+= nbCells_;
-	}
-	if (y>=nbCells_)
-	{
-		y-= nbCells_;
-	}
-	if (x>=nbCells_)
-	{
-		x-= nbCells_;
-	}
-	
-	return y*nbCells_+x;
+	return true;
 }
 
