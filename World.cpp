@@ -487,7 +487,7 @@ int World::getnbCells_()const
 {
 	return nbCells_;
 }
-
+/*
 //verifie que one fleur peut être plantée
 bool World::isGrowable(const Vec2d&p) // ATTENTION, il peut tester des choses qui ne sont pas dans le monde, donc clamper avant de l'utiliser
 {
@@ -560,3 +560,4 @@ int World::toUnidToric ( int x, int y )
 	
 	return y*nbCells_+x;
 }
+/*
