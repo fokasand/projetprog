@@ -1,6 +1,7 @@
 #include "Env.hpp"
 #include <Random/Random.hpp>
 #include <Application.hpp>
+#include "Collider.hpp"
 
 //racourci données de configuration pour env
 j::Value getEnv()
@@ -45,7 +46,9 @@ void Env::killFlower()
 //evolution de l'environnement sur un temps dt
 void Env::update(sf::Time dt)
 {
-    for (auto& fleur : flowers_) {
+	vector<Flower*> copie(flowers_); // crée une copie de surface du tableau de fleur qui ne sera pas modifié pendant l'éxécution de la boucle.
+	
+    for (auto& fleur : copie) {
         fleur->update(dt);
     }
     fgen_.update(dt); // fait à l'étape 3, réponse question.
@@ -129,42 +132,26 @@ void Env::clearHives()
 Env::~Env()
 {
     clearFlowers(); 
+    clearHives();
 }
 
 //ajouter une ruche
 bool Env::addHiveAt(const Vec2d& position)
 {
-	//creer la ruche à tester
-	Hive hive (position);
-
-	//verifier que la ruche n'est pas en collision 
-	// avec un autre element
-	// verifier toutes les fleurs
-	for (size_t i(0); i < flowers_.size() ; ++i)
+	double rayon = getAppConfig()["simulation"]["env"]["initial"]["hive"]["size"]["manual"].toDouble();
+	//creer un collider de la forme de la ruche pour les tests.
+	Collider hive (position,rayon);
+	if (world_.isHiveable(position,rayon) and (getCollidingHive(hive) == nullptr) and (getCollidingFlower(hive) == nullptr ))//verifie que la ruche n'est pas en collision, et que la zone est entièrement composée d'herbe.
 	{
-		if(hive.isColliding(*flowers_[i]))
-		{
-			return false;
-		}
+		//si n'est en collision avec rien
+		//peut être ajoutée
+		hives_.push_back(new Hive (position));
+		return true;
 	}
-	
-	//verifier toutes les ruches
-	for (size_t i(0); i < hives_.size() ; ++i)
+	else
 	{
-		Collider test (hives_[i]->getPosition(),
-		getEnv()["initial"]["hive"]["size"]["manual"].toDouble()*
-		getEnv()["initial"]["hive"]["hiveable factor"].toDouble());
-		
-		if(hive.isColliding(test))
-		{
-			return false;
-		}
+		return false;
 	}
-	
-	//si n'est en collision avec rien
-	//peut être ajoutée
-	hives_.push_back(new Hive (position));
-	return true;
 }
 
 //rend la ruche en collision avec l'argument 
@@ -201,7 +188,7 @@ Flower* Env::getCollidingFlower(const Collider& body)
  //partie bonus:
 void Env::drawHiveableZone(sf::RenderTarget& target, Vec2d const& position) 
 {
-	double rayon = getAppConfig()["simulation"]["env"]["initial"]["hive"]["size"]["manual"].toDouble();
+	double rayon = getAppConfig()["simulation"]["env"]["initial"]["hive"]["size"]["manual"].toDouble(); // peut-être à donner comme attribut de classe pour optimiser?
 	Vec2d topLeft = {position.x-rayon,position.y-rayon};
 	Vec2d bottomRight = {position.x+rayon,position.y+rayon};
 	clamping_(topLeft);
@@ -255,7 +242,7 @@ sf::Color Env:: couleur(const Vec2d& position, double rayon)
 		}
 		else
 		{
-			return sf::Color::Blue; // la ruche sera quand même créée mais elle collide une fleur ou une autre ruche
+			return sf::Color::Blue; // la ruche collide une fleur ou une autre ruche, elle ne sera pas créée
 		}
 	}
 	else
