@@ -191,3 +191,71 @@ Flower* Env::getCollidingFlower(const Collider& body)
 	}
 	return nullptr;		
 }
+
+ +/*
++ // modification a clamping de collider aussi pour qu'il soit accessible d'ici, ne pas oublier de le changer
++void Env::drawHiveableZone(sf::RenderTarget& target, Vec2d const& position) 
++{
++	
++	double rayon = hives_[]->getRadius(); // reste à trouver l'indice de la ruche pointée, utilisé par kat en mode debug
++	Vec2d Topleft({position.x-rayon,position.y-rayon});
++	Vec2d bottomRight({position.x+rayon,position.y+rayon});
++	clamping_(topLeft);
++	clamping_(bottomRight);
++	Vec2d worldSize = getApp().getWorldSize();
++	double width = worldSize.x;
+    double height= worldSize.y;
+    sf::Color color(couleur());
+	if ((topLeft.x < bottomRight.x) and (topLeft.y > bottomRight.y)) // cas 1 décrit dans indexes for rect
+	{
+	sf::RectangleShape shape(buildRectangle({ position.x-rayon, position.y+rayon }, { position.x+rayon, position.y-rayon }, color, 5.0));
+	target.draw(shape);
+	}
+	if ((topLeft.x > bottomRight.x) and ( topLeft.y < bottomRight.y))// cas 2
+	{
+		sf::RectangleShape shape1(buildRectangle({ 0.0,0.0 }, bottomRight, color, 5.0)); // double ou int?
+		sf::RectangleShape shape2(buildRectangle({ 0.0, height-(2*rayon-bottomRight.y) }, {(2*rayon-bottomRight.x), height}, color, 5.0));
+		sf::RectangleShape shape3(buildRectangle( topLeft, { 0.0, 0.0 }, color, 5.0));
+		sf::RectangleShape shape4(buildRectangle({ position.x-rayon, position.y+rayon }, { position.x+rayon, position.y-rayon }, color, 5.0));
+		target.draw(shape1);
+		target.draw(shape2);
+		target.draw(shape3);
+		target.draw(shape4);
+	}
+
+	if ((topLeft.x > bottomRight.x) and (topLeft.y > bottomRight.y)) // cas 3 
+	{
+		sf::RectangleShape shape1(buildRectangle({ 0.0, topLeft.y }, bottomRight, color, 5.0));
+		sf::RectangleShape shape2(buildRectangle(topLeft, { width, bottomRight.y }, color, 5.0));
+		target.draw(shape1);
+		target.draw(shape2);
+	}
+	if ((topLeft.x < bottomRight.x) and (topLeft.y < bottomRight.y)) // cas 4
+	{
+		sf::RectangleShape shape1(buildRectangle({ topLeft.x, 0.0 }, bottomRight, color, 5.0));
+		sf::RectangleShape shape2(buildRectangle(topLeft, { bottomRight.x, height }, color, 5.0));
+		target.draw(shape1);
+		target.draw(shape2);
+	}
+}
+
+// on trouve maintenant la couleur du rectangle:
+sf::Color Env:: couleur()
+{
+if (isHiveable(position)) // le carré ne contient que de l'herbe
+{
+	if ((getCollidingFlower == nullptr) and (getCollidingHive== nullptr))
+	{
+		return sf::Color::green;
+	}
+	else
+	{
+		return sf::Color::blue; // la ruche sera quand même créée mais elle collide une fleur ou une autre ruche
+	}
+}
+else
+{
+return sf::Color::red;
+}
+}
+*/
