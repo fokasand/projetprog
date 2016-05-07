@@ -1,21 +1,27 @@
 #ifndef HIVE_H
 #define HIVE_H
 #include "Collider.hpp"
-#include <Interface/Updatable.hpp>
-#include <SFML/Graphics.hpp>
 #include <Application.hpp>
+#include "Bee.hpp"
+#include <Interface/Updatable.hpp>
+#include <Interface/Drawable.hpp>
 
-//racourci pour les données de configuration
-j::Value getHive()
-
-class Hive: public Collider, public Updatable, public Drawable {
+class Hive : public Collider, public Drawable, public Updatable{
 public:
 	
 	//constructeur
-	Hive(const Vec2d& c,const double& r);
+	Hive() = default;
+	Hive(const Vec2d& c);
+	
+	//bloquer copie
+	Hive(Hive const& other) = delete;
+	void operator =(Hive const& other) = delete;
+	
+	//destructeur
+	~Hive();
 	
 	//ajouter una abeille à la ruche
-	void addBee;
+	void addBee();
 	
 	//faire évoluer les abeilles
 	void update(sf::Time dt);
@@ -35,5 +41,7 @@ private:
 	
 };
 
+//racourci pour les données de configuration
+j::Value getHive();
 
 #endif
