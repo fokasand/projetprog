@@ -1,4 +1,5 @@
 #include "Env.hpp"
+#include "Random.hpp"
 
 //racourci données de configuration pour env
 j::Value getEnv()
