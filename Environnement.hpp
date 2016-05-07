@@ -1,8 +1,11 @@
 #ifndef ENV_H
 #define ENV_H
 #include "World.hpp"
+#include <Application.hpp>
+#include <SFML/Graphics.hpp>
 #include "Flower.hpp"
 #include "FlowerGen.hpp"
+#include "Hive.hpp"
 #include <Interface/Drawable.hpp>
 #include <Interface/Updatable.hpp>
 
@@ -46,8 +49,7 @@ public:
 
     //tue une fleur
     void killFlower();
-
-	double howhumid(Vec2d const& p);
+    
 	//ajouter une ruche
 	bool addHiveAt(const Vec2d& position);
 	
@@ -57,9 +59,6 @@ public:
 	//rend la fleur en collision avec l'argument
 	Flower* getCollidingFlower(const Collider& body);
 	
-	//bonus 4.1:
-	void drawHiveableZone(sf::RenderTarget& target, Vec2d const& position);
-	sf::Color couleur();
 private:
     //collection de fleurs
     std::vector <Flower*> flowers_;
@@ -70,11 +69,12 @@ private:
 
     //vire les fleurs.
     void clearFlowers();
-    //efface les ruches
-    void clearHives();
     
     //collection ruches
-    vector<Hive> hives_;
+    vector<Hive*> hives_;
+    
+    //effacer les fleurs
+	void clearHives();
 };
 
 #endif
