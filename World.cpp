@@ -463,7 +463,7 @@ bool World::isGrowable(const Vec2d&p) // ATTENTION, il peut tester des choses qu
     double width = getApp().getWorldSize().x;
     double height= getApp().getWorldSize().y;
     //verifier que le type de la cellule testée est de l'herbe, et que le point appartient au monde.
-    if((p.x <  width) and (p.y< height) and (p.x> 0) and (p.y > 0))
+    if((p.x <=  width) and (p.y<= height) and (p.x>= 0) and (p.y >= 0))
     {
 		if (cells_[toUnid(toGrid(p.x),toGrid(p.y))]== Kind::grass) // pour que tounid ne soit pas appelé avec des coordonnées incorrectes, on le met dans la condition
 		{
