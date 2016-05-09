@@ -7,7 +7,7 @@
 #include <Interface/Updatable.hpp>
 #include <Interface/Drawable.hpp>
 
-class Bee, public Collider,public Drawable, public Updatable {
+class Bee: public Collider,public Drawable, public Updatable {
 	
 protected:
 	Vec2d speed_;
