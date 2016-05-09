@@ -1,48 +1,33 @@
-#ifndef HIVE_H
-#define HIVE_H
+
+#ifndef BEE_H
+#define BEE_H
 #include "Collider.hpp"
+#include "Hive.hpp"
 #include <Application.hpp>
 #include <Interface/Updatable.hpp>
 #include <Interface/Drawable.hpp>
 
-class Bee;
-class Hive : public Collider, public Drawable, public Updatable{
-public:
+class Bee, public Collider,public Drawable, public Updatable {
 	
-	//constructeur
-	Hive() = default;
-	Hive(const Vec2d& c);
+protected:
+	Vec2d speed_;
+	double energy_;
+	Hive* hive_;
 	
-	//bloquer copie
-	Hive(Hive const& other) = delete;
-	void operator =(Hive const& other) = delete;
 	
-	//destructeur
-	~Hive();
-	
-	//ajouter una abeille à la ruche
-	void addBee();
-	
-	//faire évoluer les abeilles
-	void update(sf::Time dt);
-	
-	void drawOn(sf::RenderTarget& targetWindow) const override;
-	
-	//ajouter du nectar à la ruche
-	void dropPollen(double qte);
-	
-	//retirer du nectar de la ruche
-	void takeNectar(double qte);
-	
-private:
-	double nectar_;
-	vector <Bee*> bees_;
-	sf::Texture const texture;
+//constructeur
+		Bee(Vec2d centre,
+			double rayon,
+			 Hive* hive,
+			 double energy, double amplitude);
+		
+
+//morte si energie nulle
+bool isDead();
+
+//déplacement : calcule nouvelles positions et vitesse
+void move(sf::Time dt);
 	
 };
 
-//racourci pour les données de configuration
-j::Value getHive();
-
 #endif
-
