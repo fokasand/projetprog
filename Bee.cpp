@@ -35,7 +35,7 @@ void Bee::drawOn(sf::RenderTarget& targetWindow) const
 	
 }
 
-j::Value Bee::getConfig() const virtual
+virtual j::Value Bee::getConfig() const
 {
-return getAppConfig()["simulation"]["bees"]["generic"];
+	return getAppConfig()["simulation"]["bees"]["generic"];
 }
