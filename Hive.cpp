@@ -65,3 +65,16 @@ void Hive::update(sf::Time dt)
 {
 	
 }
+
+//efface les abeilles mortes
+void Hive::killBee()
+{
+	for (size_t i(0); i < bees_.size() ; ++i) {
+        if (bees_[i]->isDead()) {
+            delete bees_[i];
+            bees_[i]= nullptr;
+        }
+    }
+
+    bees_.erase(std::remove(bees_.begin(), bees_.end(), nullptr), bees_.end());
+}
