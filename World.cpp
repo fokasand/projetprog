@@ -502,3 +502,17 @@ bool World::isHiveable(const Vec2d& position, double radius)
 	return true;
 }
 
+//determine si une abaille peut y voler
+bool World::isFlyable(const Vec2d& position)
+{
+	//convertir coordonnées graphiques en grille	
+	int x (toGrid(position.x));
+	int y (toGrid(position.y));
+	
+	//a verifier si besoin de toUnidToric ou jute toUnid
+	if (cells_[toUnidToric(x,y)]== Kind::rock)// ajout d'une fonction pour coordonnées toriques.
+		{
+			return false;
+		}
+	return true;
+}
