@@ -36,6 +36,10 @@ public:
 	
 	//efface les abeilles mortes
 	void killBee();
+	
+	//efface les abeilles et nettoie le tableau
+	void Hive::clearBees();
+	
 private:
 	double nectar_;
 	vector <Bee*> bees_;
