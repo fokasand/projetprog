@@ -15,12 +15,7 @@ texture(getAppTexture(getHive()["texture"].toString()))
 //destructeur
 Hive::~Hive()
 {
-	for (size_t i(0); i < bees_.size(); ++i)
-	{
-		delete bees_[i];
-		bees_[i] = nullptr;
-	}
-	bees_.clear();
+	clearBees();
 }
 
 //redefinir le dessin pour les ruches
@@ -77,4 +72,15 @@ void Hive::killBee()
     }
 
     bees_.erase(std::remove(bees_.begin(), bees_.end(), nullptr), bees_.end());
+}
+
+//efface les abeilles et nettoie le tableau
+void Hive::clearBees()
+{
+		for (size_t i(0); i < bees_.size(); ++i)
+	{
+		delete bees_[i];
+		bees_[i] = nullptr;
+	}
+	bees_.clear();	
 }
