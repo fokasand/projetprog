@@ -5,7 +5,7 @@
 #include <Interface/Updatable.hpp>
 #include <Interface/Drawable.hpp>
 
-
+class Bee;
 class Hive : public Collider, public Drawable, public Updatable{
 public:
 	
