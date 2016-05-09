@@ -1,14 +1,13 @@
 #include "Bee.hpp"
+#include "Utility/Utility.hpp" // inclus pour buildSprite
 #include <Application.hpp>
-
 //constructeur
 Bee::Bee(Vec2d centre,
 			double rayon,
 			 Hive* hive,
 			 double energy, double amplitude)
-	: Collider(centre,rayon),hive_(hive),
-	speed_(amplitude*Vec2d::fromRandomAngle()),
-	energy_(energy)
+: Collider(centre,rayon),hive_(hive),
+speed_(amplitude*Vec2d::fromRandomAngle()),energy_(energy), texture (getAppTexture(getConfig()["texture"].toString()))
 {}
 
 //morte si le niveau d'energie est nul
@@ -32,12 +31,20 @@ void Bee::update(sf::Time dt)
 	
 }
 
-void Bee::drawOn(sf::RenderTarget& targetWindow) const 
+void Bee::drawOn(sf::RenderTarget& target) const 
 {
+	auto beeSprite = buildSprite(centre, rayon, texture);
 	
+	if (( speed_.angle() >= M_PI/2) or (speed_.angle() <= -M_PI/2))
+	{
+			beeSprite.scale(1, -1);
+	}
+	beeSprite.rotate(speed_.angle()/DEG_TO_RAD);
+	
+    target.draw(beeSprite);
 }
 
-//aide parametrage
+
 j::Value Bee::getConfig() const
 {
 	return getAppConfig()["simulation"]["bees"]["generic"];
