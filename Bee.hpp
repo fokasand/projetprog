@@ -5,41 +5,34 @@
 #include <Interface/Updatable.hpp>
 #include <Interface/Drawable.hpp>
 
-class Bee: public Collider,public Drawable, public Updatable {
-
-public:
-//constructeur		
-	Bee(Vec2d centre,
-		double rayon,
-		Hive* hive,
-		double energy, double amplitude);
-
-//destructeur
-		~Bee();
-
-//morte si energie nulle
-	bool isDead();
-
-//déplacement : calcule nouvelles positions et vitesse
-	void move(sf::Time dt);
-
-
-//dessin des abeilles
-void drawOn(sf::RenderTarget& targetWindow) const override;
-
-//mise a jour des abeilles
-void update(sf::Time dt);
-
-// retourne le jvalue dans classe pour pouvoir le redefinir
-virtual j::Value getConfig() const;
-
+class Bee: public Collider, public Drawable, public Updatable 
+{
+	
 protected:
-	Hive* hive_;
 	Vec2d speed_;
 	double energy_;
-	
+	Hive* hive_;
+	sf::Texture texture;
+		
+public:	
+	//constructeur
+	Bee(Vec2d centre,
+		double rayon,
+		 Hive* hive,
+		 double energy, double amplitude);
+
+	//morte si energie nulle
+	bool isDead();
+
+	//déplacement : calcule nouvelles positions et vitesse
+	void move(sf::Time dt);
+
+	void drawOn(sf::RenderTarget& targetWindow) const;
+	void update(sf::Time dt);
+
+	// retourne le jvalue utilisé pour raccourcir
+	virtual j::Value getConfig() const;
+
 };
 
 #endif
-
-
