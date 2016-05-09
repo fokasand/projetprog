@@ -31,8 +31,8 @@ void move(sf::Time dt);
 void drawOn(sf::RenderTarget& targetWindow) const;
 void update(sf::Time dt);
 
-// retourne le jvalue
-j::Value getConfig() const virtual;	
+// retourne le jvalue utilisé pour raccourcir
+virtual j::Value getConfig() const;	
 };
 
 #endif
