@@ -34,6 +34,8 @@ public:
 	//retirer du nectar de la ruche
 	void takeNectar(double qte);
 	
+	//efface les abeilles mortes
+	void killBee();
 private:
 	double nectar_;
 	vector <Bee*> bees_;
