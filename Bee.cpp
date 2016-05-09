@@ -1,12 +1,14 @@
 #include "Bee.hpp"
+#include <Application.hpp>
 
 //constructeur
 Bee::Bee(Vec2d centre,
 			double rayon,
 			 Hive* hive,
 			 double energy, double amplitude)
-: Collider(centre,rayon),hive_(hive),
-speed_(amplitude*Vec2d::fromRandomAngle()),energy_(energy)
+	: Collider(centre,rayon),hive_(hive),
+	speed_(amplitude*Vec2d::fromRandomAngle()),
+	energy_(energy)
 {}
 
 //morte si le niveau d'energie est nul
@@ -35,7 +37,8 @@ void Bee::drawOn(sf::RenderTarget& targetWindow) const
 	
 }
 
-virtual j::Value Bee::getConfig() const
+//aide parametrage
+j::Value Bee::getConfig() const
 {
 	return getAppConfig()["simulation"]["bees"]["generic"];
 }
