@@ -27,7 +27,12 @@ bool isDead();
 
 //déplacement : calcule nouvelles positions et vitesse
 void move(sf::Time dt);
-	
+
+void drawOn(sf::RenderTarget& targetWindow) const;
+void update(sf::Time dt);
+
+// retourne le jvalue
+j::Value getConfig() const virtual;	
 };
 
 #endif
