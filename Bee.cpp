@@ -24,3 +24,18 @@ void Bee::move(sf::Time dt)
 {
 	
 }
+
+void Bee::update(sf::Time dt)
+{
+	
+}
+
+void Bee::drawOn(sf::RenderTarget& targetWindow) const 
+{
+	
+}
+
+j::Value Bee::getConfig() const virtual
+{
+return getAppConfig()["simulation"]["bees"]["generic"];
+}
