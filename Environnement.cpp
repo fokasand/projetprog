@@ -1,7 +1,5 @@
 #include "Env.hpp"
 #include <Random/Random.hpp>
-#include <Application.hpp>
-#include "Collider.hpp"
 
 //racourci données de configuration pour env
 j::Value getEnv()
@@ -46,17 +44,22 @@ void Env::killFlower()
 //evolution de l'environnement sur un temps dt
 void Env::update(sf::Time dt)
 {
-	vector<Flower*> copie(flowers_); // crée une copie de surface du tableau de fleur qui ne sera pas modifié pendant l'éxécution de la boucle.
+	vector<Flower*> copie(flowers_);
 	
     for (auto& fleur : copie) {
         fleur->update(dt);
     }
     fgen_.update(dt); // fait à l'étape 3, réponse question.
+    
+    for (size_t i(0); i < hives_.size() ; ++i) {
+        hives_[i]->update(dt);
+    }
 }
 
 //dessin de l'environnement
 void Env::drawOn(sf::RenderTarget& target) const
 {
+	cerr << "in env size of hives is " << hives_.size() << std::endl;
     //dessin du terrain
     world_.drawOn(target);
 
@@ -86,179 +89,3 @@ bool Env::addFlowerAt (Vec2d p)
     }
     return false;
 }
-
-
-
-//afficher anneau
-void Env::drawFlowerZone(sf::RenderTarget& target,Vec2d const& position)
-{
-    sf::Color color = (world_.isGrowable(position)) ? sf::Color::Green : sf::Color::Red; // on considère que la position ne sortira pas de la grille.
-    double size (getEnv()["initial"]["flower"]["size"]["manual"].toDouble());
-    auto shape = buildAnnulus(position, size, color, 0.5);
-    target.draw(shape);
-
-}
-
-//génération d'un environnement à partir d'un fichier
-void Env::loadWorldFromFile()
-{
-    world_.loadFromFile();
-}
-
-// sauvegarde
-void Env::saveWorldToFile()
-{
-    world_.saveToFile();
-}
-
-void Env::clearFlowers()
-{
-    for (size_t i(0); i < flowers_.size() ; ++i) {
-        delete flowers_[i];
-        flowers_[i]= nullptr;
-    }
-    flowers_.clear();
-}
-
-void Env::clearHives()
-{
-    for (size_t i(0); i < hives_.size() ; ++i) {
-        delete hives_[i];
-        hives_[i]= nullptr;
-    }
-    hives_.clear();
-}
-//destructeur de Env
-Env::~Env()
-{
-    clearFlowers(); 
-    clearHives();
-}
-
-//ajouter une ruche
-bool Env::addHiveAt(const Vec2d& position)
-{
-	double rayon = getAppConfig()["simulation"]["env"]["initial"]["hive"]["size"]["manual"].toDouble();
-	//creer un collider de la forme de la ruche pour les tests.
-	Collider hive (position,rayon);
-	if (world_.isHiveable(position,rayon) and (getCollidingHive(hive) == nullptr) and (getCollidingFlower(hive) == nullptr ))//verifie que la ruche n'est pas en collision, et que la zone est entièrement composée d'herbe.
-	{
-		//si n'est en collision avec rien
-		//peut être ajoutée
-		hives_.push_back(new Hive (position));
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-//rend la ruche en collision avec l'argument 
-//(la premiere dans la teableau qui soit en collision)
-Hive* Env::getCollidingHive(const Collider& body)
-{
-	for (size_t i(0); i < hives_.size() ; ++i)
-	{
-		Collider test(hives_[i]->getPosition(),
-		getEnv()["initial"]["hive"]["size"]["manual"].toDouble()*
-		getEnv()["initial"]["hive"]["hiveable factor"].toDouble());
-		
-		if(body.isColliding(test))
-		{
-			return Hive* Env::getCollidingHive(const Collider& body)
-{
-	for (size_t i(0); i < hives_.size() ; ++i)
-	{
-		Collider test(hives_[i]->getPosition(),
-		getEnv()["initial"]["hive"]["size"]["manual"].toDouble()*
-		getEnv()["initial"]["hive"]["hiveable factor"].toDouble());
-		
-		if(body.isColliding(test))
-		{
-			return hives_[i];
-		}
-	}
-	return nullptr;
-};
-
-//rend la fleur en collision avec l'argument
-Flower* Env::getCollidingFlower(const Collider& body)
-{
-	for (size_t i(0); i < flowers_.size() ; ++i)
-	{
-		if(body.isColliding(*flowers_[i]))
-		{
-			return flowers_[i];
-		}
-	}
-	return nullptr;		
-}
-
- //partie bonus:
-void Env::drawHiveableZone(sf::RenderTarget& target, Vec2d const& position) 
-{
-	double rayon = getAppConfig()["simulation"]["env"]["initial"]["hive"]["size"]["manual"].toDouble(); // peut-être à donner comme attribut de classe pour optimiser?
-	Vec2d topLeft = {position.x-rayon,position.y-rayon};
-	Vec2d bottomRight = {position.x+rayon,position.y+rayon};
-	clamping_(topLeft);
-	clamping_(bottomRight);
-	Vec2d worldSize = getApp().getWorldSize();
-	double width = worldSize.x;
-    double height= worldSize.y;
-    sf::Color color(couleur(position, rayon));
-	if ((topLeft.x < bottomRight.x) and (topLeft.y < bottomRight.y)) // cas 1 décrit dans indexes for rect
-	{
-	sf::RectangleShape shape(buildRectangle({ position.x-rayon, position.y+rayon }, { position.x+rayon, position.y-rayon }, color, 5.0));
-	target.draw(shape);
-	}
-	if ((topLeft.x > bottomRight.x) and ( topLeft.y > bottomRight.y))// cas 2
-	{
-		sf::RectangleShape shape1(buildRectangle({ 0.0,0.0 }, bottomRight, color, 5.0)); // top left shape
-		sf::RectangleShape shape2(buildRectangle({ 0.0, topLeft.y }, {bottomRight.x, height}, color, 5.0)); // bottom left
-		sf::RectangleShape shape3(buildRectangle( topLeft, {width, height }, color, 5.0)); // bottom right shape
-		sf::RectangleShape shape4(buildRectangle({topLeft.x, 0.0}, { width, bottomRight.y }, color, 5.0)); // top right
-		target.draw(shape1);
-		target.draw(shape2);
-		target.draw(shape3);
-		target.draw(shape4);
-	}
-
-	if ((topLeft.x > bottomRight.x) and (topLeft.y < bottomRight.y)) // cas 3 
-	{
-		sf::RectangleShape shape1(buildRectangle({ 0.0, topLeft.y }, bottomRight, color, 5.0)); // left shape
-		sf::RectangleShape shape2(buildRectangle(topLeft, { width, bottomRight.y }, color, 5.0));// right shape
-		target.draw(shape1);
-		target.draw(shape2);
-	}
-	if ((topLeft.x < bottomRight.x) and (topLeft.y > bottomRight.y)) // cas 4
-	{
-		sf::RectangleShape shape1(buildRectangle({ topLeft.x, 0.0}, bottomRight, color, 5.0)); // top shape
-		sf::RectangleShape shape2(buildRectangle(topLeft, { bottomRight.x, height }, color, 5.0)); // bottom shape
-		target.draw(shape1);
-		target.draw(shape2);
-	}
-}
-
-// on trouve maintenant la couleur du rectangle:
-sf::Color Env:: couleur(const Vec2d& position, double rayon)
-{
-	Collider c ( position, rayon);
-	if (world_.isHiveable(position, rayon)) // le carré ne contient que de l'herbe
-	{
-		if ((getCollidingFlower(c) == nullptr) and (getCollidingHive(c) == nullptr))
-		{
-			return sf::Color::Green;
-		}
-		else
-		{
-			return sf::Color::Blue; // la ruche collide une fleur ou une autre ruche, elle ne sera pas créée
-		}
-	}
-	else
-	{
-	return sf::Color::Red;
-	}
-}
-
-
