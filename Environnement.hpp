@@ -1,6 +1,7 @@
 #ifndef ENV_H
 #define ENV_H
 #include "World.hpp"
+#include <Application.hpp>
 #include <SFML/Graphics.hpp>
 #include "Flower.hpp"
 #include "FlowerGen.hpp"
