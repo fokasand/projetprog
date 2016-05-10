@@ -75,7 +75,7 @@ void Hive::update(sf::Time dt)
 void Hive::addBee()
 {
 	cerr << &bees_ << std::endl;
-	bees_.push_back(new Bee({40,40},20,this,20,20));
+	bees_.push_back(new Bee(centre,20,this,50,250));
 }
 
 //efface les abeilles mortes
