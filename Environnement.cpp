@@ -166,11 +166,21 @@ Hive* Env::getCollidingHive(const Collider& body)
 		
 		if(body.isColliding(test))
 		{
-			return new Hive (hives_[i]->getPosition());
+			return Hive* Env::getCollidingHive(const Collider& body)
+{
+	for (size_t i(0); i < hives_.size() ; ++i)
+	{
+		Collider test(hives_[i]->getPosition(),
+		getEnv()["initial"]["hive"]["size"]["manual"].toDouble()*
+		getEnv()["initial"]["hive"]["hiveable factor"].toDouble());
+		
+		if(body.isColliding(test))
+		{
+			return hives_[i];
 		}
 	}
 	return nullptr;
-}
+};
 
 //rend la fleur en collision avec l'argument
 Flower* Env::getCollidingFlower(const Collider& body)
