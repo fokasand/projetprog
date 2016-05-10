@@ -7,7 +7,7 @@ Bee::Bee(Vec2d centre,
 			 Hive* hive,
 			 double energy, double amplitude)
 : Collider(centre,rayon),hive_(hive),
-speed_(amplitude*Vec2d::fromRandomAngle()),energy_(energy), texture (getAppTexture(getConfig()["texture"].toString()))
+speed_(amplitude*Vec2d::fromRandomAngle()),energy_(energy), texture (getAppTexture(getBeeConfig()["texture"].toString()))
 {}
 
 //morte si le niveau d'energie est nul
@@ -44,8 +44,11 @@ void Bee::drawOn(sf::RenderTarget& target) const
     target.draw(beeSprite);
 }
 
-
-j::Value Bee::getConfig() const
+j::Value Bee::getBeeConfig() const 
 {
 	return getAppConfig()["simulation"]["bees"]["generic"];
+}
+j::Value Bee::getConfig() const
+{
+	return getBeeConfig();
 }
