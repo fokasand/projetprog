@@ -9,9 +9,10 @@ class Bee: public Collider, public Drawable, public Updatable
 {
 	
 protected:
-	Vec2d speed_;
-	double energy_;
 	Hive* hive_;
+	double energy_;
+	Vec2d speed_;
+	
 	sf::Texture texture;
 		
 public:	
@@ -25,15 +26,15 @@ public:
 	bool isDead();
 
 	//déplacement : calcule nouvelles positions et vitesse
-	void move(sf::Time dt);
-
-	void drawOn(sf::RenderTarget& targetWindow) const;
 	void update(sf::Time dt);
-
+	
+	void drawOn(sf::RenderTarget& targetWindow) const;
+	
 	// retourne le jvalue utilisé pour raccourcir
 	virtual j::Value getConfig() const;
-	j::Value getBeeConfig() const; // utilisé pour le constructeur
+	j::Value getBeeConfig() const; // utilisé pour le constructeur
 
 };
 
 #endif
+
