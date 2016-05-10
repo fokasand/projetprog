@@ -32,6 +32,7 @@ public:
 
 	// retourne le jvalue utilisé pour raccourcir
 	virtual j::Value getConfig() const;
+	j::Value getBeeConfig() const; // utilisé pour le constructeur
 
 };
 
