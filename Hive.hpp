@@ -1,11 +1,11 @@
 #ifndef HIVE_H
 #define HIVE_H
 #include "Collider.hpp"
-#include "Bee.hpp"
 #include <Interface/Updatable.hpp>
 #include <Interface/Drawable.hpp>
 
 class Bee;
+
 class Hive : public Collider, public Drawable, public Updatable{
 public:
 	
@@ -20,9 +20,6 @@ public:
 	//destructeur
 	~Hive();
 	
-	//ajouter una abeille à la ruche
-	void addBee();
-	
 	//faire évoluer les abeilles
 	void update(sf::Time dt);
 	
@@ -34,16 +31,19 @@ public:
 	//retirer du nectar de la ruche
 	void takeNectar(double qte);
 	
+	//ajouter une abeille à la ruche
+	void addBee();
+	
 	//efface les abeilles mortes
 	void killBee();
 	
-	//efface les abeilles et nettoie le tableau
-	void Hive::clearBees();
 	
 private:
 	double nectar_;
-	vector <Bee*> bees_;
+	std::vector <Bee*> bees_;
 	sf::Texture const texture;
+	//efface les abeilles et nettoie le tableau
+	void clearBees();
 	
 };
 
