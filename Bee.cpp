@@ -9,13 +9,16 @@ Bee::Bee(Vec2d centre,
 			 Hive* hive,
 			 double energy, double amplitude)
 : Collider(centre,rayon),hive_(hive),
-speed_(amplitude*Vec2d::fromRandomAngle()),energy_(energy), texture (getAppTexture(getConfig()["texture"].toString()))
-{ cerr << "a bee is born " << std::endl;}
+speed_(amplitude*Vec2d::fromRandomAngle()),energy_(energy),
+texture (getAppTexture(getConfig()["texture"].toString())),
+prob(getConfig()["moving behaviour"]["random"]["rotation probability"].toDouble()),
+alpha_max(getConfig()["moving behaviour"]["random"]["rotation angle max"].toDouble())
+{}
 
 //morte si le niveau d'energie est nul
 bool Bee::isDead()
 {
-	if(energy_==0)
+	if(energy_<=0)
 	{
 		return true;
 	}
@@ -25,16 +28,12 @@ bool Bee::isDead()
 //déplacement : calcule nouvelles positions et vitesse
 void Bee::update(sf::Time dt)
 {
-	cerr << "bee is moving" << std::endl;
+	double alpha (uniform(-alpha_max,alpha_max));
+	double beta;
+	Vec2d possible_pos;
 	//changement aléatoire de direction
-	if(bernoulli(getConfig()["moving behaviour"]["random"]["rotation probability"].toDouble()))
-	{
-		double alpha_max(getConfig()["moving behaviour"]["random"]["rotation angle max"].toDouble());
-		double alpha (uniform(-alpha_max,alpha_max));
-		double beta;
-		Vec2d possible_pos;
-		
-		//changer la direction du déplacement
+	if(bernoulli(prob))
+	{	//changer la direction du déplacement
 		//speed_=
 		speed_.rotate(alpha);
 		possible_pos= centre + speed_*dt.asSeconds();
@@ -53,6 +52,7 @@ void Bee::update(sf::Time dt)
 			}
 			speed_.rotate(beta);
 		}
+		clamping();
 		
 	}
 	
@@ -62,7 +62,6 @@ void Bee::update(sf::Time dt)
 
 void Bee::drawOn(sf::RenderTarget& target) const 
 {
-	cerr << "draw bee " << std::endl;
 	auto beeSprite = buildSprite(centre, rayon, texture);
 	
 	if (( speed_.angle() >= M_PI/2) or (speed_.angle() <= -M_PI/2))
