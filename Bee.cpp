@@ -18,7 +18,7 @@ alpha_max(getConfig()["moving behaviour"]["random"]["rotation angle max"].toDoub
 //morte si le niveau d'energie est nul
 bool Bee::isDead()
 {
-	if(energy_<=0)
+	if(energy_==0)
 	{
 		return true;
 	}
@@ -58,6 +58,10 @@ void Bee::update(sf::Time dt)
 	
 	//baisse de l'énergie
 	energy_-=0.1*dt.asSeconds();
+	if (energy_<0)
+	{
+		energy_=0;
+	}
 }
 
 void Bee::drawOn(sf::RenderTarget& target) const 
