@@ -1,24 +1,18 @@
 #ifndef SCOUTBEE_H
 #define SCOUTBEE_H
 #include "Bee.hpp"
+#include "Hive.hpp"
 
-class ScoutBee : public Bee 
+class ScoutBee : public Bee
 {
 public:
-/*
+	//constructeur
+	ScoutBee(Vec2d centre, Hive* hive);
 	//racourci pour les données de configuration
-	j::Value Bee::getScoutConfig() const 
-	{
-		return getAppConfig()["simulation"]["bees"]["scout"];
-	}
+	j::Value const& getScoutConfig() const;
 
-	j::Value Bee::getConfig() const
-	{
-		return getScoutConfig();
-	}
-	*/
+	j::Value const& getConfig() const;
 private:
-
 	
 };
 
