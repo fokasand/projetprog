@@ -9,11 +9,8 @@ Bee::Bee(Vec2d centre,
 			 Hive* hive,
 			 double energy, double amplitude)
 : Collider(centre,rayon),hive_(hive),
-speed_(amplitude*Vec2d::fromRandomAngle()),energy_(energy),
-texture (getAppTexture(getConfig()["texture"].toString())),
-prob(getConfig()["moving behaviour"]["random"]["rotation probability"].toDouble()),
-alpha_max(getConfig()["moving behaviour"]["random"]["rotation angle max"].toDouble())
-{}
+speed_(amplitude*Vec2d::fromRandomAngle()),energy_(energy), texture (getAppTexture(getConfig()["texture"].toString()))
+{ }
 
 //morte si le niveau d'energie est nul
 bool Bee::isDead()
@@ -28,13 +25,19 @@ bool Bee::isDead()
 //déplacement : calcule nouvelles positions et vitesse
 void Bee::update(sf::Time dt)
 {
-	double alpha (uniform(-alpha_max,alpha_max));
-	double beta;
-	Vec2d possible_pos;
+	
+}
+void Bee::randomMove(sf::Time dt)
+{
 	//changement aléatoire de direction
-	if(bernoulli(prob))
-	{	//changer la direction du déplacement
-		//speed_=
+	if(bernoulli(getConfig()["moving behaviour"]["random"]["rotation probability"].toDouble()))
+	{
+		double alpha_max(getConfig()["moving behaviour"]["random"]["rotation angle max"].toDouble());
+		double alpha (uniform(-alpha_max,alpha_max));
+		double beta;
+		Vec2d possible_pos;
+		
+		//changer la direction du déplacement
 		speed_.rotate(alpha);
 		possible_pos= centre + speed_*dt.asSeconds();
 		//verifier que l'abaeille peut occuper la possition possible_pos
@@ -53,19 +56,15 @@ void Bee::update(sf::Time dt)
 			speed_.rotate(beta);
 		}
 		clamping();
-		
 	}
 	
 	//baisse de l'énergie
 	energy_-=0.1*dt.asSeconds();
-	if (energy_<0)
-	{
-		energy_=0;
-	}
 }
 
 void Bee::drawOn(sf::RenderTarget& target) const 
 {
+
 	auto beeSprite = buildSprite(centre, rayon, texture);
 	
 	if (( speed_.angle() >= M_PI/2) or (speed_.angle() <= -M_PI/2))
@@ -77,11 +76,11 @@ void Bee::drawOn(sf::RenderTarget& target) const
     target.draw(beeSprite);
 }
 
-j::Value Bee::getBeeConfig() const 
+j::Value const& Bee::getBeeConfig() const 
 {
 	return getAppConfig()["simulation"]["bees"]["generic"];
 }
-j::Value Bee::getConfig() const
+j::Value const&  Bee::getConfig() const
 {
 	return getBeeConfig();
 }
