@@ -5,6 +5,8 @@
 #include <Interface/Drawable.hpp>
 
 class Bee;
+class WorkerBee;
+class ScoutBee;
 
 class Hive : public Collider, public Drawable, public Updatable{
 public:
@@ -33,6 +35,10 @@ public:
 	
 	//ajouter une abeille à la ruche
 	void addBee();
+	
+	//ajoute spécifiquement
+	WorkerBee* addWorker();
+	ScoutBee* addScout();
 	
 	//efface les abeilles mortes
 	void killBee();
