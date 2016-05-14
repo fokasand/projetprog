@@ -4,7 +4,8 @@
 #include "Env.hpp"
 #include <Application.hpp>
 #include "Bee.hpp"
-
+#include "WorkerBee.hpp"
+#include "ScoutBee.hpp"
 //constructeur 
 Hive::Hive(const Vec2d& c) 
 : Collider::Collider(c,getAppConfig()["simulation"]["env"]["initial"]["hive"]["size"]["manual"].toDouble()),
@@ -71,11 +72,29 @@ void Hive::update(sf::Time dt)
 	
 }
 
+/*
 //ajouter une abeille à la ruche
 void Hive::addBee()
 {
-	cerr << &bees_ << std::endl;
-	bees_.push_back(new Bee(centre,20,this,50,250));
+	bees_.push_back(new Bee({centre},30,this,250,500));
+}
+* */
+
+//ajouts spécifiques:
+WorkerBee* Hive::addWorker()
+{
+	Vec2d alea ( uniform(-rayon,rayon), uniform ( -rayon,rayon));
+	WorkerBee* ptr (new WorkerBee( {centre + alea}, this));
+	bees_.push_back(ptr);
+	return ptr;
+}
+
+ScoutBee* Hive::addScout()
+{
+	Vec2d alea ( uniform(-rayon,rayon), uniform ( -rayon,rayon));
+	ScoutBee* ptr (new ScoutBee( {centre + alea}, this));
+	bees_.push_back(ptr);
+	return ptr;
 }
 
 //efface les abeilles mortes
