@@ -12,8 +12,6 @@ protected:
 	Hive* hive_;
 	double energy_;
 	Vec2d speed_;
-	double prob;
-	double alpha_max;
 	
 	sf::Texture texture;
 		
@@ -32,10 +30,13 @@ public:
 	
 	void drawOn(sf::RenderTarget& targetWindow) const;
 	
+	void randomMove(sf::Time dt);
+	
 	// retourne le jvalue utilisé pour raccourcir
-	virtual j::Value getConfig() const;
-	j::Value getBeeConfig() const; // utilisé pour le constructeur
+	virtual j::Value const& getConfig() const = 0;
+	j::Value const& getBeeConfig() const; // utilisé pour le constructeur
 
 };
 
 #endif
+
