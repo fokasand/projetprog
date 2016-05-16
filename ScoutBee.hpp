@@ -11,6 +11,7 @@ public:
 	
 	//éxecution des actions liées à l'état courant
 	void onState(State current,sf::Time dt) override;
+	void onEnterState(State state) override;
 	
 	//racourci pour les données de configuration
 	j::Value const& getScoutConfig() const;
@@ -18,7 +19,9 @@ public:
 	j::Value const& getConfig() const;
 	
 private:
-	static const State IN_HIVE;	
+	static State const SEARCH_FLOWER;
+	static State const RETURN_HIVE;	
 };
 
 #endif
+
