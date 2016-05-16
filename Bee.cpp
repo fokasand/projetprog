@@ -8,9 +8,11 @@ Bee::Bee(Vec2d centre,
 			double rayon,
 			 Hive* hive,
 			 double energy, double amplitude)
-: Collider(centre,rayon),hive_(hive),
-speed_(amplitude*Vec2d::fromRandomAngle()),energy_(energy), texture (getAppTexture(getConfig()["texture"].toString()))
-{ }
+: speed_(amplitude*Vec2d::fromRandomAngle()),energy_(energy),
+texture (getAppTexture(getConfig()["texture"].toString())),
+prob(getConfig()["moving behaviour"]["random"]["rotation probability"].toDouble()),
+alpha_max(getConfig()["moving behaviour"]["random"]["rotation angle max"].toDouble())
+{}
 
 //morte si le niveau d'energie est nul
 bool Bee::isDead()
@@ -32,7 +34,6 @@ void Bee::randomMove(sf::Time dt)
 	//changement aléatoire de direction
 	if(bernoulli(getConfig()["moving behaviour"]["random"]["rotation probability"].toDouble()))
 	{
-		double alpha_max(getConfig()["moving behaviour"]["random"]["rotation angle max"].toDouble());
 		double alpha (uniform(-alpha_max,alpha_max));
 		double beta;
 		Vec2d possible_pos;
@@ -46,8 +47,8 @@ void Bee::randomMove(sf::Time dt)
 			centre=possible_pos;
 		} else
 		{
-			if (bernoulli(0.5))
-			{
+			if(bernoulli(prob))
+			{	
 				beta=PI/4;
 			} else
 			{
