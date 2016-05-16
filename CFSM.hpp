@@ -8,22 +8,25 @@ class CFSM {
 protected:
 //constructeur
 	CFSM(std::vector<State>);
+	CFSM() =default;
+//retablir destructeur par défaut
+	~CFSM();
 //rend létat courant
 	State getState();
 	
 //passe à l'état suivant
 	void nextState();
 	//ne fait rien par défaut ?
-	virtual void onEnterState(State state) =0;
+//execute les actions de transition
+	virtual void onEnterState(State state);
 
 //actions à l'état courant
-	void onState(State current,sf::Time dt);
+	virtual void onState(State current,sf::Time dt) = 0;
 	void action(sf::Time dt);
 
-private:	
+protected:	
 	std::vector<State> states_;
 	size_t current_;
-	
 	
 };
 #endif
