@@ -21,7 +21,8 @@ speed_(amplitude*Vec2d::fromRandomAngle()),
 texture_ (texture = getAppTexture(getBeeConfig()["texture"].toString())),
 prob(getBeeConfig()["moving behaviour"]["random"]["rotation probability"].toDouble()),
 alpha_max(getBeeConfig()["moving behaviour"]["random"]["rotation angle max"].toDouble()),
-moveMode_(Rest)
+moveMode_(Rest),
+memory_(nullptr)
 {}
 
 //morte si le niveau d'energie est nul
