@@ -12,6 +12,8 @@ protected:
 	Hive* hive_;
 	double energy_;
 	Vec2d speed_;
+	double prob;
+	double alpha_max;
 	
 	sf::Texture texture;
 		
