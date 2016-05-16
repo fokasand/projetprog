@@ -7,9 +7,14 @@
 Bee::Bee(Vec2d centre,
 			double rayon,
 			 Hive* hive,
-			 double energy, double amplitude)
-: speed_(amplitude*Vec2d::fromRandomAngle()),energy_(energy),
-texture (getAppTexture(getBeeConfig()["texture"].toString())),
+			 double energy, 
+			 double amplitude,
+			 sf::Texture texture)
+:Collider(centre,rayon), 
+hive_(hive),
+energy_(energy),
+speed_(amplitude*Vec2d::fromRandomAngle()),
+texture_ (texture = getAppTexture(getBeeConfig()["texture"].toString())),
 prob(getBeeConfig()["moving behaviour"]["random"]["rotation probability"].toDouble()),
 alpha_max(getBeeConfig()["moving behaviour"]["random"]["rotation angle max"].toDouble())
 {}
@@ -70,7 +75,7 @@ void Bee::randomMove(sf::Time dt)
 void Bee::drawOn(sf::RenderTarget& target) const 
 {
 
-	auto beeSprite = buildSprite(centre, rayon, texture);
+	auto beeSprite = buildSprite(centre, rayon, texture_);
 	
 	if (( speed_.angle() >= M_PI/2) or (speed_.angle() <= -M_PI/2))
 	{
