@@ -23,7 +23,6 @@ void ScoutBee::onState(State current,sf::Time dt)
 }
 void ScoutBee::onEnterState(State state)
 {
-	switch(state)
 	{
 		if(state==IN_HIVE)
 		{
