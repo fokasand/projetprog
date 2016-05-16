@@ -33,7 +33,11 @@ public:
 	
 	void drawOn(sf::RenderTarget& targetWindow) const;
 	
+	//méthodes de mouvement
+	//aléatoire
 	void randomMove(sf::Time dt);
+	//non aléatoire
+	void move(sf::Time dt);
 	
 	// retourne le jvalue utilisé pour raccourcir
 	virtual j::Value const& getConfig() const = 0;
