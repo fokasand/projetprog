@@ -9,9 +9,9 @@ Bee::Bee(Vec2d centre,
 			 Hive* hive,
 			 double energy, double amplitude)
 : speed_(amplitude*Vec2d::fromRandomAngle()),energy_(energy),
-texture (getAppTexture(getConfig()["texture"].toString())),
-prob(getConfig()["moving behaviour"]["random"]["rotation probability"].toDouble()),
-alpha_max(getConfig()["moving behaviour"]["random"]["rotation angle max"].toDouble())
+texture (getAppTexture(getBeeConfig()["texture"].toString())),
+prob(getBeeConfig()["moving behaviour"]["random"]["rotation probability"].toDouble()),
+alpha_max(getBeeConfig()["moving behaviour"]["random"]["rotation angle max"].toDouble())
 {}
 
 //morte si le niveau d'energie est nul
