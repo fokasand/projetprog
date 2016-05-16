@@ -19,7 +19,7 @@ public:
 		 double energy,
 		 double amplitude,
 		 sf::Texture texture);
-		 vec2d target;
+		 
 
 	//morte si energie nulle
 	bool isDead();
@@ -55,7 +55,7 @@ protected:
 	double alpha_max;
 	sf::Texture texture_;
 	static const State IN_HIVE;
-	Vecd2* memory_;
+	Vec2d* memory_;
 	//tableau rassemblant les états communs à touts types d'abeilles	
 	static std::vector<State> etats_ ;
 	//attribut désigneant le mode de déplacement
@@ -64,6 +64,8 @@ protected:
 	//valeurs initilialisées dans les constructeurs de Worker et Scout
 	double restloss_;
 	double moveloss_;
+	
+	Vec2d target_;
 
 };	
 #endif
