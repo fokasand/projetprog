@@ -47,6 +47,9 @@ public:
 	virtual j::Value const& getConfig() const = 0;
 	j::Value const& getBeeConfig() const; // utilisé pour le constructeur
 	
+	// essaye de bouger l'abeille selon son vecteur vitesse, si c est impossible, fais tourner la direction.
+	bool movebee(sf::Time dt);
+	
 protected:
 	Hive* hive_;
 	double energy_;
@@ -66,7 +69,9 @@ protected:
 	double moveloss_;
 	
 	Vec2d target_;
-
+	
+	// temps pendant lequel l'abeille est déviée
+	sf::Time avoidanceClock_;
 };	
 #endif
 
