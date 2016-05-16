@@ -60,6 +60,10 @@ void Bee::randomMove(sf::Time dt)
 	
 	//baisse de l'énergie
 	energy_-=0.1*dt.asSeconds();
+	if (energy_<= 0)
+	{
+		energy_=0;
+	}
 }
 
 void Bee::drawOn(sf::RenderTarget& target) const 
