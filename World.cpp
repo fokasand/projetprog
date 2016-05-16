@@ -487,7 +487,7 @@ bool World::isHiveable(const Vec2d& position, double radius)
 	
 	for (int xpos(x-rayon); xpos< x+rayon; ++xpos) //peutetre faire d autres bornes comme dans smooth? x+1 je crois
 	{
-		for (int ypos(y-rayon); ypos< x+rayon; ++ypos)
+		for (int ypos(y-rayon); ypos< y+rayon; ++ypos)
 		{
 			if (cells_[toUnidToric(xpos,ypos)]!= Kind::grass)// ajout d'une fonction pour coordonnées toriques.
 			{
