@@ -15,14 +15,15 @@ protected:
 	double prob;
 	double alpha_max;
 	
-	sf::Texture texture;
+	sf::Texture texture_;
 		
 public:	
 	//constructeur
 	Bee(Vec2d centre,
 		double rayon,
 		 Hive* hive,
-		 double energy, double amplitude);
+		 double energy, double amplitude,
+		 sf::Texture texture);
 
 	//morte si energie nulle
 	bool isDead();
