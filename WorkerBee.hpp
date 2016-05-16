@@ -1,3 +1,4 @@
+#ifndef WORKERBEE_H
 #define WORKERBEE_H
 #include "Bee.hpp"
 #include "Hive.hpp"
@@ -21,3 +22,4 @@ private:
 };
 
 #endif
+	
