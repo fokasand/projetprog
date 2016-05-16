@@ -1,3 +1,5 @@
+#ifndef SFCM_H
+#define SFCM_H
 #include "Utility/Utility.hpp"
 
 typedef Uid State;
