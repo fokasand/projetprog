@@ -51,30 +51,9 @@ void Bee::randomMove(sf::Time dt)
 	if(bernoulli(getConfig()["moving behaviour"]["random"]["rotation probability"].toDouble()))
 	{
 		double alpha (uniform(-alpha_max,alpha_max));
-		double beta;
-		Vec2d possible_pos;
-		
-		//changer la direction du déplacement
 		speed_.rotate(alpha);
-		possible_pos= centre + speed_*dt.asSeconds();
-		//verifier que l'abaeille peut occuper la possition possible_pos
-		if(getAppEnv().world_.isFlyable(possible_pos))
-		{
-			centre=possible_pos;
-		} else
-		{
-			if(bernoulli(prob))
-			{	
-				beta=PI/4;
-			} else
-			{
-				beta= -PI/4;
-			}
-			speed_.rotate(beta);
-		}
-		clamping();
 	}
-	
+	movebee(dt);
 	//baisse de l'énergie
 	energy_-=0.1*dt.asSeconds();
 	if (energy_<= 0)
@@ -83,10 +62,48 @@ void Bee::randomMove(sf::Time dt)
 	}
 }
 
-//déplacement ciblé
-void Bee::targetMove(sf::Time dt)
+bool Bee:: movebee(sf::Time dt) // on modularise car on en a besoin pour targetmove() et randomMove()
 {
-	//TODO: à coder
+	double beta(0); // peut etre qu'il faut l'initaliser à 0
+	//changer la direction du déplacement	
+	Vec2d possible_pos = centre + speed_*dt.asSeconds();
+	
+	//verifier que l'abeille peut occuper la possition possible_pos
+	if(getAppEnv().world_.isFlyable(possible_pos))
+	{
+		centre=possible_pos;
+		clamping();
+		return 1;
+	} else
+	{
+		if(bernoulli(prob))
+		{	
+			beta=PI/4;
+		} else
+		{
+			beta= -PI/4;
+		}
+		speed_.rotate(beta);
+		clamping();
+		return 0;
+	}
+}
+
+//déplacement ciblé
+void Bee::targetMove(sf::Time dt, Vec2d target)
+{
+	if (avoidanceClock_ < sf::Time::Zero )
+	{
+		speed_ = directionTo(target).normalised() * speed_.length();// on fait appel à la fonction codée dans Vec2d
+	}
+	else
+	{
+		avoidanceClock_ -= dt;
+	}
+	if (!movebee(dt))
+	{
+		avoidanceClock_ = sf::seconds(getConfig()["moving behaviour"]["target"]["avoidance delay"].toDouble()); // en faire un attribut statique?
+	}
 }
 
 void Bee::drawOn(sf::RenderTarget& target) const 
