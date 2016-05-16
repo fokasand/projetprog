@@ -32,7 +32,11 @@ bool Bee::isDead()
 //déplacement : calcule nouvelles positions et vitesse
 void Bee::update(sf::Time dt)
 {
-	
+	//action liée à l'etat courant
+	action();// ou OnState
+
+	//baisse de l'énergie
+	energy_-=0.1*dt.asSeconds();
 }
 void Bee::randomMove(sf::Time dt)
 {
@@ -84,6 +88,12 @@ void Bee::drawOn(sf::RenderTarget& target) const
 	beeSprite.rotate(speed_.angle()/DEG_TO_RAD);
 	
     target.draw(beeSprite);
+}
+
+//déplacement non aléatoire
+void move(sf::Time dt)
+{
+	
 }
 
 j::Value const& Bee::getBeeConfig() const 
