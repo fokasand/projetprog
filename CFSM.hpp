@@ -1,5 +1,3 @@
-#ifndef CFSM_H
-#define CFMS_H
 #include "Utility/Utility.hpp"
 
 typedef Uid State;
@@ -27,6 +25,7 @@ protected:
 protected:	
 	std::vector<State> states_;
 	size_t current_;
+	
 	
 };
 #endif
