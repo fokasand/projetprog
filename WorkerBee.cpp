@@ -1,11 +1,12 @@
 #include "WorkerBee.hpp"
 #include <Application.hpp>
 
-WorkerBee::WorkerBee(Vec2d centre, Hive* hive) : 
-Bee( centre, getWorkerConfig()["size"].toDouble(), hive, 
-	getWorkerConfig()["energy"]["initial"].toDouble(), 
-	getWorkerConfig()["speed"].toDouble())
-{}
+WorkerBee::WorkerBee(Vec2d centre, Hive* hive) : Bee( centre, getWorkerConfig()["size"].toDouble(), 
+							hive, 
+							getWorkerConfig()["energy"]["initial"].toDouble(), 
+							getWorkerConfig()["speed"].toDouble(),
+							getAppTexture(getWorkerConfig()["texture"].toString()))
+							{}
 
 //racourci pour les données de configuration
 j::Value const& WorkerBee::getWorkerConfig() const
