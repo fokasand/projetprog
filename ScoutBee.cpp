@@ -1,17 +1,24 @@
 #include "ScoutBee.hpp"
 #include <Application.hpp>
 
-State const WorkerBee::IN_HIVE = createUid()
+State const ScoutBee::SEARCH_FLOWER = createUid();
+State const ScoutBee::RETURN_HIVE = createUid();
 
-ScoutBee::ScoutBee(Vec2d centre, Hive* hive,vector<State> states) : 
+//constructeur
+
+ScoutBee::ScoutBee(Vec2d centre, Hive* hive) : 
 Bee( centre, getScoutConfig()["size"].toDouble(), hive, 
 	getScoutConfig()["energy"]["initial"].toDouble(), 
-	getScoutConfig()["speed"].toDouble()),
-CFSM(states)
-{}
+	getScoutConfig()["speed"].toDouble(),
+	getAppTexture(getScoutConfig()["texture"].toString()))
+{
+	setloss();
+	states_.push_back(SEARCH_FLOWER);
+	states_.push_back(RETURN_HIVE);
+}
 
 //éxecution des actions liées à l'état courant
-void onState(State current,sf::Time dt)
+void ScoutBee::onState(State current,sf::Time dt)
 {
 //TODO: à coder	
 }
@@ -26,5 +33,3 @@ j::Value const& ScoutBee::getConfig() const
 {
 	return getScoutConfig();
 }
-
-
