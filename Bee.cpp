@@ -5,7 +5,8 @@
 #include "Env.hpp"
 
 State const Bee::IN_HIVE = createUid();
-vector<State> Bee::etats_ =  vector<State> (IN_HIVE);
+State const Bee::TO_HIVE = createUid();
+vector<State> Bee::etats_ = vector<State> (IN_HIVE,TO_HIVE);
 sf::Time const Bee::delay_ = sf::seconds(getConfig()["moving behaviour"]["target"]["avoidance delay"].toDouble());
 
 //constructeur
@@ -24,7 +25,7 @@ prob(getBeeConfig()["moving behaviour"]["random"]["rotation probability"].toDoub
 alpha_max(getBeeConfig()["moving behaviour"]["random"]["rotation angle max"].toDouble()),
 moveMode_(Rest),
 memory_(nullptr),
-avoidanceClock_(0),
+avoidanceClock_(0)
 
 {}
 
