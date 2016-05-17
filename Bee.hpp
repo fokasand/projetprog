@@ -66,6 +66,8 @@ protected:
 	Vec2d* memory_;
 	//tableau rassemblant les états communs à touts types d'abeilles	
 	static std::vector<State> etats_ ;
+	// temps auquel l'horloge est initialisé si l'abeille doit éviter un obstacle
+	static sf::Time const delay_;
 	//attribut désigneant le mode de déplacement
 	MoveMode moveMode_;
 	
@@ -75,7 +77,7 @@ protected:
 	
 	Vec2d target_;
 	
-	// temps pendant lequel l'abeille est déviée
+	// temps incrémenté pendant lequel l'abeille est déviée
 	sf::Time avoidanceClock_;
 };	
 #endif
