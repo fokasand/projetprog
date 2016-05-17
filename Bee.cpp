@@ -6,6 +6,7 @@
 
 State const Bee::IN_HIVE = createUid();
 vector<State> Bee::etats_ =  vector<State> (IN_HIVE);
+sf::Time const Bee::delay_ = sf::seconds(getConfig()["moving behaviour"]["target"]["avoidance delay"].toDouble());
 
 //constructeur
 Bee::Bee(Vec2d centre,
@@ -22,7 +23,9 @@ texture_ (texture = getAppTexture(getBeeConfig()["texture"].toString())),
 prob(getBeeConfig()["moving behaviour"]["random"]["rotation probability"].toDouble()),
 alpha_max(getBeeConfig()["moving behaviour"]["random"]["rotation angle max"].toDouble()),
 moveMode_(Rest),
-memory_(nullptr)
+memory_(nullptr),
+avoidanceClock_(0),
+
 {}
 
 //morte si le niveau d'energie est nul
@@ -102,7 +105,7 @@ void Bee::targetMove(sf::Time dt, Vec2d target)
 	}
 	if (!movebee(dt))
 	{
-		avoidanceClock_ = sf::seconds(getConfig()["moving behaviour"]["target"]["avoidance delay"].toDouble()); // en faire un attribut statique?
+		avoidanceClock_= delay_; // en faire un attribut statique?
 	}
 }
 
