@@ -26,7 +26,7 @@ public:
 		 	 
 
 	//morte si energie nulle
-	bool isDead();
+	bool isDead() const;
 
 	//déplacement : calcule nouvelles positions et vitesse
 	void update(sf::Time dt);
@@ -42,7 +42,7 @@ public:
 	void targetMove(sf::Time dt, Vec2d target);
 	
 	//permet d'ulitiser le polymophisme de getConfig
-	void setloss();
+	void setLoss();
 	
 	//retourne le mode de déplacement 
 	MoveMode getMoveMode() const;
@@ -64,10 +64,13 @@ protected:
 	static const State IN_HIVE;
 	static const State TO_HIVE;
 	Vec2d* memory_;
+	
 	//tableau rassemblant les états communs à touts types d'abeilles	
 	static std::vector<State> etats_ ;
+	
 	// temps auquel l'horloge est initialisé si l'abeille doit éviter un obstacle
 	static sf::Time const delay_;
+	
 	//attribut désigneant le mode de déplacement
 	MoveMode moveMode_;
 	
@@ -77,8 +80,11 @@ protected:
 	
 	Vec2d target_;
 	
-	// temps incrémenté pendant lequel l'abeille est déviée
+	// temps pendant lequel l'abeille est déviée
 	sf::Time avoidanceClock_;
+	
+	//voir si ne peuvent être mis dans Bee avec un setter polymorphique
+	static const double cons_rate;
+	static const double enmin_hive;
 };	
 #endif
-
