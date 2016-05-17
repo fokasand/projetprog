@@ -7,7 +7,6 @@
 State const Bee::IN_HIVE = createUid();
 State const Bee::TO_HIVE = createUid();
 vector<State> Bee::etats_ = vector<State> (IN_HIVE,TO_HIVE);
-sf::Time const Bee::delay_ = sf::seconds(getConfig()["moving behaviour"]["target"]["avoidance delay"].toDouble());
 
 //constructeur
 Bee::Bee(Vec2d centre,
@@ -25,12 +24,11 @@ prob(getBeeConfig()["moving behaviour"]["random"]["rotation probability"].toDoub
 alpha_max(getBeeConfig()["moving behaviour"]["random"]["rotation angle max"].toDouble()),
 moveMode_(Rest),
 memory_(nullptr),
-avoidanceClock_(0)
-
+avoidanceClock_(sf::Time::Zero)
 {}
 
 //morte si le niveau d'energie est nul
-bool Bee::isDead()
+bool Bee::isDead() const
 {
 	if(energy_==0)
 	{
@@ -106,7 +104,7 @@ void Bee::targetMove(sf::Time dt, Vec2d target)
 	}
 	if (!movebee(dt))
 	{
-		avoidanceClock_= delay_; // en faire un attribut statique?
+		avoidanceClock_ = sf::seconds(getConfig()["moving behaviour"]["target"]["avoidance delay"].toDouble()); // en faire un attribut statique?
 	}
 }
 
@@ -154,11 +152,11 @@ void Bee::move(sf::Time dt)
 		
 		case Targeted:
 		{
-			targetMove(dt);
+			energy_-=moveloss_;
+			targetMove(dt,target_);
 			break;
-		}	
+		}
 	}
-	
 }
 
 //retourne le mode de déplacement 
@@ -167,18 +165,28 @@ MoveMode Bee::getMoveMode() const
 	return moveMode_;
 }
 
-void Bee::setloss()
+void Bee::setTout()
 {
 	restloss_=getConfig()["energy"]["consumption rates"]["idle"].toDouble();
 	moveloss_=getConfig()["energy"]["consumption rates"]["moving"].toDouble();
+	cons_rate = getConfig()["consumption rates"]["eating"].toDouble();
+	enmin_hive = getConfig()["energy"]["to leave hive"].toDouble();
+
 }
 
+void Bee::setVar()
+{
+	
+	
+}
 
 j::Value const& Bee::getBeeConfig() const 
 {
 	return getAppConfig()["simulation"]["bees"]["generic"];
 }
+
 j::Value const&  Bee::getConfig() const
 {
 	return getBeeConfig();
 }
+
