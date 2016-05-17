@@ -20,6 +20,10 @@ public:
 		 double amplitude,
 		 sf::Texture texture);
 		 
+	// destructeur
+	
+	virtual ~Bee() = default ;
+		 	 
 
 	//morte si energie nulle
 	bool isDead();
@@ -35,7 +39,7 @@ public:
 	//non aléatoire
 	void move(sf::Time dt);
 	//ciblé
-	void targetMove(sf::Time dt);
+	void targetMove(sf::Time dt, Vec2d target);
 	
 	//permet d'ulitiser le polymophisme de getConfig
 	void setloss();
@@ -58,6 +62,7 @@ protected:
 	double alpha_max;
 	sf::Texture texture_;
 	static const State IN_HIVE;
+	static const State TO_HIVE;
 	Vec2d* memory_;
 	//tableau rassemblant les états communs à touts types d'abeilles	
 	static std::vector<State> etats_ ;
