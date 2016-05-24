@@ -4,25 +4,22 @@
 #include <Random/Random.hpp>
 #include "Env.hpp"
 
-State const Bee::IN_HIVE = createUid();
-State const Bee::TO_HIVE = createUid();
-vector<State> Bee::etats_ = vector<State> (IN_HIVE,TO_HIVE);
-
 //constructeur
-Bee::Bee(Vec2d centre,
-			double rayon,Hive* hive,
-			double energy,
-			double amplitude,
-			sf::Texture texture)
+Bee::Bee(vector<State> states,
+		Vec2d centre,
+		double rayon,Hive* hive,
+		double energy,
+		double amplitude,
+		sf::Texture texture)
 : Collider(centre,rayon),
-CFSM (etats_),
+CFSM (states),
 hive_(hive),
 energy_(energy),
 speed_(amplitude*Vec2d::fromRandomAngle()),
 texture_ (texture = getAppTexture(getBeeConfig()["texture"].toString())),
 prob(getBeeConfig()["moving behaviour"]["random"]["rotation probability"].toDouble()),
 alpha_max(getBeeConfig()["moving behaviour"]["random"]["rotation angle max"].toDouble()),
-moveMode_(Rest),
+moveMode_(MoveMode::Rest),
 memory_(nullptr),
 avoidanceClock_(sf::Time::Zero),
 statestring_("bonjour")
@@ -44,7 +41,7 @@ void Bee::update(sf::Time dt)
 	//action liée à l'etat courant
 	action(dt);
 	// movement et perte d'energie
-	movebee(dt);
+	move(dt);
 }
 
 //déplacement aléatoire
@@ -137,23 +134,36 @@ void Bee::drawOn(sf::RenderTarget& target) const
 
 //déplacement non aléatoire
 void Bee::move(sf::Time dt)
-{
+{ if(moveMode_== MoveMode::Rest)
+	{
+		std::cerr << "Resting" << std::endl;
+	}
+	
+	if(moveMode_== MoveMode::Random)
+	{
+		std::cerr << "Randoming" << std::endl;
+	}
+	
+	if(moveMode_== MoveMode::Targeted)
+	{
+		std::cerr << "Moving" << std::endl;
+	}
 	switch(moveMode_)
 	{
-		case Rest:
+		case MoveMode::Rest:
 		{
 			energy_-=restloss_;
 			break;
 		}
 		
-		case Random:
+		case MoveMode::Random:
 		{
 			energy_-=moveloss_;
 			randomMove(dt);
 			break;
 		}
 		
-		case Targeted:
+		case MoveMode::Targeted:
 		{
 			energy_-=moveloss_;
 			targetMove(dt,target_);
@@ -203,14 +213,14 @@ void Bee::eat(sf::Time dt)
 //rend la position de la fleur visible
 Vec2d* Bee::visibleFlower()
 {
-	/*Collider vision (centre, rayon + visibility_);
-	if (getCollidingFlower(vision) == nullptr
+	Collider vision (centre, rayon + visibility_);
+	if (getAppEnv().getCollidingFlower(vision) == nullptr)
 	{
 		return nullptr;
 	} else {	
 		Vec2d position ((getAppEnv().getCollidingFlower(vision))->getPosition());
 		return new Vec2d (position);
-	}*/
+	}
 }
 
 //passer une adresse à la mémoire
