@@ -14,14 +14,18 @@ public:
 	void onEnterState(State state) override;
 	
 	//racourci pour les données de configuration
-	j::Value const& getScoutConfig() const;
+	
 
-	j::Value const& getConfig() const;
+	virtual j::Value const& getConfig() const override;
 	
 private:
 	static State const SEARCH_FLOWER;
-	static State const RETURN_HIVE;	
+
+	double const enmin_flower;
+	
+	static j::Value const& getScoutConfig();
+
+	
 };
 
 #endif
-
