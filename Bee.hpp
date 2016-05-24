@@ -13,7 +13,8 @@ class Bee: public Collider, public Drawable, public Updatable,
 {
 public:	
 	//constructeur
-	Bee(Vec2d centre,
+	Bee(vector<State> states,
+		Vec2d centre,
 		double rayon,
 		 Hive* hive,
 		 double energy,
@@ -73,15 +74,11 @@ protected:
 	sf::Texture texture_;
 	double prob;
 	double alpha_max;
-	static const State IN_HIVE;
-	static const State TO_HIVE;
 	//attribut désigneant le mode de déplacement
 	MoveMode moveMode_;
 	Vec2d* memory_;
 	// temps pendant lequel l'abeille est déviée
 	sf::Time avoidanceClock_;
-	//tableau rassemblant les états communs à touts types d'abeilles	
-	static std::vector<State> etats_ ;
 	
 	//valeurs initilialisées dans les constructeurs de Worker et Scout
 	double restloss_;
