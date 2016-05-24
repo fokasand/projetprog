@@ -22,9 +22,11 @@ public:
 		 
 	// destructeur
 	
-	virtual ~Bee() = default ;
+	virtual ~Bee()
+	{ 
+		delete hive_;
+	}
 		 	 
-
 	//morte si energie nulle
 	bool isDead() const;
 
@@ -63,6 +65,7 @@ public:
 	//rend la position de la fleur visible
 	Vec2d* visibleFlower();
 	
+	
 protected:
 	Hive* hive_;
 	double energy_;
@@ -94,6 +97,7 @@ protected:
 	double visibility_;
 	
 	string statestring_;
+	
 	
 };	
 #endif
