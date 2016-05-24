@@ -1,18 +1,22 @@
 #include "ScoutBee.hpp"
 #include <Application.hpp>
+#include "Env.hpp"
 
+State const ScoutBee::IN_HIVE = createUid();
 State const ScoutBee::SEARCH_FLOWER = createUid();
+State const ScoutBee::TO_HIVE = createUid();
+vector<State> ScoutBee::etats_ = vector<State> {IN_HIVE, SEARCH_FLOWER, TO_HIVE};
+
 
 //constructeur
 ScoutBee::ScoutBee(Vec2d centre, Hive* hive) : 
-Bee( centre, getScoutConfig()["size"].toDouble(), hive, 
+Bee( etats_, centre, getScoutConfig()["size"].toDouble(), hive, 
 	getScoutConfig()["energy"]["initial"].toDouble(), 
 	getScoutConfig()["speed"].toDouble(),
 	getAppTexture(getScoutConfig()["texture"].toString())),  //peut etre dans dessin
 	enmin_flower(getScoutConfig()["energy"]["to seek flowers"].toDouble())
 {
 	setTout();
-	states_.push_back(SEARCH_FLOWER);
 }
 
 //éxecution des actions liées à l'état courant
@@ -24,7 +28,7 @@ void ScoutBee::onState(State current, sf::Time dt)
 		std::cerr << "inhive" << std::endl;
 		// donner l'addresse à une worker
 		{
-			statestring_=="in_hive_sharing[n]";
+			statestring_="in_hive_sharing[n]";
 		}
 		while (energy_< enmin_hive)
 		{
@@ -34,22 +38,31 @@ void ScoutBee::onState(State current, sf::Time dt)
 		}
 		//passer l'adresse avec setmemory_
 		if(memory_==nullptr)
-		//arrêter de la dessiner mais comment
+		//arrêter de la dessiner dans draw (utilsier continue)
 		//passer à l'état suivant (recherche d'une fleur)
-			{
-				nextState();
-			}
+		{
+			statestring_=="in_hive_leaving";
+			nextState();
+		}
 	}
 	
 	if(current == TO_HIVE)
-	{
-		statestring_="back_to_hive";
+	{		
+		if(getAppEnv().getCollidingHive(*this) != nullptr)
+		{
+			nextState();
+		}
 	}
 	
 	if(current == SEARCH_FLOWER)
 	{
 		std::cerr << "searchin flower" << std::endl;
-		statestring_=="seeking_flower";
+		statestring_="seeking_flower";
+		if (visibleFlower()!= nullptr)
+			{
+				setMemory(visibleFlower());
+				nextState();
+			}
 	}
 }
 void ScoutBee::onEnterState( State state)
@@ -59,27 +72,23 @@ void ScoutBee::onEnterState( State state)
 		{
 			//donner l'addresse a une worker dans le tableau //waiting list
 			// switch et popback
-			moveMode_=Rest;
+			moveMode_=MoveMode::Rest;
 		}
 		
 		if(state==SEARCH_FLOWER)
 		{
-			statestring_=="in_hive_leaving";
+			std::cerr<< "onEnterState search flower " << std::endl;
 			//effacer la mémoire on admet que la position en mémoire à étée communiquée
 			memory_=nullptr;
-			moveMode_=Random;
-			// trouve une fleur 
-			if (visibleFlower()!= nullptr)
-			{
-		
-			}
+			moveMode_=MoveMode::Random;
 		}
 		
 		if(state==TO_HIVE)
 		{
 			//prendre la ruche comme cible de déplacment
 			target_=hive_->getPosition();
-			moveMode_=Targeted;
+			moveMode_= MoveMode::Targeted;
+			statestring_="back_to_hive";
 		}
 		
 	}
