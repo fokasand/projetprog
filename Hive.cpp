@@ -49,12 +49,12 @@ void Hive::drawOn(sf::RenderTarget& targetWindow) const
 	
 void Hive::dropPollen(double qte)
 {
-		
+	nectar_+=qte;	
 }
 	
 void Hive::takeNectar(double qte)
 {
-	
+	nectar_-=qte;
 }
 		
 //racourci pour les données de configuration
@@ -97,6 +97,7 @@ ScoutBee* Hive::addScout()
 	return ptr;
 }
 
+
 //efface les abeilles mortes
 void Hive::killBee()
 {
@@ -121,4 +122,14 @@ void Hive::clearBees()
 		bees_[i] = nullptr;
 	}
 	bees_.clear();	
+}
+
+double Hive::getNectar() const
+{
+	return nectar_;
+}
+
+void Hive::addToList(Bee* bee)
+{
+	waiting_list.push_back(bee);
 }
