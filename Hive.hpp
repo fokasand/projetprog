@@ -43,13 +43,18 @@ public:
 	//efface les abeilles mortes
 	void killBee();
 	
+	//rend la quantité de nectar de la ruche
+	double getNectar() const;
+	
+	void addToList(Bee* bee);
 	
 private:
 	double nectar_;
-	std::vector <Bee*> bees_;
+	std::vector < Bee*> bees_;
 	sf::Texture const texture;
 	//efface les abeilles et nettoie le tableau
 	void clearBees();
+	vector<Bee*> waiting_list;
 	
 };
 
