@@ -1,5 +1,5 @@
 #include "CFSM.hpp"
-
+#include <Application.hpp>
 //constructeur
 CFSM::CFSM(std::vector<State>& states)
 : states_(states), current_(0)
@@ -15,8 +15,9 @@ State  CFSM::getState()
 //passe à l'état suivant
 void CFSM::nextState()
 {
+	std::cerr << "size is :" << states_.size() << std::endl;
 	//passer à l'état suivant si fin de la liste pas encore attent
-	if(current_< states_.size())
+	if(current_< states_.size()-1)
 	{
 		++current_;
 	} else
@@ -24,6 +25,7 @@ void CFSM::nextState()
 		//recommence au début de la liste des états
 		current_=0;
 	}
+	std::cerr<<" current is : " <<current_<< std::endl;
 	onEnterState(states_[current_]);
 }
 
@@ -33,4 +35,3 @@ void CFSM::action(sf::Time dt)
 {
 	onState(states_[current_], dt);
 }
-
