@@ -19,12 +19,15 @@ public:
 	virtual j::Value const& getConfig() const override;
 	
 private:
-	static State const SEARCH_FLOWER;
-
+	
+	static const State IN_HIVE;
+	static const State SEARCH_FLOWER;
+	static const State TO_HIVE;
+	static std::vector<State> etats_ ;
+	
 	double const enmin_flower;
 	
 	static j::Value const& getScoutConfig();
-
 	
 };
 
