@@ -42,7 +42,7 @@ public:
 	void targetMove(sf::Time dt, Vec2d target);
 	
 	//permet d'ulitiser le polymophisme de getConfig
-	void setLoss();
+	void setTout();
 	
 	//retourne le mode de déplacement 
 	MoveMode getMoveMode() const;
@@ -54,25 +54,31 @@ public:
 	// essaye de bouger l'abeille selon son vecteur vitesse, si c est impossible, fais tourner la direction.
 	bool movebee(sf::Time dt);
 	
+	//manger la nectar
+	void eat(sf::Time dt);
+	
+	//passer une adresse à la mémoire
+	void setMemory(Vec2d* address);
+	
+	//rend la position de la fleur visible
+	Vec2d* visibleFlower();
+	
 protected:
 	Hive* hive_;
 	double energy_;
 	Vec2d speed_;
+	sf::Texture texture_;
 	double prob;
 	double alpha_max;
-	sf::Texture texture_;
 	static const State IN_HIVE;
 	static const State TO_HIVE;
-	Vec2d* memory_;
-	
-	//tableau rassemblant les états communs à touts types d'abeilles	
-	static std::vector<State> etats_ ;
-	
-	// temps auquel l'horloge est initialisé si l'abeille doit éviter un obstacle
-	static sf::Time const delay_;
-	
 	//attribut désigneant le mode de déplacement
 	MoveMode moveMode_;
+	Vec2d* memory_;
+	// temps pendant lequel l'abeille est déviée
+	sf::Time avoidanceClock_;
+	//tableau rassemblant les états communs à touts types d'abeilles	
+	static std::vector<State> etats_ ;
 	
 	//valeurs initilialisées dans les constructeurs de Worker et Scout
 	double restloss_;
@@ -80,11 +86,14 @@ protected:
 	
 	Vec2d target_;
 	
-	// temps pendant lequel l'abeille est déviée
-	sf::Time avoidanceClock_;
+	
 	
 	//voir si ne peuvent être mis dans Bee avec un setter polymorphique
-	static const double cons_rate;
-	static const double enmin_hive;
+	double cons_rate;
+	double enmin_hive;
+	double visibility_;
+	
+	string statestring_;
+	
 };	
 #endif
