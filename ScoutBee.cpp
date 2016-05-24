@@ -30,7 +30,8 @@ void ScoutBee::onState(State current, sf::Time dt)
 		{
 			statestring_="in_hive_sharing[n]";
 		}
-		while (energy_< enmin_hive)
+		
+		if (energy_< enmin_hive)
 		{
 			std::cerr << "inhive" << std::endl;
 			statestring_= "in_hive_eat";
@@ -50,15 +51,15 @@ void ScoutBee::onState(State current, sf::Time dt)
 	{		
 		if(getAppEnv().getCollidingHive(*this) != nullptr)
 		{
+			std::cerr << "touched hive" << std::endl;
 			nextState();
 		}
 	}
 	
 	if(current == SEARCH_FLOWER)
 	{
-		std::cerr << "searchin flower" << std::endl;
 		statestring_="seeking_flower";
-		if (visibleFlower()!= nullptr)
+		if (visibleFlower()!= nullptr or energy_ < enmin_flower)
 			{
 				setMemory(visibleFlower());
 				nextState();
@@ -70,6 +71,8 @@ void ScoutBee::onEnterState( State state)
 	{
 		if(state==IN_HIVE)
 		{
+			std::cerr<<"onEnterSTate hive " << std::endl;
+			
 			//donner l'addresse a une worker dans le tableau //waiting list
 			// switch et popback
 			moveMode_=MoveMode::Rest;
