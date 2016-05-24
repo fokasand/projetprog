@@ -32,10 +32,6 @@ void CFSM::nextState()
 
 void CFSM::action(sf::Time dt)
 {
-	//TODO
+	onState(current_, dt);
 }
 
-void CFSM::onEnterState(State state)
-{
-	//TODO
-}
