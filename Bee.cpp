@@ -24,7 +24,8 @@ prob(getBeeConfig()["moving behaviour"]["random"]["rotation probability"].toDoub
 alpha_max(getBeeConfig()["moving behaviour"]["random"]["rotation angle max"].toDouble()),
 moveMode_(Rest),
 memory_(nullptr),
-avoidanceClock_(sf::Time::Zero)
+avoidanceClock_(sf::Time::Zero),
+statestring_("bonjour")
 {}
 
 //morte si le niveau d'energie est nul
@@ -202,9 +203,14 @@ void Bee::eat(sf::Time dt)
 //rend la position de la fleur visible
 Vec2d* Bee::visibleFlower()
 {
-	Collider vision (centre, rayon + visibility_);
-	Vec2d position ((getAppEnv().getCollidingFlower(vision))->getPosition());
-	return new Vec2d (position);
+	/*Collider vision (centre, rayon + visibility_);
+	if (getCollidingFlower(vision) == nullptr
+	{
+		return nullptr;
+	} else {	
+		Vec2d position ((getAppEnv().getCollidingFlower(vision))->getPosition());
+		return new Vec2d (position);
+	}*/
 }
 
 //passer une adresse à la mémoire
@@ -217,6 +223,7 @@ j::Value const& Bee::getBeeConfig() const
 {
 	return getAppConfig()["simulation"]["bees"]["generic"];
 }
+
 j::Value const&  Bee::getConfig() const
 {
 	return getBeeConfig();
