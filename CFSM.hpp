@@ -24,8 +24,8 @@ protected:
 	virtual void onState(State current,sf::Time dt) = 0;
 	void action(sf::Time dt);
 
-protected:	
-	std::vector<State> states_;
+private: 
+	const std::vector<State> states_;
 	size_t current_;
 	
 	
