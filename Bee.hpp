@@ -94,7 +94,8 @@ protected:
 	double visibility_;
 	
 	string statestring_;
-	
+private :
+	void changeEnergy(double quant);
 	
 };	
 #endif
