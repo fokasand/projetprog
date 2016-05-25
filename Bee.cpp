@@ -126,47 +126,37 @@ void Bee::drawOn(sf::RenderTarget& target) const
 		double thickness = (getMoveMode()==Random) ? 5 : 3;
 		auto shape = buildAnnulus(centre, size, color, thickness);
 		target.draw(shape);
-		Vec2d affiche (centre.x,centre.y +60);
+		Vec2d affiche (centre.x,centre.y +30);
 		auto const text = buildText(statestring_, affiche , getAppFont(), 30, sf::Color::White);
 		target.draw(text);
+		Vec2d affichet (centre.x,centre.y +60);
+		auto const text1 = buildText(to_nice_string(energy_), affichet , getAppFont(), 30, sf::Color::White);
+		target.draw(text1);
 	}   
 }
 
 //déplacement non aléatoire
 void Bee::move(sf::Time dt)
-{ if(moveMode_== MoveMode::Rest)
-	{
-		std::cerr << "Resting" << std::endl;
-	}
-	
-	if(moveMode_== MoveMode::Random)
-	{
-		std::cerr << "Randoming" << std::endl;
-	}
-	
-	if(moveMode_== MoveMode::Targeted)
-	{
-		std::cerr << "Moving" << std::endl;
-	}
+{ 
 	switch(moveMode_)
 	{
 		case MoveMode::Rest:
 		{
-			energy_-=restloss_;
+			changeEnergy(-restloss_);
 			break;
 		}
 		
 		case MoveMode::Random:
 		{
-			energy_-=moveloss_;
 			randomMove(dt);
+			changeEnergy(-moveloss_);
 			break;
 		}
 		
 		case MoveMode::Targeted:
 		{
-			energy_-=moveloss_;
 			targetMove(dt,target_);
+			changeEnergy(-moveloss_);
 			break;
 		}
 	}
@@ -201,11 +191,11 @@ void Bee::eat(sf::Time dt)
 		{
 			hive_->takeNectar(dt.asSeconds()*cons_rate);
 			//l'energie de l'abeille augmente lorsqu'elle mange
-			energy_+=dt.asSeconds()*cons_rate;
+			changeEnergy(dt.asSeconds()*cons_rate);
 		} else {
 			//si pas assez de nectar en consommer ce qu'il reste
 			hive_->takeNectar(available);
-			energy_+=available;
+			changeEnergy(available);
 		}
 	}
 }
@@ -223,6 +213,16 @@ Vec2d* Bee::visibleFlower()
 	}
 }
 
+//faire perdre de l'energie à l'abeille
+void Bee::changeEnergy(double quant)
+{
+	energy_+=quant;
+	if (energy_ <0 )
+	{
+		energy_=0;
+	}
+}
+
 //passer une adresse à la mémoire
 void Bee::setMemory(Vec2d* address)
 {
@@ -233,7 +233,6 @@ j::Value const& Bee::getBeeConfig() const
 {
 	return getAppConfig()["simulation"]["bees"]["generic"];
 }
-
 j::Value const&  Bee::getConfig() const
 {
 	return getBeeConfig();
