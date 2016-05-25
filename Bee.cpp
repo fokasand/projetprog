@@ -130,12 +130,9 @@ void Bee::drawOn(sf::RenderTarget& target) const
 		double thickness = (getMoveMode()==Random) ? 5 : 3;
 		auto shape = buildAnnulus(centre, size, color, thickness);
 		target.draw(shape);
-		Vec2d affiche (centre.x,centre.y +30);
-		auto const text = buildText(statestring_, affiche , getAppFont(), 30, sf::Color::White);
+		Vec2d affiche (centre.x,centre.y +20);
+		auto const text = buildText(statestring_, affiche , getAppFont(), 10, sf::Color::White);
 		target.draw(text);
-		Vec2d affichet (centre.x,centre.y +60);
-		auto const text1 = buildText(to_nice_string(energy_), affichet , getAppFont(), 30, sf::Color::White);
-		target.draw(text1);
 	}   
 }
 
