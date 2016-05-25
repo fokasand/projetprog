@@ -32,16 +32,13 @@ class Flower : public Collider, public Drawable, public Updatable{
 	
 	double pollen;
 	// indice maximal de texture -> creation d'un int pour pouvoir utiliser uniform
-	static const int max;
-	
-	//quantité minimale de pollen pour pouvoir se diviser 
-	static const double pollen_min;
-	
-	//taux de croissance
-	static const double growth_lim;
-	
+	int max; 
 	//initialisation de la textre de la fleur, ne change plus
 	sf::Texture const texture;
+	
+	const double split_;
+	
+	const double threshold_;
 
 };
 
