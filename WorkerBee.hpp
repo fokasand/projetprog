@@ -15,10 +15,23 @@ public:
 	
 	//éxecution des actions liées à l'état courant
 	void onState(State current,sf::Time dt) override;
-private:
-	static const State GET_POLLEN;
-	static const State RETURN_HIVE;
+	void onEnterState(State current);
 	
+	virtual void drawOn(sf::RenderTarget& targetWindow) const;
+	
+	void learnFlowerLocation(Vec2d flowerPosition);
+	
+private:
+	
+	static const State GET_POLLEN;
+	static const State SEARCH_FLOWER;
+	static const State TO_HIVE;
+	static const State IN_HIVE;
+	static vector<State> etats_;
+	const double nectarStep_;
+	const double harvestStep_;
+	const double max_pollen_;
+	double nectarbee_;
 };
 
 #endif
