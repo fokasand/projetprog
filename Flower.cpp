@@ -2,18 +2,13 @@
 #include "Env.hpp"
 #include <Random/Random.hpp>
 
-//l'indice max du teableau de textures est le même pour toutes les fleurs
-const int Flower::max = getFlower()["textures"].size()-1;
-//$taux de croissance
-const double Flower::growth_lim = getFlower()["growth"]["threshold"].toDouble();
-//quantité de pollen minimale pour se diviser
-const double Flower::pollen_min = getFlower()["growth"]["split"].toDouble();
- 
 //constructeur de flower avec 3 paramètres, initialise le collider,
 //quantité de pollen et texture de la fleur à l'aide de l'indice max
 Flower::Flower (const Vec2d& c, const double& r, double qpollen)
-    : Collider::Collider(c, r), pollen(qpollen),
-      texture(getAppTexture(getFlower()["textures"][uniform(0,max)].toString()))
+    : Collider::Collider(c, r), pollen(qpollen), max(getFlower()["textures"].size()-1),
+      texture(getAppTexture(getFlower()["textures"][uniform(0,max)].toString())),
+      split_(getFlower()["growth"]["split"].toDouble()),
+      threshold_(getFlower()["growth"]["threshold"].toDouble())
 {} // la fleur est clampée automatiquement
 
 //retrait de pollen tant qu'il en reste
@@ -55,8 +50,8 @@ void Flower::update(sf::Time dt)
         getAppEnv().killFlower(); // dit qu'une fleur est morte, pour que une méthode dans Env regarde laquelle est morte et l'enlève du tableau.
     } else 
     {
-        pollen += dt.asSeconds() * log( getAppEnv().world_.howhumid(centre) /growth_lim  );
-        if (pollen >= pollen_min) 
+        pollen += dt.asSeconds() * log( getAppEnv().world_.howhumid(centre) / threshold_ );
+        if (pollen >= split_) 
         {
             Vec2d pp;
             int essaismax(0);
