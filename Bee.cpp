@@ -42,6 +42,10 @@ void Bee::update(sf::Time dt)
 	action(dt);
 	// movement et perte d'energie
 	move(dt);
+	if (energy_==0)
+	{
+		hive_->killBee();
+	}
 }
 
 //déplacement aléatoire
