@@ -24,9 +24,7 @@ public:
 	// destructeur
 	
 	virtual ~Bee()
-	{ 
-		delete hive_;
-	}
+	{}
 		 	 
 	//morte si energie nulle
 	bool isDead() const;
