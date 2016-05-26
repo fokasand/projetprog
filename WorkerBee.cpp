@@ -1,6 +1,6 @@
 #include "WorkerBee.hpp"
+#include "ScoutBee.hpp"
 #include <Application.hpp>
-#include "Env.hpp"
 
 State const WorkerBee::IN_HIVE = createUid();
 State const WorkerBee::TO_HIVE = createUid();
@@ -146,4 +146,20 @@ j::Value const& WorkerBee::getWorkerConfig() const
 j::Value const& WorkerBee::getConfig() const
 {
 	return getWorkerConfig();
+}
+
+//methodes d'interaction
+void WorkerBee::interact(Bee* other)
+{
+	other->interactWith(this);
+}
+
+void WorkerBee::interactWith(ScoutBee* scouting)
+{
+	
+}
+
+void WorkerBee::interactWith(WorkerBee* working)
+{
+	//nothing todo
 }
