@@ -16,7 +16,7 @@ Bee( etats_, centre, getScoutConfig()["size"].toDouble(), hive,
 	getScoutConfig()["speed"].toDouble(),
 	getAppTexture(getScoutConfig()["texture"].toString())),  //peut etre dans dessin
 	enmin_flower(getScoutConfig()["energy"]["to seek flowers"].toDouble()),
-	max_share(getScoutConfig()["sharing"]["max"].toDouble()),
+	max_share(getScoutConfig()["sharing"]["max"].toInt()),
 	counter(0)
 {
 	setTout();
@@ -30,7 +30,7 @@ void ScoutBee::onState(State current, sf::Time dt)
 	{
 		// donner l'addresse à une worker
 		{
-			statestring_="in_hive_sharing[n]";
+			statestring_="in_hive_sharing" + to_nice_string(counter);
 		}
 		
 		if (energy_< enmin_hive)
@@ -80,6 +80,7 @@ void ScoutBee::onEnterState( State state)
 		{
 			//effacer la mémoire on admet que la position en mémoire à étée communiquée
 			memory_=nullptr;
+			counter=0;
 			moveMode_=MoveMode::Random;
 		}
 		
