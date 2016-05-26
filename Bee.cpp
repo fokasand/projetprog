@@ -4,6 +4,7 @@
 #include <Random/Random.hpp>
 #include "Env.hpp"
 
+
 //constructeur
 Bee::Bee(vector<State> states,
 		Vec2d centre,
@@ -38,14 +39,14 @@ bool Bee::isDead() const
 //déplacement : calcule nouvelles positions et vitesse
 void Bee::update(sf::Time dt)
 {
+	if(energy_==0)
+	{
+		hive_->killBee();
+	}
 	//action liée à l'etat courant
 	action(dt);
 	// movement et perte d'energie
 	move(dt);
-	if (energy_==0)
-	{
-		hive_->killBee();
-	}
 }
 
 //déplacement aléatoire
@@ -130,9 +131,12 @@ void Bee::drawOn(sf::RenderTarget& target) const
 		double thickness = (getMoveMode()==Random) ? 5 : 3;
 		auto shape = buildAnnulus(centre, size, color, thickness);
 		target.draw(shape);
-		Vec2d affiche (centre.x,centre.y +20);
-		auto const text = buildText(statestring_, affiche , getAppFont(), 10, sf::Color::White);
+		Vec2d affiche (centre.x,centre.y +30);
+		auto const text = buildText(statestring_, affiche , getAppFont(), 30, sf::Color::White);
 		target.draw(text);
+		Vec2d affichet (centre.x,centre.y +60);
+		auto const text1 = buildText(to_nice_string(energy_), affichet , getAppFont(), 30, sf::Color::White);
+		target.draw(text1);
 	}   
 }
 
@@ -234,6 +238,7 @@ j::Value const& Bee::getBeeConfig() const
 {
 	return getAppConfig()["simulation"]["bees"]["generic"];
 }
+
 j::Value const&  Bee::getConfig() const
 {
 	return getBeeConfig();
