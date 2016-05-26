@@ -1,4 +1,3 @@
-#include "Hive.hpp"
 #include <SFML/Graphics.hpp>
 #include "Utility/Utility.hpp"
 #include "Env.hpp"
@@ -6,6 +5,7 @@
 #include "Bee.hpp"
 #include "WorkerBee.hpp"
 #include "ScoutBee.hpp"
+
 //constructeur 
 Hive::Hive(const Vec2d& c) 
 : Collider::Collider(c,getAppConfig()["simulation"]["env"]["initial"]["hive"]["size"]["manual"].toDouble()),
