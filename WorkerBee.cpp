@@ -1,6 +1,7 @@
 #include "WorkerBee.hpp"
 #include "ScoutBee.hpp"
 #include <Application.hpp>
+#include "Env.hpp"
 
 State const WorkerBee::IN_HIVE = createUid();
 State const WorkerBee::TO_HIVE = createUid();
@@ -21,7 +22,6 @@ Bee(etats_, // pour sncm
 	nectarStep_ (getWorkerConfig()["transfer rate"].toDouble())
 {
 	setTout();
-	states_.push_back(GET_POLLEN);
 }
 
 void WorkerBee::onState(State current, sf::Time dt)
@@ -131,11 +131,6 @@ void WorkerBee::onEnterState(State current)
 	}
 }
 
-
-void WorkerBee::learnFlowerLocation(Vec2d flowerPosition)
-{
-	memory_ = &flowerPosition;
-}
 	
 //racourci pour les données de configuration
 j::Value const& WorkerBee::getWorkerConfig() const
