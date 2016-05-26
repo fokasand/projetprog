@@ -1,6 +1,7 @@
 #include "ScoutBee.hpp"
 #include <Application.hpp>
 #include "Env.hpp"
+#include "WorkerBee.hpp"
 
 State const ScoutBee::IN_HIVE = createUid();
 State const ScoutBee::SEARCH_FLOWER = createUid();
@@ -14,7 +15,9 @@ Bee( etats_, centre, getScoutConfig()["size"].toDouble(), hive,
 	getScoutConfig()["energy"]["initial"].toDouble(), 
 	getScoutConfig()["speed"].toDouble(),
 	getAppTexture(getScoutConfig()["texture"].toString())),  //peut etre dans dessin
-	enmin_flower(getScoutConfig()["energy"]["to seek flowers"].toDouble())
+	enmin_flower(getScoutConfig()["energy"]["to seek flowers"].toDouble()),
+	max_share(getScoutConfig()["sharing"]["max"].toDouble()),
+	counter(0)
 {
 	setTout();
 }
@@ -25,7 +28,6 @@ void ScoutBee::onState(State current, sf::Time dt)
 	
 	if(current==IN_HIVE)
 	{
-		std::cerr << "inhive" << std::endl;
 		// donner l'addresse à une worker
 		{
 			statestring_="in_hive_sharing[n]";
@@ -33,13 +35,12 @@ void ScoutBee::onState(State current, sf::Time dt)
 		
 		if (energy_< enmin_hive)
 		{
-			std::cerr << "inhive" << std::endl;
 			statestring_= "in_hive_eat";
 			eat(dt);
 		}
 		//passer l'adresse avec setmemory_
-		if(memory_==nullptr)
-		//arrêter de la dessiner dans draw (utilsier continue)
+		if((memory_==nullptr) and (energy_>enmin_hive)) //en vrai c'est pas ça la condition mais plutot un bool d'une methode de passage
+		//arrêter de la dessiner dans draw (utilser continue)
 		//passer à l'état suivant (recherche d'une fleur)
 		{
 			statestring_=="in_hive_leaving";
@@ -48,10 +49,9 @@ void ScoutBee::onState(State current, sf::Time dt)
 	}
 	
 	if(current == TO_HIVE)
-	{		
-		if(getAppEnv().getCollidingHive(*this) != nullptr)
+	{	
+		if(isPointInside(hive_->getPosition()))
 		{
-			std::cerr << "touched hive" << std::endl;
 			nextState();
 		}
 	}
@@ -71,8 +71,6 @@ void ScoutBee::onEnterState( State state)
 	{
 		if(state==IN_HIVE)
 		{
-			std::cerr<<"onEnterSTate hive " << std::endl;
-			
 			//donner l'addresse a une worker dans le tableau //waiting list
 			// switch et popback
 			moveMode_=MoveMode::Rest;
@@ -80,7 +78,6 @@ void ScoutBee::onEnterState( State state)
 		
 		if(state==SEARCH_FLOWER)
 		{
-			std::cerr<< "onEnterState search flower " << std::endl;
 			//effacer la mémoire on admet que la position en mémoire à étée communiquée
 			memory_=nullptr;
 			moveMode_=MoveMode::Random;
@@ -92,13 +89,31 @@ void ScoutBee::onEnterState( State state)
 			target_=hive_->getPosition();
 			moveMode_= MoveMode::Targeted;
 			statestring_="back_to_hive";
-		}
-		
+		}	
+	}	
+}
+
+//méthodes permettant l'intéraction entre deux abeilles
+void ScoutBee::interact(Bee* other)
+{
+	other->interactWith(this);
+}
+
+void ScoutBee::interactWith(ScoutBee* scouting)
+{
+	//nothing todo
+}
+
+void ScoutBee::interactWith(WorkerBee* working)
+{
+	if(counter < max_share)
+	{
+		working->setMemory(memory_);
+		++counter;
 	}
 	
 }
 
-//redéfinition de drawon:
 void ScoutBee::drawOn(sf::RenderTarget& target) const 
 {
 	Bee::drawOn(target);
@@ -108,8 +123,8 @@ void ScoutBee::drawOn(sf::RenderTarget& target) const
 		auto const text = buildText("Scout: energy "+to_nice_string(energy_), affiche , getAppFont(), 10, sf::Color::Blue); // + statestring_
 		target.draw(text);
 	}
+    
 }
-
 //racourci pour les données de configuration
 j::Value const& ScoutBee::getScoutConfig()
 {
