@@ -1,7 +1,6 @@
 #ifndef WORKERBEE_H
 #define WORKERBEE_H
 #include "Bee.hpp"
-#include "Hive.hpp"
 
 class WorkerBee : public Bee
 {
@@ -21,16 +20,16 @@ public:
 	virtual void interactWith(ScoutBee* scouting) override;
 	virtual void interactWith(WorkerBee* working) override;
 	
-	virtual void drawOn(sf::RenderTarget& targetWindow) const;
 private:
 	static State const SEARCH_FLOWER;
 	static const State IN_HIVE;
 	static const State TO_HIVE;
 	//tableau rassemblant les états communs à touts types d'abeilles	
 	static std::vector<State> etats_ ;
-	
+	virtual void drawOn(sf::RenderTarget& targetWindow) const override;
 };
 
 j::Value const& getWorkerConfig();
 
-#endif	
+#endif
+	
