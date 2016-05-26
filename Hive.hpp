@@ -4,6 +4,7 @@
 #include <Interface/Updatable.hpp>
 #include <Interface/Drawable.hpp>
 
+
 class Bee;
 class WorkerBee;
 class ScoutBee;
