@@ -1,7 +1,3 @@
-#ifndef SCOUTBEE_H
-#define SCOUTBEE_H
-#include "Bee.hpp"
-
 class ScoutBee : public Bee
 {
 public:
@@ -32,7 +28,7 @@ private:
 	double const enmin_flower;
 	
 	//seuil pour la partage de la mémoire
-	double const max_share;
+	int const max_share;
 	
 	//compteur pour le nombre de partages
 	int counter;
