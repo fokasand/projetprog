@@ -49,6 +49,10 @@ public:
 	
 	void addToList(Bee* bee);
 	
+	void getBeesInHive();
+	
+	void beesInteract();
+	
 private:
 	double nectar_;
 	std::vector < Bee*> bees_;
