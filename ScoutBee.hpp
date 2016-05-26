@@ -1,3 +1,7 @@
+#ifndef SCOUTBEE_H
+#define SCOUTBEE_H
+#include "Bee.hpp"
+
 class ScoutBee : public Bee
 {
 public:
