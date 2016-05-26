@@ -30,9 +30,11 @@ private:
 	static const State TO_HIVE;
 	static const State IN_HIVE;
 	static vector<State> etats_;
-	const double nectarStep_;
-	const double harvestStep_;
 	const double max_pollen_;
+	const double harvestStep_;
+	const double nectarStep_;
+
+
 	double nectarbee_;
 
 virtual void drawOn(sf::RenderTarget& targetWindow) const;
