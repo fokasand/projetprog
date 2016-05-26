@@ -97,6 +97,19 @@ void ScoutBee::onEnterState( State state)
 	}
 	
 }
+
+//redéfinition de drawon:
+void ScoutBee::drawOn(sf::RenderTarget& target) const 
+{
+	Bee::drawOn(target);
+	if (isDebugOn())
+	{
+		Vec2d affiche (centre.x, centre.y - 25 );
+		auto const text = buildText("Scout: energy "+to_nice_string(energy_), affiche , getAppFont(), 10, sf::Color::Blue); // + statestring_
+		target.draw(text);
+	}
+}
+
 //racourci pour les données de configuration
 j::Value const& ScoutBee::getScoutConfig()
 {
