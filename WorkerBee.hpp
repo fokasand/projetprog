@@ -16,9 +16,12 @@ public:
 	void onState(State current,sf::Time dt) override;
 	void onEnterState(State current);
 	
-	virtual void drawOn(sf::RenderTarget& targetWindow) const;
+
 	
-	void learnFlowerLocation(Vec2d flowerPosition);
+	//méthodes permettant l'intéraction entre deux abeilles
+	virtual void interact(Bee* other) override;
+	virtual void interactWith(ScoutBee* scouting) override;
+	virtual void interactWith(WorkerBee* working) override;
 	
 private:
 	
@@ -31,6 +34,8 @@ private:
 	const double harvestStep_;
 	const double max_pollen_;
 	double nectarbee_;
+
+virtual void drawOn(sf::RenderTarget& targetWindow) const;
 };
 
 #endif
