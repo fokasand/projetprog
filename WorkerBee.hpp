@@ -1,7 +1,6 @@
 #ifndef WORKERBEE_H
 #define WORKERBEE_H
 #include "Bee.hpp"
-#include "Hive.hpp"
 
 class WorkerBee : public Bee
 {
