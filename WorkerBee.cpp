@@ -30,8 +30,8 @@ void WorkerBee::onState(State current, sf::Time dt)
 	{
 		if (nectarbee_ > 0)
 		{
-			nectarbee_ -= nectarStep_;
-			hive_->dropPollen(nectarStep_);
+			nectarbee_ -= nectarStep_*dt.asSeconds();
+			hive_->dropPollen(nectarStep_*dt.asSeconds());
 			statestring_ = "in_hive_pollen";
 		}
 		else
@@ -60,27 +60,30 @@ void WorkerBee::onState(State current, sf::Time dt)
 	{
 		if (isPointInside(*memory_))
 		{
+			std::cerr<<"passe a getpollen"<< std::endl;
 			nextState();
 		}
 	}
 	
 	if (current == GET_POLLEN)
 	{
-		if ( (getAppEnv().getCollidingFlower(*this) != nullptr) and (nectarbee_ < max_pollen_))
+		// vérifie que la fleur existe bien toujours
+		if ((nectarbee_ < max_pollen_) and (getAppEnv().getCollidingFlower(*this) != nullptr))
 		{
-		nectarbee_ += harvestStep_; // ajoute le pollen au stock de l'abeille
-		getAppEnv().getCollidingFlower(*this)->takePollen(harvestStep_); // retire le pollen de la fleur
-		statestring_ = "collecting_pollen";
+			nectarbee_ += harvestStep_*dt.asSeconds(); // ajoute le pollen au stock de l'abeille
+			getAppEnv().getCollidingFlower(*this)->takePollen(harvestStep_*dt.asSeconds()); // retire le pollen de la fleur
+			statestring_ = "collecting_pollen";
 		}
 		else 
 		{
+			std::cerr<<"passe a tohive"<< std::endl;
 			nextState();
 		}
 	}
 	if(current==TO_HIVE)
 	{
 		statestring_="back_to_hive";
-		if ((getAppEnv().getCollidingHive(*this)->getPosition() == target_))
+		if (isPointInside(hive_->getPosition()))
 		{
 			nextState();
 		}
@@ -106,18 +109,13 @@ void WorkerBee::onEnterState(State current)
 	{
 		//effacer la mémoire pour qu'elle puisse être remplie par un scout dans la ruche.
 		memory_=nullptr;
-		// ajoute l'abeille à la waiting list
-		//hive_.addToList(this);
-		if (hive_->getNectar() > 0)
-		{
-			//méthode givenectar
-		}
-		
 		moveMode_ = Rest;
+		isInHive_=1;
 	}
 	
 	if(current==SEARCH_FLOWER)
 	{
+		isInHive_=0;
 		statestring_ = "to_flower";
 		target_ = *memory_;
 		moveMode_=Targeted;
