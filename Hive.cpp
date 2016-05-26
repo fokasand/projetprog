@@ -69,6 +69,9 @@ void Hive::update(sf::Time dt)
 	{
 		bees_[i]->update(dt);
 	}
+	getBeesInHive();
+	beesInteract();
+	waiting_list.clear();
 	
 }
 
@@ -79,6 +82,17 @@ void Hive::addBee()
 	bees_.push_back(new Bee({centre},30,this,250,500));
 }
 * */
+
+void Hive::beesInteract()
+{
+	for(auto& bee: waiting_list)
+	{
+		for(auto& other: waiting_list)
+		{
+			bee->interact  (other);
+		}
+	}
+}
 
 //ajouts spécifiques:
 WorkerBee* Hive::addWorker()
@@ -132,4 +146,17 @@ double Hive::getNectar() const
 void Hive::addToList(Bee* bee)
 {
 	waiting_list.push_back(bee);
+}
+
+//rend un tableau avec les abeilles dans la ruche
+void Hive::getBeesInHive()
+{
+	for (auto& bee: bees_)
+	{
+		// le state d'indice 0 dans states_  est IN_HIVE
+		if (bee->getState()==0)
+		{
+			waiting_list.push_back(bee);
+		}
+	}	
 }
