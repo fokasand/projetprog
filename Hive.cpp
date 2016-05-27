@@ -65,13 +65,13 @@ j::Value getHive()
 
 void Hive::update(sf::Time dt)
 {
+	waiting_list.clear();
 	for (size_t i(0); i <bees_.size() ; ++i)
 	{
 		bees_[i]->update(dt);
 	}
 	getBeesInHive();
 	beesInteract();
-	waiting_list.clear();
 	
 }
 
@@ -121,9 +121,7 @@ void Hive::killBee()
             bees_[i]= nullptr;
         }
     }
-
     bees_.erase(std::remove(bees_.begin(), bees_.end(), nullptr), bees_.end());
-    
 }
 
 
