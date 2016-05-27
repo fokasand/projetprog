@@ -61,7 +61,6 @@ void WorkerBee::onState(State current, sf::Time dt)
 	{
 		if (isPointInside(*memory_))
 		{
-			std::cerr<<"passe a getpollen"<< std::endl;
 			nextState();
 		}
 	}
@@ -77,7 +76,6 @@ void WorkerBee::onState(State current, sf::Time dt)
 		}
 		else 
 		{
-			std::cerr<<"passe a tohive"<< std::endl;
 			nextState();
 		}
 	}
