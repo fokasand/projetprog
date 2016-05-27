@@ -19,7 +19,8 @@ Bee(etats_, // pour sncm
 	
 	max_pollen_(getWorkerConfig()["max pollen capacity"].toDouble()),// attributs propres à la classe
 	harvestStep_(getWorkerConfig()["harvest rate"].toDouble()),
-	nectarStep_ (getWorkerConfig()["transfer rate"].toDouble())
+	nectarStep_ (getWorkerConfig()["transfer rate"].toDouble()),
+	nectarbee_(0)
 {
 	setTout();
 }
