@@ -90,7 +90,7 @@ void Hive::update(sf::Time dt)
 	}
 	getBeesInHive();
 	beesInteract();
-	
+	addRandom();
 }
 
 /*
