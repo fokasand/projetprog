@@ -29,9 +29,7 @@ void ScoutBee::onState(State current, sf::Time dt)
 	if(current==IN_HIVE)
 	{
 		// donner l'addresse à une worker
-		{
-			statestring_="in_hive_sharing" + to_nice_string(counter);
-		}
+		statestring_="in_hive_sharing" + to_nice_string(counter);
 		
 		if (energy_< enmin_hive)
 		{
@@ -39,7 +37,7 @@ void ScoutBee::onState(State current, sf::Time dt)
 			eat(dt);
 		}
 		//passer l'adresse avec setmemory_
-		if((memory_==nullptr) and (energy_>enmin_hive)) //en vrai c'est pas ça la condition mais plutot un bool d'une methode de passage
+		if((memory_==nullptr) and (energy_>enmin_hive) and (counter >= max_share)) //en vrai c'est pas ça la condition mais plutot un bool d'une methode de passage
 		//arrêter de la dessiner dans draw (utilser continue)
 		//passer à l'état suivant (recherche d'une fleur)
 		{
@@ -74,6 +72,7 @@ void ScoutBee::onEnterState( State state)
 			//donner l'addresse a une worker dans le tableau //waiting list
 			// switch et popback
 			moveMode_=MoveMode::Rest;
+			isInHive_=1;
 		}
 		
 		if(state==SEARCH_FLOWER)
@@ -82,6 +81,7 @@ void ScoutBee::onEnterState( State state)
 			memory_=nullptr;
 			counter=0;
 			moveMode_=MoveMode::Random;
+			isInHive_=0;
 		}
 		
 		if(state==TO_HIVE)
@@ -107,12 +107,15 @@ void ScoutBee::interactWith(ScoutBee* scouting)
 
 void ScoutBee::interactWith(WorkerBee* working)
 {
-	if(counter < max_share)
+	if ((counter < max_share) and (working->getMemory() ==nullptr))
 	{
 		working->setMemory(memory_);
 		++counter;
 	}
-	
+	else
+	{
+		setMemory(nullptr);
+	}
 }
 
 void ScoutBee::drawOn(sf::RenderTarget& target) const 
