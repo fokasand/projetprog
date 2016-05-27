@@ -61,6 +61,18 @@ private:
 	void clearBees();
 	vector<Bee*> waiting_list;
 	
+	//seuil de néctar pour la reproduction
+	double const nectar_lim;
+	
+	//nombre maximal d'abeilles
+	int const max_bees;
+	
+	//probabilité d'ajotuer une worker
+	double const proba;
+	
+	//ajoute des abeilles aléatoirement
+	void addRandom();
+	
 };
 
 //racourci pour les données de configuration
