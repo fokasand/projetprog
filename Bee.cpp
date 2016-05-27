@@ -4,7 +4,6 @@
 #include <Random/Random.hpp>
 #include "Env.hpp"
 
-
 //constructeur
 Bee::Bee(vector<State> states,
 		Vec2d centre,
@@ -23,7 +22,8 @@ alpha_max(getBeeConfig()["moving behaviour"]["random"]["rotation angle max"].toD
 moveMode_(MoveMode::Rest),
 memory_(nullptr),
 avoidanceClock_(sf::Time::Zero),
-statestring_("bonjour")
+statestring_("bonjour"),
+isInHive_(1)
 {}
 
 //morte si le niveau d'energie est nul
@@ -39,14 +39,16 @@ bool Bee::isDead() const
 //déplacement : calcule nouvelles positions et vitesse
 void Bee::update(sf::Time dt)
 {
-	if(energy_==0)
+	if (energy_==0)
 	{
 		hive_->killBee();
 	}
+	
 	//action liée à l'etat courant
 	action(dt);
 	// movement et perte d'energie
 	move(dt);
+	
 }
 
 //déplacement aléatoire
@@ -65,6 +67,11 @@ void Bee::randomMove(sf::Time dt)
 	{
 		energy_=0;
 	}
+}
+
+Vec2d* Bee::getMemory() const
+{
+	return memory_;
 }
 
 bool Bee:: movebee(sf::Time dt) // on modularise car on en a besoin pour targetmove() et randomMove()
@@ -131,12 +138,9 @@ void Bee::drawOn(sf::RenderTarget& target) const
 		double thickness = (getMoveMode()==Random) ? 5 : 3;
 		auto shape = buildAnnulus(centre, size, color, thickness);
 		target.draw(shape);
-		Vec2d affiche (centre.x,centre.y +30);
-		auto const text = buildText(statestring_, affiche , getAppFont(), 30, sf::Color::White);
+		Vec2d affiche (centre.x,centre.y +20);
+		auto const text = buildText(statestring_, affiche , getAppFont(), 10, sf::Color::White);
 		target.draw(text);
-		Vec2d affichet (centre.x,centre.y +60);
-		auto const text1 = buildText(to_nice_string(energy_), affichet , getAppFont(), 30, sf::Color::White);
-		target.draw(text1);
 	}   
 }
 
@@ -228,6 +232,11 @@ void Bee::changeEnergy(double quant)
 	}
 }
 
+
+bool Bee::isBeeInHive()
+{
+	return isInHive_;
+}
 //passer une adresse à la mémoire
 void Bee::setMemory(Vec2d* address)
 {
@@ -238,7 +247,6 @@ j::Value const& Bee::getBeeConfig() const
 {
 	return getAppConfig()["simulation"]["bees"]["generic"];
 }
-
 j::Value const&  Bee::getConfig() const
 {
 	return getBeeConfig();
