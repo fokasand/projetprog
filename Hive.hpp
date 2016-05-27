@@ -47,8 +47,6 @@ public:
 	//rend la quantité de nectar de la ruche
 	double getNectar() const;
 	
-	void addToList(Bee* bee);
-	
 	void getBeesInHive();
 	
 	void beesInteract();
