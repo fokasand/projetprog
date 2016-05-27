@@ -39,16 +39,14 @@ bool Bee::isDead() const
 //déplacement : calcule nouvelles positions et vitesse
 void Bee::update(sf::Time dt)
 {
-	if (energy_==0)
-	{
-		hive_->killBee();
-	}
-	
 	//action liée à l'etat courant
 	action(dt);
 	// movement et perte d'energie
 	move(dt);
-	
+	if (energy_==0)
+	{
+		hive_->killBee();
+	}
 }
 
 //déplacement aléatoire
