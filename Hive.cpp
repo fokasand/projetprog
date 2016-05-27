@@ -119,9 +119,13 @@ void Hive::killBee()
         if (bees_[i]->isDead()) {
             delete bees_[i];
             bees_[i]= nullptr;
+            cerr << "killing the bee " << endl;
         }
     }
+
     bees_.erase(std::remove(bees_.begin(), bees_.end(), nullptr), bees_.end());
+    cerr << "be is erased" << endl;
+    
 }
 
 
