@@ -83,11 +83,18 @@ j::Value getHive()
 
 void Hive::update(sf::Time dt)
 {
-	waiting_list.clear();
-	for (size_t i(0); i <bees_.size() ; ++i)
+	vector<Bee*> copie = bees_;
+	for (size_t i(0); i <copie.size() ; ++i)
 	{
-		bees_[i]->update(dt);
+		copie[i]->update(dt);
+		if (copie[i]->isDead()) 
+		{
+            delete copie[i];
+            copie[i]=nullptr;
+            bees_[i] = nullptr;
+        }
 	}
+    bees_.erase(std::remove(bees_.begin(), bees_.end(), nullptr), bees_.end());
 	getBeesInHive();
 	beesInteract();
 	addRandom();
@@ -101,13 +108,31 @@ void Hive::addBee()
 }
 * */
 
+//rend un tableau avec les abeilles dans la ruche
+void Hive::getBeesInHive()
+{
+	waiting_list.clear();
+	for (auto bee: bees_)
+	{
+		// le state d'indice 0 dans states_  est IN_HIVE
+		if (bee->getState()==0) // peut etre mieux avec collider
+		{
+			waiting_list.push_back(bee);
+		}
+	}	
+}
+
 void Hive::beesInteract()
 {
-	for(auto& bee: waiting_list)
+	for(int i(0); i< waiting_list.size(); ++i)
 	{
-		for(auto& other: waiting_list)
+
+		for (int j(0); j< waiting_list.size(); ++j)
 		{
-			bee->interact  (other);
+			if (i!=j)
+			{
+			bees_[j]->interact(bees_[i]);
+			}
 		}
 	}
 }
@@ -129,24 +154,6 @@ ScoutBee* Hive::addScout()
 	return ptr;
 }
 
-
-//efface les abeilles mortes
-void Hive::killBee()
-{
-	for (size_t i(0); i < bees_.size() ; ++i) {
-        if (bees_[i]->isDead()) {
-            delete bees_[i];
-            bees_[i]= nullptr;
-            cerr << "killing the bee " << endl;
-        }
-    }
-
-    bees_.erase(std::remove(bees_.begin(), bees_.end(), nullptr), bees_.end());
-    cerr << "be is erased" << endl;
-    
-}
-
-
 //efface les abeilles et nettoie le tableau
 void Hive::clearBees()
 {
@@ -156,27 +163,10 @@ void Hive::clearBees()
 		bees_[i] = nullptr;
 	}
 	bees_.clear();	
+	waiting_list.clear();
 }
 
 double Hive::getNectar() const
 {
 	return nectar_;
-}
-
-void Hive::addToList(Bee* bee)
-{
-	waiting_list.push_back(bee);
-}
-
-//rend un tableau avec les abeilles dans la ruche
-void Hive::getBeesInHive()
-{
-	for (auto& bee: bees_)
-	{
-		// le state d'indice 0 dans states_  est IN_HIVE
-		if (bee->getState()==0)
-		{
-			waiting_list.push_back(bee);
-		}
-	}	
 }
