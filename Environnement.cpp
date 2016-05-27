@@ -2,13 +2,13 @@
 #include <Random/Random.hpp>
 
 //racourci données de configuration pour env
-j::Value getEnv()
+j::Value const& getEnv()
 {
     return getAppConfig()["simulation"]["env"];
 }
 
 //constructeur par défaut
-Env::Env()
+Env::Env() : maxFlower (getEnv()["max flowers"].toInt())
 {
     try {
         loadWorldFromFile();
@@ -46,7 +46,8 @@ void Env::update(sf::Time dt)
 {
 	vector<Flower*> copie(flowers_);
 	
-    for (auto& fleur : copie) {
+    for (auto& fleur : copie) 
+    {
         fleur->update(dt);
     }
     fgen_.update(dt); // fait à l'étape 3, réponse question.
@@ -59,7 +60,6 @@ void Env::update(sf::Time dt)
 //dessin de l'environnement
 void Env::drawOn(sf::RenderTarget& target) const
 {
-	cerr << "in env size of hives is " << hives_.size() << std::endl;
     //dessin du terrain
     world_.drawOn(target);
 
@@ -78,7 +78,6 @@ void Env::drawOn(sf::RenderTarget& target) const
 bool Env::addFlowerAt (Vec2d p)
 {
     //la cellule correspondant à p doit être de l'herbe
-    unsigned int maxFlower (getEnv()["max flowers"].toInt());
 
     if (world_.isGrowable(p) and flowers_.size()< maxFlower) {
         double min (getEnv()["initial"]["flower"]["nectar"]["min"].toDouble());
@@ -136,6 +135,7 @@ void Env::clearHives()
 Env::~Env()
 {
     clearFlowers(); 
+    clearHives();
 }
 
 //ajouter une ruche
@@ -170,8 +170,12 @@ bool Env::addHiveAt(const Vec2d& position)
 	
 	//si n'est en collision avec rien
 	//peut être ajoutée
+	if (world_.isHiveable(position, getAppConfig()["simulation"]["env"]["initial"]["hive"]["size"]["manual"].toDouble()))
+	{
 	hives_.push_back(new Hive (position));
 	return true;
+	}
+	return false;
 }
 
 //rend la ruche en collision avec l'argument 
