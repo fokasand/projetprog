@@ -34,10 +34,9 @@ private:
 	const double harvestStep_;
 	const double nectarStep_;
 
-
 	double nectarbee_;
 
-virtual void drawOn(sf::RenderTarget& targetWindow) const;
+	virtual void drawOn(sf::RenderTarget& targetWindow) const;
 };
 
 #endif
