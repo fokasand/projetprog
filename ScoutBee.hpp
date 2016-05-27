@@ -8,6 +8,7 @@ public:
 	//constructeur
 	ScoutBee(Vec2d centre, Hive* hive);
 	
+	
 	//éxecution des actions liées à l'état courant
 	void onState(State current,sf::Time dt) override;
 	void onEnterState(State state) override;
@@ -19,7 +20,6 @@ public:
 	virtual void interact(Bee* other) override;
 	virtual void interactWith(ScoutBee* scouting) override;
 	virtual void interactWith(WorkerBee* working) override;
-
 	
 private:
 	
