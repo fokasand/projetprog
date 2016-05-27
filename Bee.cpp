@@ -26,6 +26,10 @@ statestring_("bonjour"),
 isInHive_(1)
 {}
 
+Bee::~Bee()
+{
+	//delete memory_;
+}
 //morte si le niveau d'energie est nul
 bool Bee::isDead() const
 {
@@ -39,14 +43,11 @@ bool Bee::isDead() const
 //déplacement : calcule nouvelles positions et vitesse
 void Bee::update(sf::Time dt)
 {
+	
 	//action liée à l'etat courant
 	action(dt);
 	// movement et perte d'energie
 	move(dt);
-	if (energy_==0)
-	{
-		hive_->killBee();
-	}
 }
 
 //déplacement aléatoire
@@ -59,12 +60,6 @@ void Bee::randomMove(sf::Time dt)
 		speed_.rotate(alpha);
 	}
 	movebee(dt);
-	//baisse de l'énergie
-	energy_-=0.1*dt.asSeconds();
-	if (energy_<= 0)
-	{
-		energy_=0;
-	}
 }
 
 Vec2d* Bee::getMemory() const
@@ -112,34 +107,37 @@ void Bee::targetMove(sf::Time dt, Vec2d target)
 	}
 	if (!movebee(dt))
 	{
-		avoidanceClock_ = sf::seconds(getConfig()["moving behaviour"]["target"]["avoidance delay"].toDouble()); // en faire un attribut statique?
+		avoidanceClock_ = sf::seconds(delay); // en faire un attribut statique?
 	}
 }
 
 void Bee::drawOn(sf::RenderTarget& target) const 
 {
-	auto beeSprite = buildSprite(centre, rayon, texture_);
-	
-	if (( speed_.angle() >= M_PI/2) or (speed_.angle() <= -M_PI/2))
-	{
-			beeSprite.scale(1, -1);
-	}
-	beeSprite.rotate(speed_.angle()/DEG_TO_RAD);
-	
-    target.draw(beeSprite);
-    
-    if(isDebugOn())
-    {
-		//couleur et épaisseur dependent de l'état de mouvement de l'abeille
-		sf::Color color = (getMoveMode()==Random) ? sf::Color::Black : sf::Color::Blue; 
-		double size (rayon+1);
-		double thickness = (getMoveMode()==Random) ? 5 : 3;
-		auto shape = buildAnnulus(centre, size, color, thickness);
-		target.draw(shape);
-		Vec2d affiche (centre.x,centre.y +20);
-		auto const text = buildText(statestring_, affiche , getAppFont(), 10, sf::Color::White);
-		target.draw(text);
-	}   
+	//if (!isInHive_)
+	//{
+		auto beeSprite = buildSprite(centre, rayon, texture_);
+		
+		if (( speed_.angle() >= M_PI/2) or (speed_.angle() <= -M_PI/2))
+		{
+				beeSprite.scale(1, -1);
+		}
+		beeSprite.rotate(speed_.angle()/DEG_TO_RAD);
+		
+		target.draw(beeSprite);
+		
+		if(isDebugOn())
+		{
+			//couleur et épaisseur dependent de l'état de mouvement de l'abeille
+			sf::Color color = (getMoveMode()==Random) ? sf::Color::Black : sf::Color::Blue; 
+			double size (rayon+1);
+			double thickness = (getMoveMode()==Random) ? 5 : 3;
+			auto shape = buildAnnulus(centre, size, color, thickness);
+			target.draw(shape);
+			Vec2d affiche (centre.x,centre.y +20);
+			auto const text = buildText(statestring_, affiche , getAppFont(), 10, sf::Color::White);
+			target.draw(text);
+		}   
+	//}
 }
 
 //déplacement non aléatoire
@@ -182,7 +180,7 @@ void Bee::setTout()
 	cons_rate = getConfig()["energy"]["consumption rates"]["eating"].toDouble();
 	enmin_hive = getConfig()["energy"]["to leave hive"].toDouble();
 	visibility_ = getConfig()["visibility range"].toDouble();
-
+	delay = getConfig()["moving behaviour"]["target"]["avoidance delay"].toDouble();
 }
 
 void Bee::eat(sf::Time dt)
