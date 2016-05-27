@@ -22,6 +22,11 @@ Bee( etats_, centre, getScoutConfig()["size"].toDouble(), hive,
 	setTout();
 }
 
+//destructeur
+ScoutBee::~ScoutBee()
+{
+	cerr<< "Scout destroyed" << endl;
+}
 //éxecution des actions liées à l'état courant
 void ScoutBee::onState(State current, sf::Time dt)
 {
