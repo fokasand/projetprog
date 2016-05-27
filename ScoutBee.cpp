@@ -11,7 +11,7 @@ vector<State> ScoutBee::etats_ = vector<State> {IN_HIVE, SEARCH_FLOWER, TO_HIVE}
 
 //constructeur
 ScoutBee::ScoutBee(Vec2d centre, Hive* hive) : 
-Bee( etats_, centre, getScoutConfig()["size"].toDouble(), hive, 
+Bee(etats_, centre, getScoutConfig()["size"].toDouble(), hive, 
 	getScoutConfig()["energy"]["initial"].toDouble(), 
 	getScoutConfig()["speed"].toDouble(),
 	getAppTexture(getScoutConfig()["texture"].toString())),  //peut etre dans dessin
@@ -22,11 +22,6 @@ Bee( etats_, centre, getScoutConfig()["size"].toDouble(), hive,
 	setTout();
 }
 
-//destructeur
-ScoutBee::~ScoutBee()
-{
-	cerr<< "Scout destroyed" << endl;
-}
 //éxecution des actions liées à l'état courant
 void ScoutBee::onState(State current, sf::Time dt)
 {
@@ -42,7 +37,7 @@ void ScoutBee::onState(State current, sf::Time dt)
 			eat(dt);
 		}
 		//passer l'adresse avec setmemory_
-		if((memory_==nullptr) and (energy_>enmin_hive) and (counter >= max_share)) //en vrai c'est pas ça la condition mais plutot un bool d'une methode de passage
+		if((memory_==nullptr) and (energy_>enmin_hive) and (counter == max_share)) //en vrai c'est pas ça la condition mais plutot un bool d'une methode de passage
 		//arrêter de la dessiner dans draw (utilser continue)
 		//passer à l'état suivant (recherche d'une fleur)
 		{
@@ -63,10 +58,10 @@ void ScoutBee::onState(State current, sf::Time dt)
 	{
 		statestring_="seeking_flower";
 		if (visibleFlower()!= nullptr or energy_ < enmin_flower)
-			{
-				setMemory(visibleFlower());
-				nextState();
-			}
+		{
+			setMemory(visibleFlower());
+			nextState();
+		}
 	}
 }
 void ScoutBee::onEnterState( State state)
@@ -112,7 +107,7 @@ void ScoutBee::interactWith(ScoutBee* scouting)
 
 void ScoutBee::interactWith(WorkerBee* working)
 {
-	if ((counter < max_share) and (working->getMemory() ==nullptr))
+	if ((counter < max_share) and (working->getMemory() == nullptr))
 	{
 		working->setMemory(memory_);
 		++counter;
