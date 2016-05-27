@@ -10,7 +10,10 @@
 Hive::Hive(const Vec2d& c) 
 : Collider::Collider(c,getAppConfig()["simulation"]["env"]["initial"]["hive"]["size"]["manual"].toDouble()),
 nectar_(getHive()["initial"]["nectar"].toDouble()),
-texture(getAppTexture(getHive()["texture"].toString()))
+texture(getAppTexture(getHive()["texture"].toString())),
+nectar_lim(getHive()["reproduction"]["max bees"].toDouble()),
+max_bees(getHive()["reproduction"]["max bees"].toInt()),
+proba(getHive()["reproduction"]["scout probability"].toDouble())
 {}
 
 //destructeur
@@ -19,6 +22,21 @@ Hive::~Hive()
 	clearBees();
 }
 
+
+//ajoute des abeilles aléatoirement
+void Hive::addRandom()
+{
+	if ((nectar_>= nectar_lim) and (bees_.size() < max_bees))
+	{
+		if( bernoulli(proba))
+		{
+			addWorker();
+		} else {
+			
+			addScout();
+		}
+	}
+}
 //redefinir le dessin pour les ruches
 void Hive::drawOn(sf::RenderTarget& targetWindow) const
 {
