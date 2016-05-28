@@ -10,7 +10,7 @@
 #include <Interface/Updatable.hpp>
 
 //racourci données de configuration pour env
-j::Value getEnv();
+j::Value const& getEnv();
 
 class Env: public Drawable, public Updatable
 {
@@ -78,6 +78,8 @@ private:
     
     //effacer les fleurs
 	void clearHives();
+	
+	unsigned int maxFlower;
 };
 
 #endif
