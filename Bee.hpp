@@ -6,6 +6,9 @@
 #include <Interface/Drawable.hpp>
 #include "CFSM.hpp"
 
+class WorkerBee;
+class ScoutBee;
+
 enum MoveMode {Rest,Random,Targeted};
 
 class Bee: public Collider, public Drawable, public Updatable, 
@@ -16,15 +19,14 @@ public:
 	Bee(vector<State> states,
 		Vec2d centre,
 		double rayon,
-		 Hive* hive,
-		 double energy,
-		 double amplitude,
-		 sf::Texture texture);
+		Hive* hive,
+		double energy,
+		double amplitude,
+		sf::Texture texture);
 		 
 	// destructeur
 	
-	virtual ~Bee()
-	{}
+	virtual ~Bee();
 		 	 
 	//morte si energie nulle
 	bool isDead() const;
@@ -64,6 +66,16 @@ public:
 	//rend la position de la fleur visible
 	Vec2d* visibleFlower();
 	
+	virtual void interact(Bee* other) = 0;
+	virtual void interactWith(ScoutBee* scouting) = 0;
+	virtual void interactWith(WorkerBee* working) = 0;
+	
+	bool isBeeInHive();
+	
+	Vec2d* getMemory() const;
+	
+private:
+	void changeEnergy(double quant);
 	
 protected:
 	Hive* hive_;
@@ -81,10 +93,7 @@ protected:
 	//valeurs initilialisées dans les constructeurs de Worker et Scout
 	double restloss_;
 	double moveloss_;
-	
 	Vec2d target_;
-	
-	
 	
 	//voir si ne peuvent être mis dans Bee avec un setter polymorphique
 	double cons_rate;
@@ -92,8 +101,11 @@ protected:
 	double visibility_;
 	
 	string statestring_;
-private :
-	void changeEnergy(double quant);
 	
+	//permet de repertorier les abeilles dans une ruche
+	bool isInHive_;
+	
+private:
+	double delay;
 };	
 #endif
