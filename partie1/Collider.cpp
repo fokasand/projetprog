@@ -4,13 +4,13 @@
 #include <vector>
 #include <utility>
 
-//constructeur, verifier que r positif ou nul
+//constructeur: prend un rayon et un centre en arguments
 Collider::Collider (const Vec2d& c, const double& r) :
     centre(c),
     rayon(r)
 {
     assert(rayon >=0); // gestion de l'erreur pour r negatif
-    clamping();
+    clamping(); //intialiser le collider dans la map
 }
 
 //constructeur par copie
@@ -20,14 +20,14 @@ Collider::Collider (const Collider& a) :
 {}
 
 
-//clamping
-
-void Collider::clamping() //takes current Collider and operates on its center
+//clamping, remet le centre du collider dans la map
+void Collider::clamping()
 {
     clamping_(centre);
 }
 
-void clamping_(Vec2d& position) //méthode créée en dehors de collider pour pouvoir être utilisée sans créer de collider
+ //fonction créée en dehors de collider pour pouvoir être utilisée sans créer de collider
+void clamping_(Vec2d& position)
 {
 	Vec2d worldSize = getApp().getWorldSize();
 	double width = worldSize.x;
@@ -50,12 +50,13 @@ void clamping_(Vec2d& position) //méthode créée en dehors de collider pour po
 }
 
 //getters
-
+//rend la position du centre
 const Vec2d& Collider::getPosition() const
 {
     return centre;
 }
 
+//rend le rayon
 double Collider::getRadius() const
 {
     return rayon;
@@ -63,13 +64,13 @@ double Collider::getRadius() const
 
 
 //deplacement
-
-
+//rend la distance entre le collider et un vecteur
 double Collider::distanceTo(Vec2d to) const
 {
     return directionTo(to).length();
 }
 
+//rend la distance entre un collider et un autre collider
 double Collider::distanceTo(Collider c) const
 {
     return distanceTo(c.getPosition());
@@ -84,22 +85,27 @@ Vec2d Collider::directionTo (Vec2d to) const
     double* coordinatef(nullptr);
     double width = worldSize.x;
     double height= worldSize.y;
-    //creer deux pointeurs
+
+//une boucle pour le travail sur le coordonnées en x et une pour y
+//puisque les traitements sont les mêmes
 
     for (int i(0); i <2 ; i++) {
         if (i==0) {
-            //dimension= new double(worldSize.x); Set all pointer to x coordinates
+           //tous les pointeurs sur coordonnées en x
             dimension = &width;
             coordinatei= &from.x;
             coordinatef= &to.x;
         }
         if (i==1) {
-            // Set all pointer to y coordinates
+            //pointeurs sur cordonnées en y 
             dimension = &height;
             coordinatei = &from.y;
             coordinatef = &to.y;
         }
-        if ((*coordinatei-*coordinatef)<(-*dimension/2)) { //test si la coordonnee pointee de to n'est pas trop grande
+        
+        //test si la coordonnee pointee de to n'est pas trop grande
+        if ((*coordinatei-*coordinatef)<(-*dimension/2)) 
+        { 
             // si oui on la decremente de la taille du monde
             *coordinatef= *coordinatef-*dimension;
         }
@@ -117,11 +123,13 @@ Vec2d Collider::directionTo (Vec2d to) const
     return result;
 }
 
+//directionTo utilisé sur un collider directement
 Vec2d Collider::directionTo (Collider c) const
 {
-    return 	directionTo(c.getPosition());
+    return directionTo(c.getPosition());
 }
 
+//bouge le centre du collider
 void Collider::move(const Vec2d& dx)
 {
     centre+=dx;
@@ -129,17 +137,17 @@ void Collider::move(const Vec2d& dx)
 }
 
 //booléens
-
+//indique si un collider se trouve à l'interieur d'un autre
 bool Collider::isColliderInside(const Collider& other) const
 {
     if ((rayon >= other.getRadius()) and ((distanceTo(other)) <= (rayon-other.getRadius()))) {
-        return true; // si other est dans l'instance courante
+        return true; 
     } else {
         return false;
     }
 }
 
-
+//indique si un Collider en touche un autre
 bool Collider::isColliding(const Collider& other) const
 {
     if ((distanceTo(other)) <= (rayon+other.getRadius())) {
@@ -149,9 +157,10 @@ bool Collider::isColliding(const Collider& other) const
     }
 }
 
-bool Collider::isPointInside(const Vec2d& poin) const
+//teste si la position en argument se trouve dans la collider
+bool Collider::isPointInside(const Vec2d& point) const
 {
-    if (distanceTo(poin) <= rayon) {
+    if (distanceTo(point) <= rayon) {
         return true;
     } else {
         return false;
@@ -195,7 +204,7 @@ void swap(Collider& a, Collider& b)
 
 std::ostream& Collider::affiche(std::ostream& sortie) const
 {
-    sortie << "Collider: position : x=" << getPosition().x <<"y=" << getPosition().y << "radius =" << getRadius() << std:: endl;
+    sortie << "Collider: position : x=" << centre.x <<"y=" << centre.y << "radius =" << rayon << std:: endl;
 
     return sortie;
 }
