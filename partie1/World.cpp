@@ -78,6 +78,48 @@ void World::updateCache()
     for(size_t j(0); j<cells_.size(); ++j) {
         //contient les coordonnées dans sommets
         std::vector<std::size_t> indexes_for_cell (indexesForCellVertexes(toBid(j).x, toBid(j).y, nbCells_ ));
+        
+        /*
+        switch(cells_[j])
+        {
+        	case Kind::rock:
+        	{
+        	for (int i = 0; i <4 ; ++i) {
+                	//pour chaque sommet, colorie pour la texture appropriée
+                	rockVertexes_[indexes_for_cell[i]].color.a = 255;
+                	grassVertexes_[indexes_for_cell[i]].color.a = 0;
+        		 waterVertexes_[indexes_for_cell[i]].color.a = 0;	
+        		}
+        	break;
+        	}
+        	
+        	case Kind::grass:
+        	{
+        		for (int i = 0; i <4 ; ++i) {
+                rockVertexes_[indexes_for_cell[i]].color.a = 0;
+                grassVertexes_[indexes_for_cell[i]].color.a = 255;
+                waterVertexes_[indexes_for_cell[i]].color.a = 0;
+            		}	
+        	break;	
+        	}
+        	
+        	case Kind::water:
+        	{
+        		for (int i = 0; i <4 ; ++i) {
+        		 rockVertexes_[indexes_for_cell[i]].color.a = 0;
+        		 grassVertexes_[indexes_for_cell[i]].color.a = 0;
+        	  	waterVertexes_[indexes_for_cell[i]].color.a = 255;
+        		 }
+        		 break;
+        	}
+        	
+        	
+        	
+        }
+        
+        
+        
+        */
         if (cells_[j] == Kind::rock) {
             for (int i = 0; i <4 ; ++i) {
                 //pour chaque sommet, colorie pour la texture appropriée
