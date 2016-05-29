@@ -1,4 +1,3 @@
-
 #include <cassert>
 #ifndef COLLIDER_H
 #define COLLIDER_H
@@ -8,9 +7,7 @@ using namespace std;
 
 class Collider
 {
-protected :
-    Vec2d centre;
-    double rayon;
+
 public :
 
     friend void swap(Collider& a, Collider& b);
@@ -48,7 +45,9 @@ public :
     //aide pour <<
 
     std::ostream& affiche(std::ostream& sortie) const;
-
+private :
+    Vec2d centre;
+    double rayon;
 };
 
 //opérateurs externes:
