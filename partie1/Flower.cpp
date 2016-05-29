@@ -9,21 +9,24 @@ Flower::Flower (const Vec2d& c, const double& r, double qpollen)
       texture(getAppTexture(getFlower()["textures"][uniform(0,max)].toString())),
       split_(getFlower()["growth"]["split"].toDouble()),
       threshold_(getFlower()["growth"]["threshold"].toDouble())
-{} // la fleur est clampée automatiquement
+{} // la fleur est clampée automatiquement par le constructeur de Collider
 
 //retrait de pollen tant qu'il en reste
 double Flower::takePollen (double take)
 {
 	if (pollen > 0 )
 	{
+		//si il y a assez de pollen pour prélever la quantité take
 		if ( pollen >= take) {
 			pollen-= take; // on rend la quantité prélevée
-			// si superieure à celle de pollen
-		} else {
-			take= pollen; //on rend la quantité disponible
-			pollen-= take;
+			
+		} else // si superieure à celle de pollen
+		double taken;
+		{
+			taken= pollen; //on rend la quantité disponible
+			pollen-= taken; //le pollen est à 0
 		}
-		return take;
+		return taken;
 	}
 	return 0;
 }
@@ -31,10 +34,8 @@ double Flower::takePollen (double take)
 //dessiner les fleurs
 void Flower::drawOn(sf::RenderTarget& target) const
 {
-
-    auto flowerSprite = buildSprite(centre, rayon, texture);
+   auto flowerSprite = buildSprite(centre, rayon, texture);
     target.draw(flowerSprite);
-
 }
 
 //racourci pour les données de configuration
@@ -45,12 +46,17 @@ j::Value getFlower()
 
 void Flower::update(sf::Time dt)
 {
+	//si la fleur n'a plus de pollen le tuer
     if (pollen<= 0) 
     {
-        getAppEnv().killFlower(); // dit qu'une fleur est morte, pour que une méthode dans Env regarde laquelle est morte et l'enlève du tableau.
+    	// dit qu'une fleur est morte, pour que une méthode dans Env regarde laquelle est morte et l'enlève du tableau.
+    	 getAppEnv().killFlower(); 
     } else 
     {
+    	//le pollen augmente
         pollen += dt.asSeconds() * log( getAppEnv().world_.howhumid(centre) / threshold_ );
+        
+        //si assez de pollen, la fleur se multiplie
         if (pollen >= split_) 
         {
             Vec2d pp;
@@ -68,6 +74,7 @@ void Flower::update(sf::Time dt)
     }
 }
 
+//getter 
 double Flower::getPollen() const
 {
     return pollen;
