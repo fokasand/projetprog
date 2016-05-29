@@ -47,7 +47,7 @@ public:
     //afficher anneau
     void drawFlowerZone(sf::RenderTarget& target,Vec2d const& position);
 
-    //tue une fleur
+    //tue les fleurs qui n'ont plus d'eéergie
     void killFlower();
     
 	//ajouter une ruche
@@ -56,12 +56,12 @@ public:
 	//rend un pointeur la ruche en collision avec l'argument
 	Hive* getCollidingHive(const Collider& body);
 	
-	//rend la fleur en collision avec l'argument
+	//rend un pointeur sur la fleur en collision avec l'argument
 	Flower* getCollidingFlower(const Collider& body);
 	
 	sf::Color couleur(const Vec2d& position, double rayon); // aide partie bonus
 	void drawHiveableZone(sf::RenderTarget& target, Vec2d const& position);
-	
+
 private:
     //collection de fleurs
     std::vector <Flower*> flowers_;
@@ -76,10 +76,11 @@ private:
     //collection ruches
     vector<Hive*> hives_;
     
-    //effacer les fleurs
-	void clearHives();
-	
-	unsigned int maxFlower;
+    //effacer les ruches
+    void clearHives();
+    
+    //nombre maximal de fleurs;
+    unsigned int maxFlower;
 };
 
 #endif
