@@ -30,9 +30,11 @@ Bee::~Bee()
 {
 	//delete memory_;
 }
-//morte si le niveau d'energie est nul
+
+
 bool Bee::isDead() const
 {
+	//morte si le niveau d'energie est nul
 	if(energy_==0)
 	{
 		return true;
@@ -59,6 +61,7 @@ void Bee::randomMove(sf::Time dt)
 		double alpha (uniform(-alpha_max,alpha_max));
 		speed_.rotate(alpha);
 	}
+	//avance dans le sens du vecteur vitesse
 	movebee(dt);
 }
 
@@ -69,18 +72,22 @@ Vec2d* Bee::getMemory() const
 
 bool Bee:: movebee(sf::Time dt) // on modularise car on en a besoin pour targetmove() et randomMove()
 {
-	double beta(0); // peut etre qu'il faut l'initaliser à 0
-	//changer la direction du déplacement	
+	double beta(0);
+	
+	// calcule de la position envisagée en fonction du vecteur vitesse
 	Vec2d possible_pos = centre + speed_*dt.asSeconds();
 	
-	//verifier que l'abeille peut occuper la possition possible_pos
+	//verifier que l'abeille peut occuper cette position
 	if(getAppEnv().world_.isFlyable(possible_pos))
 	{
+		//si oui bouger le centre du collider abeille
 		centre=possible_pos;
+		//on s'assure que il fait toujorus partie de la carte
 		clamping();
 		return 1;
-	} else
+	} else //si la position envisagée n'est pas libre
 	{
+		//changement de direction dans la sens opposé
 		if(bernoulli(prob))
 		{	
 			beta=PI/4;
@@ -107,7 +114,7 @@ void Bee::targetMove(sf::Time dt, Vec2d target)
 	}
 	if (!movebee(dt))
 	{
-		avoidanceClock_ = sf::seconds(delay); // en faire un attribut statique?
+		avoidanceClock_ = sf::seconds(delay); 
 	}
 }
 
@@ -127,7 +134,7 @@ void Bee::drawOn(sf::RenderTarget& target) const
 		
 		if(isDebugOn())
 		{
-			//couleur et épaisseur dependent de l'état de mouvement de l'abeille
+			//couleur et épaisseur du cercle dependent de l'état de mouvement de l'abeille
 			sf::Color color = (getMoveMode()==Random) ? sf::Color::Black : sf::Color::Blue; 
 			double size (rayon+1);
 			double thickness = (getMoveMode()==Random) ? 5 : 3;
@@ -140,7 +147,7 @@ void Bee::drawOn(sf::RenderTarget& target) const
 	//}
 }
 
-//déplacement non aléatoire
+//déplacement selon l'etat de mouvement courant 
 void Bee::move(sf::Time dt)
 { 
 	switch(moveMode_)
@@ -173,6 +180,7 @@ MoveMode Bee::getMoveMode() const
 	return moveMode_;
 }
 
+//permet d'initialiser les attributs differents selon le type de Bee en utilisant la virtualité de getConfig()
 void Bee::setTout()
 {
 	restloss_=getConfig()["energy"]["consumption rates"]["idle"].toDouble();
@@ -194,41 +202,48 @@ void Bee::eat(sf::Time dt)
 		//si il reste asser de nectar pour prelever le taux
 		if(available > dt.asSeconds()*cons_rate)
 		{
+			//prelever le nectar de la ruche
 			hive_->takeNectar(dt.asSeconds()*cons_rate);
 			//l'energie de l'abeille augmente lorsqu'elle mange
 			changeEnergy(dt.asSeconds()*cons_rate);
 		} else {
-			//si pas assez de nectar en consommer ce qu'il reste
+			//si pas assez de nectar en consommer ce qu'il reste,
+			//la quantité minimale de nectar de la ruche est donc 0
 			hive_->takeNectar(available);
 			changeEnergy(available);
 		}
 	}
 }
 
-//rend la position de la fleur visible
+//rend la position de la premiere fleur faisant partie du champs de vision
 Vec2d* Bee::visibleFlower()
 {
+	//création d'un collider simulatant de champs de vision
 	Collider vision (centre, rayon + visibility_);
+	
+	//si aucune fleur nefait partie du champs de vision rendre nullptr
 	if (getAppEnv().getCollidingFlower(vision) == nullptr)
 	{
 		return nullptr;
-	} else {	
+	} else {
+		//sinon rendre la position de la premiere fleur appercue
 		Vec2d position ((getAppEnv().getCollidingFlower(vision))->getPosition());
 		return new Vec2d (position);
 	}
 }
 
-//faire perdre de l'energie à l'abeille
+//faire perdre ou gagner de l'energie à l'abeille
 void Bee::changeEnergy(double quant)
 {
 	energy_+=quant;
+	//l'energie ne peut être négative 
 	if (energy_ <0 )
 	{
 		energy_=0;
 	}
 }
 
-
+//indique si l'abeille se trouve dans la ruche ou non 
 bool Bee::isBeeInHive()
 {
 	return isInHive_;
