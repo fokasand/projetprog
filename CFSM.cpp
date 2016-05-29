@@ -7,15 +7,14 @@ CFSM::CFSM(std::vector<State>& states)
 
 CFSM::~CFSM()=default;
 //rend l'état courant
-State  CFSM::getState()
+State CFSM::getState()
 {
-	return current_;
+	return current_; //
 }
 	
 //passe à l'état suivant
 void CFSM::nextState()
 {
-	std::cerr << "size is :" << states_.size() << std::endl;
 	//passer à l'état suivant si fin de la liste pas encore attent
 	if(current_< states_.size()-1)
 	{
@@ -25,7 +24,6 @@ void CFSM::nextState()
 		//recommence au début de la liste des états
 		current_=0;
 	}
-	std::cerr<<" current is : " <<current_<< std::endl;
 	onEnterState(states_[current_]);
 }
 
