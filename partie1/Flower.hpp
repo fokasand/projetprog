@@ -36,8 +36,10 @@ class Flower : public Collider, public Drawable, public Updatable{
 	//initialisation de la textre de la fleur, ne change plus
 	sf::Texture const texture;
 	
+	//quantité de pollen minimale pour se multiplier
 	const double split_;
 	
+	//gère la croissance du pollen
 	const double threshold_;
 
 };
