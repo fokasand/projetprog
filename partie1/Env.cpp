@@ -7,7 +7,7 @@ j::Value const& getEnv()
     return getAppConfig()["simulation"]["env"];
 }
 
-//constructeur par défaut
+//constructeur par défaut, soit charge un environneùent depuis un fichier soit le génère aléatoirement
 Env::Env() : maxFlower (getEnv()["max flowers"].toInt())
 {
     try {
@@ -22,13 +22,23 @@ Env::Env() : maxFlower (getEnv()["max flowers"].toInt())
 void Env::reset()
 {
     fgen_.reset();
-
     world_.reset(true);
     clearFlowers();
     clearHives();
 
 }
 
+//efface toutes les fleurs et libère la mémoire, utilisé pour reset et destructeur
+void Env::clearFlowers()
+{
+    for (size_t i(0); i < flowers_.size() ; ++i) {
+        delete flowers_[i];
+        flowers_[i]= nullptr;
+    }
+    flowers_.clear();
+} 
+
+//marque les fleurs sans pollen comme morte puis les efface du tableau de fleurs 
 void Env::killFlower()
 {
     for (size_t i(0); i < flowers_.size() ; ++i) {
@@ -46,12 +56,14 @@ void Env::update(sf::Time dt)
 {
 	vector<Flower*> copie(flowers_);
 	
+//update de chaque fleur dans l'environnemtn
     for (auto& fleur : copie) 
     {
         fleur->update(dt);
     }
-    fgen_.update(dt); // fait à l'étape 3, réponse question.
-    
+    fgen_.update(dt);
+
+//update de toutes les ruches dans l'environnement    
     for (size_t i(0); i < hives_.size() ; ++i) {
         hives_[i]->update(dt);
     }
@@ -94,8 +106,8 @@ bool Env::addFlowerAt (Vec2d p)
 //afficher anneau
 void Env::drawFlowerZone(sf::RenderTarget& target,Vec2d const& position)
 {
-	//attention plante encore des fleurs sur les ruches
-    sf::Color color = (world_.isGrowable(position)) ? sf::Color::Green : sf::Color::Red; // on considère que la position ne sortira pas de la grille.
+	// on considère que la position ne sortira pas de la grille.
+    sf::Color color = (world_.isGrowable(position)) ? sf::Color::Green : sf::Color::Red;
     double size (getEnv()["initial"]["flower"]["size"]["manual"].toDouble());
     auto shape = buildAnnulus(position, size, color, 0.5);
     target.draw(shape);
@@ -108,21 +120,13 @@ void Env::loadWorldFromFile()
     world_.loadFromFile();
 }
 
-// sauvegarde
+// sauvegarde de l'environnement
 void Env::saveWorldToFile()
 {
     world_.saveToFile();
 }
 
-void Env::clearFlowers()
-{
-    for (size_t i(0); i < flowers_.size() ; ++i) {
-        delete flowers_[i];
-        flowers_[i]= nullptr;
-    }
-    flowers_.clear();
-}
-
+//efface toutes les ruches et libère le mémoire (pour reset et le destructeur)
 void Env::clearHives()
 {
     for (size_t i(0); i < hives_.size() ; ++i) {
@@ -131,6 +135,7 @@ void Env::clearHives()
     }
     hives_.clear();
 }
+
 //destructeur de Env
 Env::~Env()
 {
@@ -149,7 +154,8 @@ bool Env::addHiveAt(const Vec2d& position)
 	// verifier toutes les fleurs
 	for (size_t i(0); i < flowers_.size() ; ++i)
 	{
-		if(hive.isColliding(*flowers_[i]))
+		//teste si en collision
+		if(hive|*flowers_[i])
 		{
 			return false;
 		}
@@ -158,11 +164,13 @@ bool Env::addHiveAt(const Vec2d& position)
 	//verifier toutes les ruches
 	for (size_t i(0); i < hives_.size() ; ++i)
 	{
+		//création d'un novueau collider car le rayon de test est plus grand que le rayon réél
 		Collider test (hives_[i]->getPosition(),
 		getEnv()["initial"]["hive"]["size"]["manual"].toDouble()*
 		getEnv()["initial"]["hive"]["hiveable factor"].toDouble());
 		
-		if(hive.isColliding(test))
+		//teste si en collision
+		if(hive|test))
 		{
 			return false;
 		}
@@ -188,7 +196,7 @@ Hive* Env::getCollidingHive(const Collider& body)
 		getEnv()["initial"]["hive"]["size"]["manual"].toDouble()*
 		getEnv()["initial"]["hive"]["hiveable factor"].toDouble());
 		
-		if(body.isColliding(test))
+		if(body|test)
 		{
 			return hives_[i];
 		}
@@ -201,7 +209,7 @@ Flower* Env::getCollidingFlower(const Collider& body)
 {
 	for (size_t i(0); i < flowers_.size() ; ++i)
 	{
-		if(body.isColliding(*flowers_[i]))
+		if(body|*flowers_[i])
 		{
 			return flowers_[i];
 		}
