@@ -4,15 +4,17 @@
 
 typedef Uid State;
 class CFSM {
+public:
+//rend létat courant
+	State getState();
 
 protected:
 //constructeur
 	CFSM(std::vector<State>&);
 	CFSM() =default;
 //retablir destructeur par défaut
-	~CFSM();
-//rend létat courant
-	State getState();
+	virtual ~CFSM();
+
 	
 //passe à l'état suivant
 	void nextState();
@@ -24,8 +26,8 @@ protected:
 	virtual void onState(State current,sf::Time dt) = 0;
 	void action(sf::Time dt);
 
-private: 
-	const std::vector<State> states_;
+protected:	
+	std::vector<State> states_;
 	size_t current_;
 	
 	
