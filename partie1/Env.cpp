@@ -152,7 +152,18 @@ bool Env::addHiveAt(const Vec2d& position)
 	//verifier que la ruche n'est pas en collision 
 	// avec un autre element
 	// verifier toutes les fleurs
-	for (size_t i(0); i < flowers_.size() ; ++i)
+	if((getCollidingHive(hive) == nullptr) and (getCollidingFlower()==nullptr))
+	{
+		return false;
+	} 
+	
+	//si n'est en collision avec rien
+	//peut être ajoutée
+	if (world_.isHiveable(position, getAppConfig()["simulation"]["env"]["initial"]["hive"]["size"]["manual"].toDouble()))
+	{
+	hives_.push_back(new Hive (position));
+	return true;
+/*	for (size_t i(0); i < flowers_.size() ; ++i)
 	{
 		//teste si en collision
 		if(hive|*flowers_[i])
@@ -184,6 +195,7 @@ bool Env::addHiveAt(const Vec2d& position)
 	return true;
 	}
 	return false;
+	*/
 }
 
 //rend la ruche en collision avec l'argument 
