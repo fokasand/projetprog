@@ -14,6 +14,7 @@ Flower::Flower (const Vec2d& c, const double& r, double qpollen)
 //retrait de pollen tant qu'il en reste
 double Flower::takePollen (double take)
 {
+	double taken;
 	if (pollen > 0 )
 	{
 		//si il y a assez de pollen pour prélever la quantité take
@@ -21,7 +22,6 @@ double Flower::takePollen (double take)
 			pollen-= take; // on rend la quantité prélevée
 			
 		} else // si superieure à celle de pollen
-		double taken;
 		{
 			taken= pollen; //on rend la quantité disponible
 			pollen-= taken; //le pollen est à 0
@@ -34,7 +34,7 @@ double Flower::takePollen (double take)
 //dessiner les fleurs
 void Flower::drawOn(sf::RenderTarget& target) const
 {
-   auto flowerSprite = buildSprite(centre, rayon, texture);
+   auto flowerSprite = buildSprite(getPosition(), getRadius(), texture);
     target.draw(flowerSprite);
 }
 
@@ -54,7 +54,7 @@ void Flower::update(sf::Time dt)
     } else 
     {
     	//le pollen augmente
-        pollen += dt.asSeconds() * log( getAppEnv().world_.howhumid(centre) / threshold_ );
+        pollen += dt.asSeconds() * log( getAppEnv().world_.howhumid(getPosition()) / threshold_ );
         
         //si assez de pollen, la fleur se multiplie
         if (pollen >= split_) 
@@ -62,8 +62,8 @@ void Flower::update(sf::Time dt)
             Vec2d pp;
             int essaismax(0);
             do {
-                double d (uniform(0.5*rayon, 2*rayon));
-                pp = centre + Vec2d::fromRandomAngle() * d;
+                double d (uniform(0.5*getRadius(), 2*getRadius()));
+                pp = getPosition() + Vec2d::fromRandomAngle() * d;
                 ++essaismax;
             } while ( (!getAppEnv().addFlowerAt(pp)) and (essaismax <=100) );
 			if (essaismax != 100) // la quantité de pollen n'est divisée par 2 que si on a bien fait la fleur.
